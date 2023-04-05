@@ -1,1 +1,1 @@
-hello minishell test text!
+why using git is so fucking difficul
