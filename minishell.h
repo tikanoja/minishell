@@ -24,6 +24,9 @@
 # define REDIR 2
 # define EXEC 3
 
+# define TRUE 1
+# define FALSE 0
+
 
 
 # define GREEN "\033[0;32m"

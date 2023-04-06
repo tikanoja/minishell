@@ -57,6 +57,16 @@ int is_it_whitespace(char *prompt)
         return (0);
 }
 
+// void    *get_node_data(t_tree *node, char *prompt)
+// {
+//     if (node->type == EXEC)
+//         return (get_exec_data(node, prompt));
+//     else if (node->type == PIPE)
+//         return (get_pipe_data(node, prompt));
+//     else if (node->type == REDIR)
+//         return (get_redir_data(node, prompt));
+// }
+
 t_tree *parsecmd(char *prompt)
 {
     int i;
@@ -69,18 +79,19 @@ t_tree *parsecmd(char *prompt)
     while(*prompt)
     {
         // node = malloc(sizeof(t_tree));
-        //if fails free the bin tree (joku foreach joka luikauttaa free())
+        // // if fails free the bin tree (joku foreach joka luikauttaa free())
         // if (node == NULL)
         //     exit(1);
         while(is_it_whitespace(prompt) == 1)
         {
-            write(1, "WS\n", 3);
+            write(1, "WHITESPACE\n", 11);
             prompt++;
         }
         if (is_it_builtin(prompt) == 1)
         {
             write(1, "YES\n", 4);
-            //node->type = EXEC;
+            // node->type = EXEC;
+            // node->data = get_node_data(node, prompt);
         }
         prompt++;
     }
