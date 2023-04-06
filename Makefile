@@ -1,9 +1,9 @@
 
-NAME = shelly
+NAME = minishell
 
-SRC = main.c ft_split_pipex.c ft_split_utils.c
+SRC = main.c ft_split_pipex.c ft_split_utils.c parsing.c
 
-OBJ = main.o ft_split_pipex.o ft_split_utils.o
+OBJ = main.o ft_split_pipex.o ft_split_utils.o parsing.o
 
 FLAGS = -Wall -Werror -Wextra
 

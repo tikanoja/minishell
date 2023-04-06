@@ -36,11 +36,13 @@ typedef struct  s_exec
     char **args;
 }               t_exec;
 
+//redirection redirects input or output of a cmd to a file or device
 typedef struct  s_redir
 {
     //???
 }               t_redir;
 
+//pipes connects the output of one command to another command 
 typedef struct  s_pipe
 {
     int infd;
@@ -68,9 +70,17 @@ void	fillhelper(char *arr, int *b, size_t *i, char *c);
 char	**fillarr_p(char **arr, const char *s, char c, int wcount);
 char	**ft_split_p(char const *s, char c);
 
+//parsing.c
+int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
+int is_it_builtin(char *prompt);
+int is_it_whitespace(char *prompt);
+t_tree *parsecmd(char *prompt);
+
 
 //main.c
 int is_it_whitespace(char *prompt);
+int ft_echo(char *prompt);
+int main (void);
 
 
 #endif
