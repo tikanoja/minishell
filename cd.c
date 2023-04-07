@@ -79,7 +79,7 @@ char *my_realpath(const char *path, char *resolved_path)
     return (resolved_path);
 }
 
-int ft_cd(const char *user_path, int argc, char **envp) 
+int ft_cd(const char *user_path, int argc) 
 {
     char *path;
     char *oldpwd;
@@ -87,15 +87,14 @@ int ft_cd(const char *user_path, int argc, char **envp)
 	char *last_slash;
 
     path = (char *)malloc(sizeof(char) * (ft_strlen(user_path) + 1));
-    if (!path) {
+    if (!path)
+	{
         perror("malloc failed");
         return (-1);
     }
     ft_strlcpy(path, user_path, ft_strlen(user_path));
     if (argc == 0 || *path == '~')
-	{
         path = getenv("HOME");
-    }
 	else if (*path == '.')
 	{
         if (*(path + 1) == '/')
@@ -106,9 +105,7 @@ int ft_cd(const char *user_path, int argc, char **envp)
             path = my_realpath(cwd, NULL);
         }
 		else if (*(path + 1) == '\0')
-		{
             path = getenv("PWD");
-        }
 		else if (*(path + 1) == '.' && *(path + 2) == '/') //näitä pitää varmaan vähän rukata
 		{
             getcwd(cwd, sizeof(cwd));
@@ -120,9 +117,7 @@ int ft_cd(const char *user_path, int argc, char **envp)
         }
     }
 	else if (ft_strncmp(user_path, "$OLDPWD", 7) == 0 || *user_path == '-')
-	{
         path = getenv("OLDPWD");
-    }
     oldpwd = getenv("PWD");
     if(chdir(path) != 0)
 	{
