@@ -40,7 +40,7 @@ char *ft_strcat(char *dest, const char *src)
     *dest = '\0';
     return result;
 }
-char *my_realpath(const char *path, char *resolved_path)
+char *ft_realpath(const char *path, char *resolved_path)
 {
     char cwd[PATH_MAX];
     char *p;
@@ -102,7 +102,7 @@ int ft_cd(const char *user_path, int argc)
             getcwd(cwd, sizeof(cwd));
             ft_strcat(cwd, "/");
             ft_strcat(cwd, path);
-            path = my_realpath(cwd, NULL);
+            path = ft_realpath(cwd, NULL);
         }
 		else if (*(path + 1) == '\0')
             path = getenv("PWD");
@@ -113,7 +113,7 @@ int ft_cd(const char *user_path, int argc)
             *last_slash = '\0';
             ft_strcat(cwd, "/");
             ft_strcat(cwd, path + 2);
-            path = my_realpath(cwd, NULL);
+            path = ft_realpath(cwd, NULL);
         }
     }
 	else if (ft_strncmp(user_path, "$OLDPWD", 7) == 0 || *user_path == '-')
