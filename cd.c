@@ -22,7 +22,7 @@
 	//ENV PWD = path;?
 }*/
 
-#include <limits.h>
+#include <limits.h> //tän vois vissiin vaan definaa PATH_MAX 1024?
 char *ft_strcat(char *dest, const char *src)
 {
 	char *result; 
@@ -31,15 +31,12 @@ char *ft_strcat(char *dest, const char *src)
 	while (*dest != '\0')
 		dest++;
 	while (*src != '\0')
-	{
-		*dest = *src;
-		dest++;
-		src++;
-	}
+		*dest++ = *src++;
 	*dest = '\0';
 	return (result);
 }
-char *ft_realpath(const char *path, char *resolved_path)
+
+char *ft_realpath(const char *path, char *resolved_path) //
 {
 	char cwd[PATH_MAX];
 	char *p;
@@ -50,12 +47,12 @@ char *ft_realpath(const char *path, char *resolved_path)
 		return (NULL);
 	}
 	if (path[0] == '/')
-	{ // absolute path
+	{ // absolute path aka start with /
 		ft_strlcpy(resolved_path, path, PATH_MAX);
 		resolved_path[PATH_MAX - 1] = '\0';
 	}
 	else
-	{ // relative path
+	{ // relative path no start with /
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
 			return (NULL);
 		ft_strlcpy(resolved_path, cwd, PATH_MAX);
@@ -128,12 +125,13 @@ int ft_cd(const char *user_path, int argc)
 	return (0);
 }
 
-/*int main(int argc, char **argv, char **envp) {
+int main(){//, char **envp) {
 	char path[PATH_MAX];
 	char resolved_path[PATH_MAX];
 	printf("PATH_MAX = %d\n", PATH_MAX);
 
 	// Test my_realpath() function
+
 	printf("Enter a path to resolve: ");
 	scanf("%s", path);
 	if (ft_realpath(path, resolved_path) == NULL) {
@@ -143,11 +141,11 @@ int ft_cd(const char *user_path, int argc)
 	printf("Resolved path: %s\n", resolved_path);
 
 	// Test ft_cd() function
-	char *home_dir = getenv("OLDPWD");
-	if (ft_cd(".", 1) != 0) {
+	char *home_dir = path;//getenv("OLDPWD");
+	if (ft_cd(home_dir, 1) != 0) {
 		perror("ft_cd() failed");
 		exit(EXIT_FAILURE);
 	}
-	printf("Current working directory after cd to OLDPWD: %s\n", getcwd(NULL, 0));
+	printf("Current working directory after cd to %s: %s\n",home_dir, getcwd(NULL, 0));
 	return 0;
-}*/
+}
