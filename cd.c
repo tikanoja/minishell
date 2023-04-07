@@ -23,26 +23,21 @@
 }*/
 
 #include <limits.h>
-char *ft_strcat(char *dest, const char *src) {
+char *ft_strcat(char *dest, const char *src)
+{
     // Save a pointer to the start of dest
-    char *result = dest;
-
-    // Advance dest to the end of the string
-    while (*dest != '\0') {
+    char *result; 
+	
+	result = dest;
+    while (*dest != '\0')
         dest++;
-    }
-
-    // Copy the contents of src to the end of dest
-    while (*src != '\0') {
+    while (*src != '\0')
+	{
         *dest = *src;
         dest++;
         src++;
     }
-
-    // Append a null terminator to the end of the new string
     *dest = '\0';
-
-    // Return a pointer to the start of the new string
     return result;
 }
 char *my_realpath(const char *path, char *resolved_path)
@@ -55,10 +50,9 @@ char *my_realpath(const char *path, char *resolved_path)
         //errno = EINVAL;
         return (NULL);
     }
-
     if (path[0] == '/')
 	{ // absolute path
-       ft_strlcpy(resolved_path, path, PATH_MAX);
+    	ft_strlcpy(resolved_path, path, PATH_MAX);
         resolved_path[PATH_MAX - 1] = '\0';
     }
 	else
@@ -70,10 +64,8 @@ char *my_realpath(const char *path, char *resolved_path)
         ft_strlcat(resolved_path, "/", PATH_MAX - ft_strlen(resolved_path) - 1);
         ft_strlcat(resolved_path, path, PATH_MAX - ft_strlen(resolved_path) - 1);
     }
-
     while ((p = ft_strnstr(resolved_path, "/./", ft_strlen(resolved_path))) != NULL)
         ft_memmove(p + 1, p + 3, ft_strlen(p + 3) + 1);
-
     while ((p = ft_strnstr(resolved_path, "/../", ft_strlen(resolved_path))) != NULL) 
 	{
         if (p == resolved_path)
@@ -84,7 +76,6 @@ char *my_realpath(const char *path, char *resolved_path)
         char *prev_slash = ft_strrchr(resolved_path, '/') - 1;
     	ft_memmove(prev_slash, p + 3, ft_strlen(p + 3) + 1);
     }
-
     return (resolved_path);
 }
 
@@ -93,6 +84,7 @@ int ft_cd(const char *user_path, int argc, char **envp)
     char *path;
     char *oldpwd;
     char cwd[1024]; //current working directory
+	char *last_slash;
 
     path = (char *)malloc(sizeof(char) * (ft_strlen(user_path) + 1));
     if (!path) {
@@ -100,7 +92,6 @@ int ft_cd(const char *user_path, int argc, char **envp)
         return (-1);
     }
     ft_strlcpy(path, user_path, ft_strlen(user_path));
-
     if (argc == 0 || *path == '~')
 	{
         path = getenv("HOME");
@@ -118,10 +109,10 @@ int ft_cd(const char *user_path, int argc, char **envp)
 		{
             path = getenv("PWD");
         }
-		else if (*(path + 1) == '.' && *(path + 2) == '/')
+		else if (*(path + 1) == '.' && *(path + 2) == '/') //näitä pitää varmaan vähän rukata
 		{
             getcwd(cwd, sizeof(cwd));
-            char *last_slash = ft_strrchr(cwd, '/');
+            last_slash = ft_strrchr(cwd, '/');
             *last_slash = '\0';
             ft_strcat(cwd, "/");
             ft_strcat(cwd, path + 2);
@@ -132,19 +123,16 @@ int ft_cd(const char *user_path, int argc, char **envp)
 	{
         path = getenv("OLDPWD");
     }
-
     oldpwd = getenv("PWD");
-
     if(chdir(path) != 0)
 	{
         perror(path);
         return -1;
     }
-
     setenv("OLDPWD", oldpwd, 1);
     setenv("PWD", getcwd(cwd, sizeof(cwd)), 1);
-
-    return 0;
+	free(path);
+    return (0);
 }
 /*
 int main(int argc, char **argv, char **envp) {
