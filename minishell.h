@@ -58,6 +58,7 @@ typedef struct  s_tree
     void *data;
     struct s_tree *left;
     struct s_tree *right;
+    struct s_tree *prev;
 }               t_tree;
 
 //ft_split_utils.c

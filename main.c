@@ -30,15 +30,48 @@ int ft_echo(char *prompt)
     return (0);
 }
 
+//pitää varmaa olla int return error handling ja clean exit varten...
+int check_quotes(char *str)
+{
+    int i;
+    int single_quotes;
+    int double_quotes;
+
+    i = 0;
+    single_quotes = 0;
+    double_quotes = 0;
+    while(str[i])
+    {
+        if (str[i] == '\'')
+            single_quotes++;
+        else if (str[i] == '"')
+            double_quotes++;
+        i++;
+    }
+    if (single_quotes % 2 == 1 || double_quotes % 2 == 1)
+    {
+        printf("unclosed quotes...\n");
+        return (1);
+    }
+    return (0);
+}
+
 int main (void)
 {
     char *prompt;
     t_tree *head;
+
+    prompt = NULL;
+    head = NULL;
+    if (head != NULL)
+        printf("variable 'head' set but not used [-Werror,-Wunused-but-set-variable]");
     while (1)
     {
         //shell nimen tilal printtais working directory???
         prompt = readline("\033[0;32mshelly\033[0m> ");
         add_history(prompt);
+        if (check_quotes(prompt) == 1)
+            continue ;
         //1. parsecmd will create a binary tree based on the prompt
         head = parsecmd(prompt);
         //2. runcmd(); will go thru the tree recursively & execute nodes & create child processes to do so 

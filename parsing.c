@@ -69,13 +69,9 @@ int is_it_whitespace(char *prompt)
 
 t_tree *parsecmd(char *prompt)
 {
-    int i;
-    int type;
-    t_tree *node;
+    // t_tree *node;
 
-    i = 0;
-    type = 0;
-    node = NULL;
+    // node = NULL;
     while(*prompt)
     {
         // node = malloc(sizeof(t_tree));
