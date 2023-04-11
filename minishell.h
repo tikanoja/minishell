@@ -32,26 +32,6 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
-
-typedef struct  s_exec
-{
-    char *exec;
-    char **args;
-}               t_exec;
-
-//redirection redirects input or output of a cmd to a file or device
-typedef struct  s_redir
-{
-    //???
-}               t_redir;
-
-//pipes connects the output of one command to another command 
-typedef struct  s_pipe
-{
-    int infd;
-    int outfd;
-}               t_pipe;
-
 typedef struct  s_list
 {
     int type; //pitäiskö olla joku enum juttu?? noo mut t'' kertoo COMMAND, PIPE tai REDIRECTION
@@ -82,7 +62,7 @@ char	**ft_split_p(char const *s, char c);
 //parsing.c
 int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int is_it_builtin(char *prompt);
-t_tree *parsecmd(char *prompt);
+t_list *parsecmd(char *prompt);
 
 //ft_lexer.c
 int is_it_whitespace(char c);

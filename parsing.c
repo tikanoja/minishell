@@ -48,9 +48,9 @@ int is_it_builtin(char *prompt)
     return (0);
 }
 
-t_tree *parsecmd(char *prompt)
+t_list *parsecmd(char *prompt)
 {
-    // t_tree  *node;
+    // t_list  *node;
     char    *token;
 
     // node = NULL;
