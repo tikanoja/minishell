@@ -25,71 +25,49 @@ int	ft_strncmp_casein(const char *s1, const char *s2, size_t n)
 int is_it_builtin(char *prompt)
 {
     if (ft_strncmp_casein(prompt, "echo", 4) == 0 &&\
-    (is_it_whitespace(&prompt[4]) || prompt[4] == '\0')) 
+    (is_it_whitespace(prompt[4]) || prompt[4] == '\0')) 
         return (1);
     else if (ft_strncmp_casein(prompt, "cd", 2) == 0 &&\
-    (is_it_whitespace(&prompt[2]) || prompt[2] == '\0'))
+    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
         return (1);
     else if (ft_strncmp_casein(prompt, "pwd", 3) == 0 &&\
-    (is_it_whitespace(&prompt[3]) || prompt[3] == '\0'))
+    (is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
         return (1);
     else if (ft_strncmp_casein(prompt, "export", 6) == 0 &&\
-    (is_it_whitespace(&prompt[6]) || prompt[6] == '\0'))
+    (is_it_whitespace(prompt[6]) || prompt[6] == '\0'))
         return (1);
     else if (ft_strncmp_casein(prompt, "unset", 5) == 0 &&\
-    (is_it_whitespace(&prompt[5]) || prompt[5] == '\0'))
+    (is_it_whitespace(prompt[5]) || prompt[5] == '\0'))
         return (1);
     else if (ft_strncmp_casein(prompt, "env", 3) == 0 &&\
-    (is_it_whitespace(&prompt[3]) || prompt[3] == '\0'))
+    (is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
         return (1);
     else if (ft_strncmp_casein(prompt, "exit", 4) == 0 &&\
-    (is_it_whitespace(&prompt[4]) || prompt[4] == '\0'))
+    (is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
         return (1);
     return (0);
 }
 
-int is_it_whitespace(char *prompt)
-{
-    if (*prompt == 9 || *prompt == 10 || *prompt == 11 || *prompt == 12 ||\
-    *prompt == 13 || *prompt == 32)
-        return (1);
-    else
-        return (0);
-}
-
-// void    *get_node_data(t_tree *node, char *prompt)
-// {
-//     if (node->type == EXEC)
-//         return (get_exec_data(node, prompt));
-//     else if (node->type == PIPE)
-//         return (get_pipe_data(node, prompt));
-//     else if (node->type == REDIR)
-//         return (get_redir_data(node, prompt));
-// }
-
 t_tree *parsecmd(char *prompt)
 {
-    // t_tree *node;
+    // t_tree  *node;
+    char    *token;
 
     // node = NULL;
-    while(*prompt)
+    token = ft_lexer(prompt);
+    while(token)
     {
         // node = malloc(sizeof(t_tree));
         // // if fails free the bin tree (joku foreach joka luikauttaa free())
         // if (node == NULL)
         //     exit(1);
-        while(is_it_whitespace(prompt) == 1)
-        {
-            write(1, "WHITESPACE\n", 11);
-            prompt++;
-        }
-        if (is_it_builtin(prompt) == 1)
+        if (is_it_builtin(token) == 1)
         {
             write(1, "YES\n", 4);
-            // node->type = EXEC;
-            // node->data = get_node_data(node, prompt);
+            // node->type = 3;
         }
-        prompt++;
+        printf("%s\n", token);
+        token = ft_lexer(NULL);
     }
     return (0);
 }

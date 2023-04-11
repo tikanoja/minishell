@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int is_it_whitespace2(char c)
+int is_it_whitespace(char c)
 {
     if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32)
         return (1);
@@ -44,7 +44,7 @@ char *ft_lexer(char *str)
 
     if (str != NULL)
         last_str = str;
-    while (*last_str && is_it_whitespace2(*last_str))
+    while (*last_str && is_it_whitespace(*last_str))
         last_str++;
     token = last_str;
     if (*last_str == '\'' || *last_str == '\"')
@@ -54,9 +54,9 @@ char *ft_lexer(char *str)
     } 
     else
     {
-        while (*last_str && !is_it_whitespace2(*last_str))
+        while (*last_str && !is_it_whitespace(*last_str))
             last_str++;
-        if (*last_str && is_it_whitespace2(*last_str))
+        if (*last_str && is_it_whitespace(*last_str))
             *last_str++ = '\0';
     }
     if (*token == '\0')

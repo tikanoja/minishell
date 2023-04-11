@@ -55,7 +55,7 @@ typedef struct  s_pipe
 typedef struct  s_tree
 {
     int type;
-    void *data;
+    char *data;
     struct s_tree *left;
     struct s_tree *right;
     struct s_tree *prev;
@@ -77,16 +77,14 @@ char	**ft_split_p(char const *s, char c);
 //parsing.c
 int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int is_it_builtin(char *prompt);
-int is_it_whitespace(char *prompt);
 t_tree *parsecmd(char *prompt);
 
 //ft_lexer.c
-int is_it_whitespace2(char c);
+int is_it_whitespace(char c);
 char *handle_quotes(char *last_str, char quote);
 char *ft_lexer(char *str);
 
 //main.c
-int is_it_whitespace(char *prompt);
 int ft_echo(char *prompt);
 int main (void);
 
