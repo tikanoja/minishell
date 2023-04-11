@@ -52,14 +52,19 @@ typedef struct  s_pipe
     int outfd;
 }               t_pipe;
 
-typedef struct  s_tree
+typedef struct  s_list
 {
-    int type;
-    char *data;
-    struct s_tree *left;
-    struct s_tree *right;
-    struct s_tree *prev;
-}               t_tree;
+    int type; //pitäiskö olla joku enum juttu?? noo mut t'' kertoo COMMAND, PIPE tai REDIRECTION
+    char *value; //esim "echo", ">" taiii "file.txt"
+    char **args; //esim "-n" ja "terve $ARG"
+    int argc; //you already know
+    int input; //fd for input
+    int output; //fd for output
+    int append; //flag if output redirection should append to file
+    int background; //ei oo mitää hajuu
+    struct s_list *next; //next node
+    struct s_list *prev; //prev node
+}               t_list;
 
 //ft_split_utils.c
 int	wordcount_p(const char *s, char c);
