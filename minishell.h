@@ -80,6 +80,10 @@ int is_it_builtin(char *prompt);
 int is_it_whitespace(char *prompt);
 t_tree *parsecmd(char *prompt);
 
+//ft_lexer.c
+int is_it_whitespace2(char c);
+char *handle_quotes(char *last_str, char quote);
+char *ft_lexer(char *str);
 
 //main.c
 int is_it_whitespace(char *prompt);

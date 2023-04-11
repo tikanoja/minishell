@@ -45,17 +45,17 @@ char *ft_strtok(char *str, const char *delim)
     return (token);
 }
 
-// int main(void)
-// {
-//     char str[35] = "hello  , please tokenize me,please\0";
-//     char delim[3] = " ,";
-//     char *token;
+int main(void)
+{
+    char str[39] = "hello  , 'please tokenize' me , please\0";
+    char delim[3] = " ,";
+    char *token;
 
-//     token = ft_strtok(str, delim);
-//     while (token != NULL)
-//     {
-//         printf("%s\n", token);
-//         token = ft_strtok(NULL, delim);
-//     }
-//     return (0);
-// }
+    token = ft_strtok(str, delim);
+    while (token != NULL)
+    {
+        printf("%s\n", token);
+        token = ft_strtok(NULL, delim);
+    }
+    return (0);
+}
