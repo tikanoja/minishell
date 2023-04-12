@@ -89,8 +89,14 @@ int is_it_whitespace(char c);
 char *handle_quotes(char *last_str, char quote);
 char *ft_lexer(char *str);
 
+//errors.c
+void exitmsg(char *msg);
+
 //main.c
 int ft_echo(char *prompt);
+int check_quotes(char *str);
+void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
+void get_env_copy(char ***envcpy, const char **envp);
 int main (int argc, char **argv, const char **envp);
 
 

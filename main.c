@@ -56,7 +56,33 @@ int check_quotes(char *str)
     return (0);
 }
 
-//malloc check
+void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i)
+{
+    while(envp[rows] != NULL)
+        rows++;
+    (*envcpy) = malloc((rows + 1) * sizeof(char *));
+    if ((*envcpy) == NULL)
+        exitmsg("env copy malloc failed");
+    (*envcpy)[rows] = NULL;
+    while(i < rows)
+    {
+        (*envcpy)[i] = malloc((ft_strlen(envp[i]) + 1) * sizeof(char));
+        if ((*envcpy)[i] == NULL)
+        {
+            i = 0;
+            while((*envcpy)[i] != NULL)
+            {
+                free((*envcpy)[i]);
+                i++;
+            }
+            free((*envcpy));
+            exitmsg("env copy malloc failed");
+        }
+        (*envcpy)[i][ft_strlen(envp[i])] = '\0';
+        i++;
+    }
+}
+
 void get_env_copy(char ***envcpy, const char **envp)
 {
     int i;
@@ -68,17 +94,7 @@ void get_env_copy(char ***envcpy, const char **envp)
     rows = 0;
     while(envp[rows] != NULL)
         rows++;
-    (*envcpy) = malloc((rows + 1) * sizeof(char *));
-    if ((*envcpy) == NULL)
-        exit(1);
-    (*envcpy)[rows] = NULL;
-    while(i < rows)
-    {
-        (*envcpy)[i] = malloc((ft_strlen(envp[i]) + 1) * sizeof(char));
-        (*envcpy)[i][ft_strlen(envp[i])] = '\0';
-        i++;
-    }
-    i = 0;
+    malloc_env_copy(envcpy, envp, rows, i);
     while(envp[i])
     {
         (*envcpy)[i][j] = envp[i][j];
@@ -91,7 +107,7 @@ void get_env_copy(char ***envcpy, const char **envp)
     }
 }
 
-int main (int argc, char **argv, const char **envp)
+int main(int argc, char **argv, const char **envp)
 {
     char *prompt;
     t_list *head;
