@@ -20,21 +20,41 @@
 # define MAX_INT 2147483647
 # define MAXLINE 1024 //maximum lenght of stdin command the user can input!
 
-# define PIPE 1
-# define REDIR 2
-# define EXEC 3
-
 # define TRUE 1
 # define FALSE 0
-
-
 
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
+// typedef enum
+// {
+//     echo,
+//     cd,
+//     pwd,
+//     export,
+//     unset,
+//     env,
+//     exit,
+//     invalid
+// }       builtinCommand;
+
+// typedef enum e_tokenType
+// {
+//     COMMAND,
+//     ARGUMENT,
+//     PIPE,
+//     REDIRECTION,
+//     INPUT,
+//     OUPUT,
+//     APPEND,
+//     BACKGROUND,
+//     INVALID
+// }       t_tokenType;
+
 typedef struct  s_list
 {
-    int type; //pitäiskö olla joku enum juttu?? noo mut t'' kertoo COMMAND, PIPE tai REDIRECTION
+    // enum t_tokenType; //COMMAND, PIPE, REDIRECTION etc...
+    // enum builtinCommand;
     char *value; //esim "echo", ">" taiii "file.txt"
     char **args; //esim "-n" ja "terve $ARG"
     int argc; //you already know
@@ -71,7 +91,7 @@ char *ft_lexer(char *str);
 
 //main.c
 int ft_echo(char *prompt);
-int main (void);
+int main (int argc, char **argv, const char **envp);
 
 
 #endif

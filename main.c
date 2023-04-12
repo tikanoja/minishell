@@ -56,14 +56,54 @@ int check_quotes(char *str)
     return (0);
 }
 
-int main (void)
+//malloc check
+void get_env_copy(char ***envcpy, const char **envp)
+{
+    int i;
+    int j;
+    int rows;
+
+    i = 0;
+    j = 0;
+    rows = 0;
+    while(envp[rows] != NULL)
+        rows++;
+    (*envcpy) = malloc((rows + 1) * sizeof(char *));
+    if ((*envcpy) == NULL)
+        exit(1);
+    (*envcpy)[rows] = NULL;
+    while(i < rows)
+    {
+        (*envcpy)[i] = malloc((ft_strlen(envp[i]) + 1) * sizeof(char));
+        (*envcpy)[i][ft_strlen(envp[i])] = '\0';
+        i++;
+    }
+    i = 0;
+    while(envp[i])
+    {
+        (*envcpy)[i][j] = envp[i][j];
+        j++;
+        if (envp[i][j] == '\0')
+        {
+            i++;
+            j = 0;
+        }
+    }
+}
+
+int main (int argc, char **argv, const char **envp)
 {
     char *prompt;
-    t_tree *head;
+    t_list *head;
+    char **envcpy;
 
     prompt = NULL;
     head = NULL;
-    if (head != NULL)
+    envcpy = NULL;
+    get_env_copy(&envcpy, envp);
+    if (envcpy == NULL || argv[0] == NULL)
+        write(1, "okay\n", 5);
+    if (head != NULL || argc == 105)
         printf("variable 'head' set but not used [-Werror,-Wunused-but-set-variable]");
     while (1)
     {
