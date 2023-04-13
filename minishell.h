@@ -99,5 +99,8 @@ void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
 void get_env_copy(char ***envcpy, const char **envp);
 int main (int argc, char **argv, const char **envp);
 
+//builtin utils
+char *ft_strcat(char *dest, const char *src);
+
 
 #endif
