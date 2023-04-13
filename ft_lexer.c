@@ -8,18 +8,6 @@ int is_it_whitespace(char c)
         return (0);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
 char *handle_quotes(char *last_str, char quote)
 {
     char *token;

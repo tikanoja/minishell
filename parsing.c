@@ -48,26 +48,69 @@ int is_it_builtin(char *prompt)
     return (0);
 }
 
+int is_it_redirection(char *prompt)
+{
+    if (ft_strncmp(prompt, "|", 1) == 0 &&\
+    (is_it_whitespace(prompt[1]) || prompt[1] == '\0')) 
+        return (1);
+    else if (ft_strncmp(prompt, "<", 1) == 0 &&\
+    (is_it_whitespace(prompt[1]) || prompt[1] == '\0'))
+        return (1);
+    else if (ft_strncmp(prompt, ">", 1) == 0 &&\
+    (is_it_whitespace(prompt[1]) || prompt[1] == '\0'))
+        return (1);
+    else if (ft_strncmp(prompt, "<<", 2) == 0 &&\
+    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
+        return (1);
+    else if (ft_strncmp(prompt, ">>", 2) == 0 &&\
+    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
+        return (1);
+    return (0);
+}
+
 t_list *parsecmd(char *prompt)
 {
-    // t_list  *node;
+    t_list  *node;
+    t_list  *head;
     char    *token;
 
-    // node = NULL;
+    node = NULL;
+    head = NULL;
     token = ft_lexer(prompt);
     while(token)
     {
-        // node = malloc(sizeof(t_tree));
-        // // if fails free the bin tree (joku foreach joka luikauttaa free())
-        // if (node == NULL)
-        //     exit(1);
-        if (is_it_builtin(token) == 1)
+        node = malloc(sizeof(t_list));
+        if (node == NULL)
+        {
+            if (head == NULL)
+            {
+                //free envcpy
+                exit(1);
+            }
+            else if (head != NULL)
+            {
+                free_list(head);
+                exit(1);
+            }
+        }
+        if (head == NULL);
+            head = node;
+
+        if (is_it_builtin(token) == 1) //seuraavat redir tai pipe asti on args
         {
             write(1, "YES\n", 4);
             // node->type = 3;
         }
+        /*
+        else if se on joku muu cmd tyylii cat tai ls
+            tee jotain
+        else if se on | < << > >> (SEURAAVAN PITÄIS OLLA CMD TAI FILE.TXT tms)
+            tee jotain
+        else se on bullshit
+            printf("minishell: command not found: %s", token);
+        */
         printf("%s\n", token);
         token = ft_lexer(NULL);
     }
-    return (0);
+    return (head);
 }
