@@ -26,35 +26,35 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
-// typedef enum
+// typedef enum e_builtinCommand
 // {
-//     echo,
-//     cd,
-//     pwd,
-//     export,
-//     unset,
-//     env,
-//     exit,
-//     invalid
-// }       builtinCommand;
+//     ft_echo,
+//     ft_cd,
+//     ft_pwd,
+//     ft_export,
+//     ft_unset,
+//     ft_env,
+//     ft_exit,
+//     ft_invalid
+// }       t_builtinCommand;
 
-// typedef enum e_tokenType
-// {
-//     COMMAND,
-//     ARGUMENT,
-//     PIPE,
-//     REDIRECTION,
-//     INPUT,
-//     OUPUT,
-//     APPEND,
-//     BACKGROUND,
-//     INVALID
-// }       t_tokenType;
+typedef enum e_tokenType
+{
+    COMMAND,
+    ARGUMENT,
+    PIPE,
+    REDIRECTION,
+    INPUT,
+    OUPUT,
+    APPEND,
+    BACKGROUND,
+    INVALID
+}       t_tokenType;
 
 typedef struct  s_list
 {
-    // enum t_tokenType; //COMMAND, PIPE, REDIRECTION etc...
-    // enum builtinCommand;
+    t_tokenType tokenType; //COMMAND, PIPE, REDIRECTION etc...
+    // t_builtinCommand builtinCommand; //builtin commands
     char *value; //esim "echo", ">" taiii "file.txt"
     char **args; //esim "-n" ja "terve $ARG"
     int argc; //you already know
@@ -82,7 +82,10 @@ char	**ft_split_p(char const *s, char c);
 //parsing.c
 int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int is_it_builtin(char *prompt);
-t_list *parsecmd(char *prompt);
+int is_it_redirection(char *prompt);
+char	*get_path(char **patharr, char *token);
+int is_it_shell_command(char *token, char **envcpy);
+t_list *parsecmd(char *prompt, char **envcpy);
 
 //ft_lexer.c
 int is_it_whitespace(char c);
@@ -91,6 +94,7 @@ char *ft_lexer(char *str);
 
 //errors.c
 void exitmsg(char *msg);
+void free_list(t_list *head);
 
 //main.c
 int ft_echo(char *prompt);
