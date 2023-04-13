@@ -116,7 +116,9 @@ int is_it_shell_command(char *token, char **envcpy)
         }
     }
     patharr = ft_split(envcpy[i] + 5, ':');
+    //protect
     pathcmd = get_path(patharr, token);
+    //protect
     if (pathcmd == NULL)
         return (0);
     return (1); //jos ginostaa ni täst voi suoraa palauttaa oikee path binaryyn
@@ -128,10 +130,12 @@ t_list *parsecmd(char *prompt, char **envcpy)
     t_list  *head;
     t_list  *prev;
     char    *token;
+    // int     argflag;
 
     node = NULL;
     head = NULL;
     prev = NULL;
+    // argflag = 0;
     token = ft_lexer(prompt);
     while(token)
     {
@@ -160,6 +164,7 @@ t_list *parsecmd(char *prompt, char **envcpy)
         {
             write(1, "BUILTIN\n", 8);
             // node->type = 3;
+            // argflag = 1;
         }
         else if (is_it_shell_command(token, envcpy) == 1)
         {
@@ -170,6 +175,7 @@ t_list *parsecmd(char *prompt, char **envcpy)
         {
             write(1, "REDIR\n", 6);
             //node->type = joku
+            // argflag = 0;
         }
          /*
         else if se on joku muu cmd tyylii cat tai ls
