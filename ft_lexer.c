@@ -8,17 +8,17 @@ int is_it_whitespace(char c)
         return (0);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
+// size_t	ft_strlen(const char *s)
+// {
+// 	size_t	i;
 
-	i = 0;
-	while (s[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
+// 	i = 0;
+// 	while (s[i] != '\0')
+// 	{
+// 		i++;
+// 	}
+// 	return (i);
+// }
 
 char *handle_quotes(char *last_str, char quote)
 {
@@ -108,16 +108,16 @@ char *ft_lexer(char *str)
 //     return (token);
 // }
 
-int main(void)
-{
-    char str[420] = "VAR=msakkura && echo $VAR || echo 'Variable not set'";
-    char *token;
+// int main(void)
+// {
+//     char str[420] = "VAR=msakkura && echo $VAR || echo 'Variable not set'";
+//     char *token;
 
-    token = ft_lexer(str);
-    while (token != NULL)
-    {
-        printf("%s\n", token);
-        token = ft_lexer(NULL);
-    }
-    return (0);
-}
+//     token = ft_lexer(str);
+//     while (token != NULL)
+//     {
+//         printf("%s\n", token);
+//         token = ft_lexer(NULL);
+//     }
+//     return (0);
+// }
