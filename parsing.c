@@ -112,7 +112,7 @@ int is_it_shell_command(char *token, char **envcpy)
         if (envcpy[i] == NULL)
         {
             printf("missing path variable\n");
-            exit(1);
+            //exit(1);
         }
     }
     patharr = ft_split(envcpy[i] + 5, ':');
@@ -123,7 +123,57 @@ int is_it_shell_command(char *token, char **envcpy)
         return (0);
     return (1); //jos ginostaa ni täst voi suoraa palauttaa oikee path binaryyn
 }
+/*
+t_list *parsecmd(char *prompt, char **envcpy)
+{
+    t_list  *node;
+    t_list  *head;
+    t_list  *prev;
+    char    *token;
+    int     argflag;
 
+    node = NULL;
+    head = NULL;
+    prev = NULL;
+    argflag = -1;
+    token = ft_lexer(prompt);
+    node = malloc(sizeof(t_list)); //protect malloc (if head null just this, if not free list from head)
+    head = node;
+    while(token)
+    {
+        printf("token: %s\n", token);
+        if (argflag >= 0 && is_it_redirection(token) == 0)
+        {
+            write(1, "ARG\n", 4);
+            node->args[argflag] = token;
+            argflag++;
+            node->argc = argflag;
+        }
+        else if (is_it_builtin(token) == 1 ||\
+        is_it_shell_command(token, envcpy) == 1)
+        {
+            write(1, "BUILTIN / SHELL CMD\n", 8);
+            node->value = token;
+            argflag = 0;
+        }
+        else if (is_it_redirection(token) == 1)
+        {
+            write(1, "REDIR\n", 6);
+            node->value = token;
+            token = ft_lexer(NULL);
+            node->args[0] = token;
+            prev = node;
+            free(node);
+            node = malloc(sizeof(t_list));
+            prev->next = node;
+            node->prev = prev;
+            argflag = -1;
+        }
+        token = ft_lexer(NULL);
+    }
+    return (head);
+}
+*/
 t_list *parsecmd(char *prompt, char **envcpy)
 {
     t_list  *node;
@@ -139,6 +189,7 @@ t_list *parsecmd(char *prompt, char **envcpy)
     token = ft_lexer(prompt);
     while(token)
     {
+        printf("token: %s\n", token);
         if (argflag == -1)
             node = malloc(sizeof(t_list));
         if (node == NULL)

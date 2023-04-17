@@ -90,6 +90,7 @@ t_list *parsecmd(char *prompt, char **envcpy);
 //ft_lexer.c
 int is_it_whitespace(char c);
 char *handle_quotes(char *last_str, char quote);
+char    *ft_lexer_helper(char *last_str);
 char *ft_lexer(char *str);
 
 //errors.c
@@ -101,7 +102,7 @@ int ft_echo(char *prompt);
 int check_quotes(char *str);
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
 void get_env_copy(char ***envcpy, const char **envp);
-int main (int argc, char **argv, const char **envp);
+//int main (int argc, char **argv, const char **envp);
 
 //builtin utils
 char *ft_strcat(char *dest, const char *src);
