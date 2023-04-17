@@ -56,7 +56,7 @@ typedef struct  s_list
     t_tokenType tokenType; //COMMAND, PIPE, REDIRECTION etc...
     // t_builtinCommand builtinCommand; //builtin commands
     char *value; //esim "echo", ">" taiii "file.txt"
-    char **args; //esim "-n" ja "terve $ARG"
+    char *args[20]; //esim "-n" ja "terve $ARG"
     int argc; //you already know
     int input; //fd for input
     int output; //fd for output

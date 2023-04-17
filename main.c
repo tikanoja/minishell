@@ -107,6 +107,31 @@ void get_env_copy(char ***envcpy, const char **envp)
     }
 }
 
+void runcmd(t_list *head)
+{
+    t_list *current;
+    int i;
+    int j;
+
+    current = head;
+    i = 1;
+    j = 0;
+    while (current != NULL)
+    {
+        printf("\nNode number %d\n", i);
+        printf("value: %s\n", current->value);
+        while(current->args[j] != NULL)
+        {
+            printf("args: %s\n", current->args[j]);
+            j++;
+        }
+        j = 0;
+        printf("in: %d, out: %d\n", current->input, current->output);
+        current = current->next;
+        i++;
+    }
+}
+
 int main(int argc, char **argv, const char **envp)
 {
     char *prompt;
@@ -130,6 +155,7 @@ int main(int argc, char **argv, const char **envp)
             continue ;
         //1. parsecmd will create a binary tree based on the prompt
         head = parsecmd(prompt, envcpy);
+        runcmd(head);
         //2. runcmd(); will go thru the tree recursively & execute nodes & create child processes to do so 
         //parse_prompt(prompt, cmd);
         //cmd = ft_split_p(prompt, ' ');

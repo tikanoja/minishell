@@ -130,16 +130,17 @@ t_list *parsecmd(char *prompt, char **envcpy)
     t_list  *head;
     t_list  *prev;
     char    *token;
-    // int     argflag;
+    int     argflag;
 
     node = NULL;
     head = NULL;
     prev = NULL;
-    // argflag = 0;
+    argflag = -1;
     token = ft_lexer(prompt);
     while(token)
     {
-        node = malloc(sizeof(t_list));
+        if (argflag == -1)
+            node = malloc(sizeof(t_list));
         if (node == NULL)
         {
             if (head == NULL)
@@ -153,40 +154,44 @@ t_list *parsecmd(char *prompt, char **envcpy)
                 exit(1);
             }
         }
+        //kaikki noi if elset omien ftioiden sisään
         if (head == NULL)
             head = node;
-        if (prev != NULL)
+        if (prev != NULL && argflag == -1)
         {
             prev->next = node;
             node->prev = prev;
         }
-        if (is_it_builtin(token) == 1) //seuraavat redir tai pipe asti on args
+        if (argflag >= 0 && is_it_redirection(token) == 0)
+        {
+            write(1, "ARG\n", 4);
+            node->args[argflag] = token;
+            argflag++;
+        }
+        else if (is_it_builtin(token) == 1) //seuraavat redir tai pipe asti on args
         {
             write(1, "BUILTIN\n", 8);
             // node->type = 3;
-            // argflag = 1;
+            node->value = token;
+            argflag = 0;
         }
         else if (is_it_shell_command(token, envcpy) == 1)
         {
             write(1, "SHELL CMD\n", 10);
-            //node->type = joku
+            node->value = token;
         }
         else if (is_it_redirection(token) == 1)
         {
+            //palauta et onko < << > >> | ja avaa fd
             write(1, "REDIR\n", 6);
-            //node->type = joku
-            // argflag = 0;
+            token = ft_lexer(NULL);
+            node->output = 1; // open fd & store int to node...
+            argflag = -1;
         }
-         /*
-        else if se on joku muu cmd tyylii cat tai ls
-            tee jotain
-        else if se on | < << > >> (SEURAAVAN PITÄIS OLLA CMD TAI FILE.TXT tms)
-            tee jotain
-        else se on bullshit
-            printf("minishell: command not found: %s", token);
-        */
-        node->value = token;
-        prev = node;
+        else
+            printf("minishell: command not found: %s\n", token);
+        if (argflag == -1)
+            prev = node;
         token = ft_lexer(NULL);
     }
     return (head);
