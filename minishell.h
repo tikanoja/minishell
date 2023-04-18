@@ -85,7 +85,7 @@ int is_it_builtin(char *prompt);
 int is_it_redirection(char *prompt);
 char	*get_path(char **patharr, char *token);
 int is_it_shell_command(char *token, char **envcpy);
-t_list *parsecmd(char *prompt, char **envcpy);
+t_list *parsecmd(char *prompt);
 
 //ft_lexer.c
 int is_it_whitespace(char c);

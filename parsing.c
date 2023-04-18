@@ -68,6 +68,17 @@ int is_it_redirection(char *prompt)
     return (0);
 }
 
+int is_it_log_operator(char *prompt)
+{
+    if (ft_strncmp(prompt, "||", 2) == 0 &&\
+    (is_it_whitespace(prompt[2]) || prompt[2] == '\0')) 
+        return (1);
+    else if (ft_strncmp(prompt, "&&", 2) == 0 &&\
+    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
+        return (1);
+    return (0);
+}
+
 char	*get_path(char **patharr, char *token)
 {
 	char	*tmp;
@@ -123,57 +134,53 @@ int is_it_shell_command(char *token, char **envcpy)
         return (0);
     return (1); //jos ginostaa ni täst voi suoraa palauttaa oikee path binaryyn
 }
-/*
-t_list *parsecmd(char *prompt, char **envcpy)
+
+t_list *add_node(t_list *node, char *token)
+{
+    t_list  *prev;
+
+    prev = NULL;
+    prev = node;
+    node = malloc(sizeof(t_list)); //protect
+    if (token != NULL)
+        node->value = token;
+    node->prev = prev;
+    prev->next = node;
+    return (node);
+}
+
+t_list *parsecmd(char *prompt)
 {
     t_list  *node;
     t_list  *head;
-    t_list  *prev;
     char    *token;
     int     argflag;
 
     node = NULL;
     head = NULL;
-    prev = NULL;
     argflag = -1;
     token = ft_lexer(prompt);
     node = malloc(sizeof(t_list)); //protect malloc (if head null just this, if not free list from head)
     head = node;
     while(token)
     {
-        printf("token: %s\n", token);
-        if (argflag >= 0 && is_it_redirection(token) == 0)
+        if (is_it_redirection(token) == 1 || is_it_log_operator(token) == 1)
         {
-            write(1, "ARG\n", 4);
-            node->args[argflag] = token;
-            argflag++;
-            node->argc = argflag;
-        }
-        else if (is_it_builtin(token) == 1 ||\
-        is_it_shell_command(token, envcpy) == 1)
-        {
-            write(1, "BUILTIN / SHELL CMD\n", 8);
-            node->value = token;
-            argflag = 0;
-        }
-        else if (is_it_redirection(token) == 1)
-        {
-            write(1, "REDIR\n", 6);
-            node->value = token;
-            token = ft_lexer(NULL);
-            node->args[0] = token;
-            prev = node;
-            free(node);
-            node = malloc(sizeof(t_list));
-            prev->next = node;
-            node->prev = prev;
             argflag = -1;
+            node = add_node(node, token);
+            node = add_node(node, NULL);
+            token = ft_lexer(NULL);
         }
+        if (argflag == -1)
+            node->value = token;
+        else
+            node->args[argflag] = token;
+        argflag++;
         token = ft_lexer(NULL);
     }
     return (head);
 }
-*/
+/*
 t_list *parsecmd(char *prompt, char **envcpy)
 {
     t_list  *node;
@@ -247,3 +254,4 @@ t_list *parsecmd(char *prompt, char **envcpy)
     }
     return (head);
 }
+*/
