@@ -29,7 +29,7 @@ int ft_echo(t_list *echo)
 
 	n_flag = 0;
 	i = 0;
-	if (echo->argc < 1)
+	if (echo->argc < 1) //if (echo_argc_check(echo) == 1) return(0); sellane mika tsekkaa argc ja sen et onks eka arg -n tai -nnnn ta jotaa
 		printf("\n");
 	while(n_definer(echo->args[n_flag]) == 1)
 		n_flag++;

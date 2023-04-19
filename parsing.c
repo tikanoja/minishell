@@ -144,8 +144,23 @@ t_list *add_node(t_list *node, char *token)
     node = malloc(sizeof(t_list)); //protect
     if (token != NULL)
         node->value = token;
+    node->argc = 0;
     node->prev = prev;
     prev->next = node;
+    node->args[0] = NULL;
+    node->input = STDIN_FILENO;
+    node->output = STDOUT_FILENO;
+    return (node);
+}
+
+t_list *add_head_node(t_list *node, t_list **head)
+{
+    node = malloc(sizeof(t_list)); //protect malloc
+    node->args[0] = NULL;
+    node->input = STDIN_FILENO;
+    node->output = STDOUT_FILENO;
+    node->prev = NULL;
+    *head = node;
     return (node);
 }
 
@@ -160,8 +175,7 @@ t_list *parsecmd(char *prompt)
     head = NULL;
     argflag = -1;
     token = ft_lexer(prompt);
-    node = malloc(sizeof(t_list)); //protect malloc (if head null just this, if not free list from head)
-    head = node;
+    node = add_head_node(node, &head);
     while(token)
     {
         if (is_it_redirection(token) == 1 || is_it_log_operator(token) == 1)
@@ -174,7 +188,11 @@ t_list *parsecmd(char *prompt)
         if (argflag == -1)
             node->value = token;
         else
+        {
             node->args[argflag] = token;
+            node->argc = argflag + 1;
+            node->args[argflag + 1] = NULL;
+        }
         argflag++;
         token = ft_lexer(NULL);
     }

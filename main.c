@@ -1,34 +1,34 @@
 #include "minishell.h"
 
-int ft_echo(char *prompt)
-{
-    char **cmd;
-    int nflag;
-    int startpoint;
+// int ft_echo(char *prompt)
+// {
+//     char **cmd;
+//     int nflag;
+//     int startpoint;
 
-    nflag = 0;
-    startpoint = 1;
-    cmd = ft_split(prompt, ' ');
-    if (ft_strncmp(cmd[1], "-n", (size_t)ft_strlen(cmd[1])) == 0)
-    {
-        nflag = 1;
-        startpoint = 2;
-    }
-    free(cmd);
-    cmd = ft_split_p(prompt, ' ');
-    while (cmd[startpoint] != NULL)
-    {
-        printf("%s", cmd[startpoint]);
-        if (cmd[startpoint + 1] != NULL)
-            printf(" ");
-        startpoint++;
-    }
-    if (nflag != 1)
-        printf("\n");
-    char *test = getenv("HOME");
-    printf("\n\n%s\n\n", test);
-    return (0);
-}
+//     nflag = 0;
+//     startpoint = 1;
+//     cmd = ft_split(prompt, ' ');
+//     if (ft_strncmp(cmd[1], "-n", (size_t)ft_strlen(cmd[1])) == 0)
+//     {
+//         nflag = 1;
+//         startpoint = 2;
+//     }
+//     free(cmd);
+//     cmd = ft_split_p(prompt, ' ');
+//     while (cmd[startpoint] != NULL)
+//     {
+//         printf("%s", cmd[startpoint]);
+//         if (cmd[startpoint + 1] != NULL)
+//             printf(" ");
+//         startpoint++;
+//     }
+//     if (nflag != 1)
+//         printf("\n");
+//     char *test = getenv("HOME");
+//     printf("\n\n%s\n\n", test);
+//     return (0);
+// }
 
 //pitää varmaa olla int return error handling ja clean exit varten...
 int check_quotes(char *str)
@@ -107,7 +107,7 @@ void get_env_copy(char ***envcpy, const char **envp)
     }
 }
 
-void runcmd(t_list *head)
+void printlist(t_list *head)
 {
     t_list *current;
     int i;
@@ -125,6 +125,7 @@ void runcmd(t_list *head)
             printf("args: %s\n", current->args[j]);
             j++;
         }
+        printf("argc: %d\n", current->argc);
         j = 0;
         printf("in: %d, out: %d\n", current->input, current->output);
         current = current->next;
@@ -155,6 +156,7 @@ int main(int argc, char **argv, const char **envp)
             continue ;
         //1. parsecmd will create a binary tree based on the prompt
         head = parsecmd(prompt);
+        // printlist(head);
         runcmd(head);
         //2. runcmd(); will go thru the tree recursively & execute nodes & create child processes to do so 
         //parse_prompt(prompt, cmd);

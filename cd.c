@@ -125,27 +125,27 @@ int ft_cd(const char *user_path, int argc)
 	return (0);
 }
 
-int main(){//, char **envp) {
-	char path[PATH_MAX];
-	char resolved_path[PATH_MAX];
-	printf("PATH_MAX = %d\n", PATH_MAX);
+// int main(){//, char **envp) {
+// 	char path[PATH_MAX];
+// 	char resolved_path[PATH_MAX];
+// 	printf("PATH_MAX = %d\n", PATH_MAX);
 
-	// Test my_realpath() function
+// 	// Test my_realpath() function
 
-	printf("Enter a path to resolve: ");
-	scanf("%s", path);
-	if (ft_realpath(path, resolved_path) == NULL) {
-		perror("my_realpath() failed");
-		exit(EXIT_FAILURE);
-	}
-	printf("Resolved path: %s\n", resolved_path);
+// 	printf("Enter a path to resolve: ");
+// 	scanf("%s", path);
+// 	if (ft_realpath(path, resolved_path) == NULL) {
+// 		perror("my_realpath() failed");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	printf("Resolved path: %s\n", resolved_path);
 
-	// Test ft_cd() function
-	char *home_dir = path;//getenv("OLDPWD");
-	if (ft_cd(home_dir, 1) != 0) {
-		perror("ft_cd() failed");
-		exit(EXIT_FAILURE);
-	}
-	printf("Current working directory after cd to %s: %s\n",home_dir, getcwd(NULL, 0));
-	return 0;
-}
+// 	// Test ft_cd() function
+// 	char *home_dir = path;//getenv("OLDPWD");
+// 	if (ft_cd(home_dir, 1) != 0) {
+// 		perror("ft_cd() failed");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	printf("Current working directory after cd to %s: %s\n",home_dir, getcwd(NULL, 0));
+// 	return 0;
+// }

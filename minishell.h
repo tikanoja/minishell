@@ -97,15 +97,26 @@ char *ft_lexer(char *str);
 void exitmsg(char *msg);
 void free_list(t_list *head);
 
+//builtin utils
+char *ft_strcat(char *dest, const char *src);
+
+//echo.c
+int n_definer(char *arg);
+int ft_echo(t_list *echo);
+void ft_pwd();
+void ft_exit(int exit_status);
+
+//runcmd.c
+void    redirection_check(t_list *current);
+void    runcmd(t_list *head);
+
 //main.c
-int ft_echo(char *prompt);
+// int ft_echo(char *prompt);
 int check_quotes(char *str);
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
 void get_env_copy(char ***envcpy, const char **envp);
 int main (int argc, char **argv, const char **envp);
 
-//builtin utils
-char *ft_strcat(char *dest, const char *src);
 
 
 #endif
