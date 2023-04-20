@@ -68,7 +68,7 @@ char *ft_lexer(char *str)
     {
         token = handle_quotes(last_str, *last_str);
         last_str = token + ft_strlen(token) + 1;
-    } 
+    }
     else
     {
         while (*last_str && !is_it_whitespace(*last_str))
@@ -80,33 +80,6 @@ char *ft_lexer(char *str)
         return (NULL);
     return (token);
 }
-
-// char *ft_lexer(char *str)
-// {
-//     static char *last_str;
-//     char *token;
-
-//     if (str != NULL)
-//         last_str = str;
-//     while (*last_str && is_it_whitespace(*last_str))
-//         last_str++;
-//     token = last_str;
-//     if (*last_str == '\'' || *last_str == '\"')
-//     {
-//         token = handle_quotes(last_str, *last_str);
-//         last_str = token + ft_strlen(token) + 1;
-//     } 
-//     else
-//     {
-//         while (*last_str && !is_it_whitespace(*last_str))
-//             last_str++;
-//         if (*last_str && is_it_whitespace(*last_str))
-//             *last_str++ = '\0';
-//     }
-//     if (*token == '\0')
-//         return (NULL);
-//     return (token);
-// }
 
 // int main(void)
 // {

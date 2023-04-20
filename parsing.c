@@ -160,6 +160,7 @@ t_list *add_head_node(t_list *node, t_list **head)
     node->input = STDIN_FILENO;
     node->output = STDOUT_FILENO;
     node->prev = NULL;
+    node->next = NULL;
     *head = node;
     return (node);
 }
@@ -198,77 +199,111 @@ t_list *parsecmd(char *prompt)
     }
     return (head);
 }
+
 /*
-t_list *parsecmd(char *prompt, char **envcpy)
+int check_token_end(char c1, char c2)
+{
+    char *charjoin;
+
+    charjoin = ft_strjoin(c1, c2);
+    if (is_it_whitespace(c1) == 1)
+        return (1);
+    else if (is_it_redirection(charjoin) == 1)
+        return (1);
+    else if (is_it_log_operator(charjoin) == 1)
+        return (1);
+    return (0);
+}
+
+char *extract_token(char *last_str)
+{
+    char *token;
+    char *env;
+    int i;
+
+    token = NULL;
+    i = 0;
+    while (last_str[i])
+    {
+        if (last_str[i] == '\'')
+            while(last_str[i] != '\'' && check_token_end(last_str[i+1], last_str[i+2]) == 0)
+            {
+                ft_strjoin(token, last_str[i]);
+                i++;
+            }
+        else if (last_str[i] == '\"')
+            while(last_str[i] != '\"' && check_token_end(last_str[i+1], last_str[i+2]) == 0)
+            {
+                if (last_str[i] == '$')
+                {
+                    i++;
+                    while (check_token_end(last_str[i+1], last_str[i+2]) == 0)
+                    {
+                        ft_strjoin(env, last_str[i]);
+                        i++;
+                    }
+                    if(getenv(env) != '\0')
+                        ft_strjoin(token, env);
+                }
+                ft_strjoin(token, last_str[i]);
+                i++;
+            }
+        else
+            while(check_token_end(last_str[i+1], last_str[i+2]) == 0)
+            {
+                ft_strjoin(token, last_str[i]);
+                i++;
+            }
+    }
+    return (token);
+}
+
+char *get_token(char *str)
+{
+    static char *last_str;
+    char *token;
+
+    if (str != NULL)
+        last_str = str;
+    while (*last_str && is_it_whitespace(*last_str))
+        last_str++;
+    token = extract_token(last_str);
+    if (*token == '\0')
+        return (NULL);
+    return (token);
+}
+
+t_list *parsecmd(char *prompt)
 {
     t_list  *node;
     t_list  *head;
-    t_list  *prev;
     char    *token;
     int     argflag;
 
     node = NULL;
     head = NULL;
-    prev = NULL;
     argflag = -1;
-    token = ft_lexer(prompt);
+    token = get_token(prompt);
+    node = add_head_node(node, &head);
     while(token)
     {
-        printf("token: %s\n", token);
-        if (argflag == -1)
-            node = malloc(sizeof(t_list));
-        if (node == NULL)
+        if (is_it_redirection(token) == 1 || is_it_log_operator(token) == 1)
         {
-            if (head == NULL)
-            {
-                //free envcpy
-                exit(1);
-            }
-            else if (head != NULL)
-            {
-                free_list(head);
-                exit(1);
-            }
-        }
-        //kaikki noi if elset omien ftioiden sisään
-        if (head == NULL)
-            head = node;
-        if (prev != NULL && argflag == -1)
-        {
-            prev->next = node;
-            node->prev = prev;
-        }
-        if (argflag >= 0 && is_it_redirection(token) == 0)
-        {
-            write(1, "ARG\n", 4);
-            node->args[argflag] = token;
-            argflag++;
-        }
-        else if (is_it_builtin(token) == 1) //seuraavat redir tai pipe asti on args
-        {
-            write(1, "BUILTIN\n", 8);
-            // node->type = 3;
-            node->value = token;
-            argflag = 0;
-        }
-        else if (is_it_shell_command(token, envcpy) == 1)
-        {
-            write(1, "SHELL CMD\n", 10);
-            node->value = token;
-        }
-        else if (is_it_redirection(token) == 1)
-        {
-            //palauta et onko < << > >> | ja avaa fd
-            write(1, "REDIR\n", 6);
-            token = ft_lexer(NULL);
-            node->output = 1; // open fd & store int to node...
             argflag = -1;
+            node = add_node(node, token);
+            node = add_node(node, NULL);
+            token = get_token(NULL);
         }
-        else
-            printf("minishell: command not found: %s\n", token);
         if (argflag == -1)
-            prev = node;
-        token = ft_lexer(NULL);
+            node->value = token;
+        else
+        {
+            node->args[argflag] = token;
+            node->argc = argflag + 1;
+            node->args[argflag + 1] = NULL;
+        }
+        argflag++;
+        token = get_token(NULL);
     }
     return (head);
 }
