@@ -83,13 +83,14 @@ char	**ft_split_p(char const *s, char c);
 int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int is_it_builtin(char *prompt);
 int is_it_redirection(char *prompt);
+int is_it_log_operator(char *prompt);
 char	*get_path(char **patharr, char *token);
 int is_it_shell_command(char *token, char **envcpy);
 t_list *parsecmd(char *prompt);
 
 //ft_lexer.c
 int is_it_whitespace(char c);
-char *handle_quotes(char *last_str, char quote);
+int handle_quotes(char *last_str, char quote);
 char    *ft_lexer_helper(char *last_str);
 char *ft_lexer(char *str);
 

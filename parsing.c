@@ -24,25 +24,25 @@ int	ft_strncmp_casein(const char *s1, const char *s2, size_t n)
 
 int is_it_builtin(char *prompt)
 {
-    if (ft_strncmp_casein(prompt, "echo", 4) == 0 &&\
+    if (ft_strncmp_casein(prompt, "echo\0", 4) == 0 &&\
     (is_it_whitespace(prompt[4]) || prompt[4] == '\0')) 
         return (1);
-    else if (ft_strncmp_casein(prompt, "cd", 2) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "cd\0", 2) == 0 &&\
     (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
         return (1);
-    else if (ft_strncmp_casein(prompt, "pwd", 3) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "pwd\0", 3) == 0 &&\
     (is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
         return (1);
-    else if (ft_strncmp_casein(prompt, "export", 6) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "export\0", 6) == 0 &&\
     (is_it_whitespace(prompt[6]) || prompt[6] == '\0'))
         return (1);
-    else if (ft_strncmp_casein(prompt, "unset", 5) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "unset\0", 5) == 0 &&\
     (is_it_whitespace(prompt[5]) || prompt[5] == '\0'))
         return (1);
-    else if (ft_strncmp_casein(prompt, "env", 3) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "env\0", 3) == 0 &&\
     (is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
         return (1);
-    else if (ft_strncmp_casein(prompt, "exit", 4) == 0 &&\
+    else if (ft_strncmp_casein(prompt, "exit\0", 4) == 0 &&\
     (is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
         return (1);
     return (0);
@@ -50,32 +50,25 @@ int is_it_builtin(char *prompt)
 
 int is_it_redirection(char *prompt)
 {
-    if (ft_strncmp(prompt, "|", 1) == 0 &&\
-    (is_it_whitespace(prompt[1]) || prompt[1] == '\0')) 
+    if (ft_strncmp(prompt, "|\0", 1) == 0) 
         return (1);
-    else if (ft_strncmp(prompt, "<", 1) == 0 &&\
-    (is_it_whitespace(prompt[1]) || prompt[1] == '\0'))
+    else if (ft_strncmp(prompt, "<\0", 1) == 0)
         return (1);
-    else if (ft_strncmp(prompt, ">", 1) == 0 &&\
-    (is_it_whitespace(prompt[1]) || prompt[1] == '\0'))
+    else if (ft_strncmp(prompt, ">\0", 1) == 0)
         return (1);
-    else if (ft_strncmp(prompt, "<<", 2) == 0 &&\
-    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
-        return (1);
-    else if (ft_strncmp(prompt, ">>", 2) == 0 &&\
-    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
-        return (1);
+    else if (ft_strncmp(prompt, "<<\0", 2) == 0)
+        return (2);
+    else if (ft_strncmp(prompt, ">>\0", 2) == 0)
+        return (2);
     return (0);
 }
 
 int is_it_log_operator(char *prompt)
 {
-    if (ft_strncmp(prompt, "||", 2) == 0 &&\
-    (is_it_whitespace(prompt[2]) || prompt[2] == '\0')) 
-        return (1);
-    else if (ft_strncmp(prompt, "&&", 2) == 0 &&\
-    (is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
-        return (1);
+    if (ft_strncmp(prompt, "||\0", 2) == 0) 
+        return (2);
+    else if (ft_strncmp(prompt, "&&\0", 2) == 0)
+        return (2);
     return (0);
 }
 
@@ -179,7 +172,7 @@ t_list *parsecmd(char *prompt)
     node = add_head_node(node, &head);
     while(token)
     {
-        if (is_it_redirection(token) == 1 || is_it_log_operator(token) == 1)
+        if (is_it_redirection(token) > 0 || is_it_log_operator(token) > 0)
         {
             argflag = -1;
             node = add_node(node, token);

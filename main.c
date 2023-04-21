@@ -156,7 +156,7 @@ int main(int argc, char **argv, const char **envp)
             continue ;
         //1. parsecmd will create a binary tree based on the prompt
         head = parsecmd(prompt);
-        // printlist(head);
+        printlist(head);
         runcmd(head);
         //2. runcmd(); will go thru the tree recursively & execute nodes & create child processes to do so 
         //parse_prompt(prompt, cmd);
