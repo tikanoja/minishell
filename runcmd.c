@@ -13,10 +13,12 @@ void    runcmd(t_list *head)
     current = head;
     while (current)
     {
-        if (ft_strncmp_casein(current->value, "echo", 4) == 0)
+        if (ft_strncmp_casein(current->value, "echo", 5) == 0)
             ft_echo(current);
-        else if (ft_strncmp_casein(current->value, "pwd", 3) == 0)
+        else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
             ft_pwd();
+        else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
+            ft_exit(ft_atoi(current->args[1]));
         current = current->next;
     }
 }
