@@ -18,7 +18,7 @@ void    runcmd(t_list *head)
         else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
             ft_pwd();
         else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
-            ft_exit(ft_atoi(current->args[1]));
+            ft_exit(ft_atoi(current->args[0]));
         current = current->next;
     }
 }
