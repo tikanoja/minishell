@@ -81,7 +81,7 @@ void ft_pwd()
     }
 }
 
-void ft_exit(t_list *exit_arg)
+void ft_exit(t_list *exit_arg) //siirrä omaan filuun?
 {
     int exit_status;
     if(exit_arg->argc < 1) 
