@@ -104,7 +104,7 @@ char *ft_strcat(char *dest, const char *src);
 int n_definer(char *arg);
 int ft_echo(t_list *echo);
 void ft_pwd();
-void ft_exit(int exit_status);
+void ft_exit(t_list *exit);
 
 //runcmd.c
 void    redirection_check(t_list *current);

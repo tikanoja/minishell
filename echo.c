@@ -81,9 +81,12 @@ void ft_pwd()
     }
 }
 
-void ft_exit(int exit_status)
+void ft_exit(t_list *exit_arg)
 {
-    exit_status = exit_status % 256;
+    int exit_status;
+    if(exit_arg->argc < 1) 
+        exit(0);
+    exit_status = ft_atoi(exit_arg->args[0]) % 256;
     exit (exit_status);
 }
 /*int main()
