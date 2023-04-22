@@ -31,21 +31,12 @@ char get_next_quote(char quote)
         return ('\"');
 }
 
-int is_it_closed(int closedflag)
-{
-    if (closedflag == 0)
-        return (1);
-    else
-        return (0);
-}
-
-// " ", 
 int handle_quotes(char *str, char quote)
 {
     int len;
-    int closedflag;
+    int quotes;
 
-    closedflag = 0; //0 on auki, 1 on kiinni
+    quotes = 1; //0 on auki, 1 on kiinni
     len = 2;
     str++;
     while(1)
@@ -54,8 +45,8 @@ int handle_quotes(char *str, char quote)
             break ;
         else if (*str == quote)
         {
-            closedflag = is_it_closed(closedflag);
-            if (check_token_end(str) > 0 && closedflag == 1)
+            quotes++;
+            if (check_token_end(str) > 0 && quotes % 2 == 0)
                 break ;
             else if (str[1] == '\'' || str[1] == '\"')
             {
