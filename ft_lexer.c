@@ -8,34 +8,6 @@ int is_it_whitespace(char c)
         return (0);
 }
 
-// size_t	ft_strlen(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i] != '\0')
-// 	{
-// 		i++;
-// 	}
-// 	return (i);
-// }
-
-// char    *ft_lexer_helper(char *last_str)
-// {
-//     char delim;
-
-//     if (*last_str == '=')
-//     {
-//         last_str++;
-//         delim = *last_str;
-//         last_str++;
-//         if (delim == '\'' || delim == '\"')
-//             while (*last_str != delim)
-//                 last_str++;
-//     }
-//     last_str++;
-//     return (last_str);
-// }
 
 int check_token_end(char *str)
 {
@@ -59,9 +31,21 @@ char get_next_quote(char quote)
         return ('\"');
 }
 
+int is_it_closed(int closedflag)
+{
+    if (closedflag == 0)
+        return (1);
+    else
+        return (0);
+}
+
+// " ", 
 int handle_quotes(char *str, char quote)
 {
     int len;
+    int closedflag;
+
+    closedflag = 0; //0 on auki, 1 on kiinni
     len = 2;
     str++;
     while(1)
@@ -70,9 +54,10 @@ int handle_quotes(char *str, char quote)
             break ;
         else if (*str == quote)
         {
-            if (check_token_end(str) > 0)
+            closedflag = is_it_closed(closedflag);
+            if (check_token_end(str) > 0 && closedflag == 1)
                 break ;
-            if (str[1] == '\'' || str[1] == '\"')
+            else if (str[1] == '\'' || str[1] == '\"')
             {
                 quote = get_next_quote(str[1]);
                 str++;
@@ -87,8 +72,8 @@ int handle_quotes(char *str, char quote)
         len++;
         str++;
     }
-    if (len == 3)
-        len = 2;
+    // if (len == 3)
+    //     len = 2;
     return (len);
 }
 
@@ -110,7 +95,8 @@ int get_token_len(char *str)
         return (handle_quotes(str, *str));
     else if (is_it_operator(str) > 0)
         return (is_it_operator(str));
-    while(str[len] && is_it_whitespace(str[len]) == 0)
+    while(str[len] && is_it_whitespace(str[len]) == 0 &&\
+    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0)
         len++;
     return (len);
 }
