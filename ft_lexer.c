@@ -31,6 +31,7 @@ char get_next_quote(char quote)
         return ('\"');
 }
 
+//echo a"b">testing.c |grep b>" test"moi"'b'"'ing' ' '
 int handle_quotes(char *str, char quote)
 {
     int len;
@@ -57,8 +58,8 @@ int handle_quotes(char *str, char quote)
                 len++;
                 continue ;
             }
-            else
-                continue ;
+            // else
+            //     continue ;
         }
         len++;
         str++;
@@ -87,7 +88,8 @@ int get_token_len(char *str)
     else if (is_it_operator(str) > 0)
         return (is_it_operator(str));
     while(str[len] && is_it_whitespace(str[len]) == 0 &&\
-    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0)
+    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0&&\
+    str[len] != '\'' && str[len] != '\"')
         len++;
     return (len);
 }
