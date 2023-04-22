@@ -52,14 +52,14 @@ int is_it_redirection(char *prompt)
 {
     if (ft_strncmp(prompt, "|\0", 1) == 0) 
         return (1);
-    else if (ft_strncmp(prompt, "<\0", 1) == 0)
-        return (1);
-    else if (ft_strncmp(prompt, ">\0", 1) == 0)
-        return (1);
     else if (ft_strncmp(prompt, "<<\0", 2) == 0)
         return (2);
     else if (ft_strncmp(prompt, ">>\0", 2) == 0)
         return (2);
+    else if (ft_strncmp(prompt, "<\0", 1) == 0)
+        return (1);
+    else if (ft_strncmp(prompt, ">\0", 1) == 0)
+        return (1);
     return (0);
 }
 
