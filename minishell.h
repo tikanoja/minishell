@@ -56,7 +56,7 @@ typedef struct  s_list
     t_tokenType tokenType; //COMMAND, PIPE, REDIRECTION etc...
     // t_builtinCommand builtinCommand; //builtin commands
     char *value; //esim "echo", ">" taiii "file.txt"
-    char *args[20]; //esim "-n" ja "terve $ARG"
+    char **args; //esim "-n" ja "terve $ARG"
     int argc; //you already know
     int input; //fd for input
     int output; //fd for output
@@ -97,6 +97,7 @@ char *ft_lexer(char *str);
 //errors.c
 void exitmsg(char *msg);
 void free_list(t_list *head);
+void free_env(char **env);
 
 //builtin utils
 char *ft_strcat(char *dest, const char *src);

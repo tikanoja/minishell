@@ -2,7 +2,7 @@
 
 void exitmsg(char *msg)
 {
-    printf("%s\n", msg);
+    perror(msg);
     exit(1);
 }
 
@@ -24,3 +24,28 @@ void free_list(t_list *head)
         current = next;
     }
 }
+
+void free_env(char **env)
+{
+    int i;
+
+    i = 0;
+    while(env[i])
+    {
+        free(env[i]);
+        i++;
+    }
+    free(env);
+}
+
+// void mallocprotect(t_list *head, int stageflag)
+// {
+    
+//     while (head)
+//     {
+//         if (head->value)
+//         free(head->value);
+
+//         head = head->next;
+//     }
+// }
