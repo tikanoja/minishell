@@ -127,6 +127,7 @@ int main(int argc, char **argv, const char **envp)
         if (check_quotes(prompt) == 1)
             continue ;
         head = parsecmd(prompt, envcpy);
+        expand_envs(head);
         printlist(head);
         runcmd(head);
         free(prompt);

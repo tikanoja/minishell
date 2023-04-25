@@ -65,6 +65,8 @@ typedef struct  s_list
     struct s_list *next; //next node
     struct s_list *prev; //prev node
 }               t_list;
+//gatekeeper
+void expand_envs(t_list *head);
 
 //ft_split_utils.c
 int	wordcount_p(const char *s, char c);
@@ -93,6 +95,7 @@ t_list *parsecmd(char *prompt, char **envcpy);
 
 //ft_lexer.c
 int is_it_whitespace(char c);
+int check_token_end(char *str);
 int handle_quotes(char *last_str, char quote);
 char *ft_lexer(char *str, char **envcpy, t_list *head);
 

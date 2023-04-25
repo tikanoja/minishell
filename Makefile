@@ -2,10 +2,10 @@
 NAME = minishell
 
 SRC = main.c ft_split_pipex.c ft_split_utils.c parsing.c ft_lexer.c errors.c\
-		echo.c cd.c runcmd.c
+		echo.c cd.c runcmd.c gatekeeper.c
 
 OBJ = main.o ft_split_pipex.o ft_split_utils.o parsing.o ft_lexer.o errors.o\
-		echo.o cd.o runcmd.o
+		echo.o cd.o runcmd.o gatekeeper.o
 
 FLAGS = -Wall -Werror -Wextra
 
