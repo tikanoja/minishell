@@ -117,7 +117,6 @@ int main(int argc, char **argv, const char **envp)
     get_env_copy(&envcpy, envp);
     while (1)
     {
-        //shell nimen tilal printtais working directory???
         prompt = readline("\033[0;32mshelly\033[0m> ");
         if (!prompt)
         {
@@ -127,17 +126,11 @@ int main(int argc, char **argv, const char **envp)
         add_history(prompt);
         if (check_quotes(prompt) == 1)
             continue ;
-        //1. parsecmd will create a binary tree based on the prompt
-        head = parsecmd(prompt);
+        head = parsecmd(prompt, envcpy);
         printlist(head);
-        // head = expand_variables(head);
         runcmd(head);
-        //2. runcmd(); will go thru the tree recursively & execute nodes & create child processes to do so 
-        //parse_prompt(prompt, cmd);
-        //cmd = ft_split_p(prompt, ' ');
-        //is_it_builtin(cmd, prompt);
-        //free(prompt);
-        //free list;
+        free(prompt);
+        free_list(head);
     }
     return (0);
 }

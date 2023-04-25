@@ -86,18 +86,23 @@ int is_it_redirection(char *prompt);
 int is_it_log_operator(char *prompt);
 char	*get_path(char **patharr, char *token);
 int is_it_shell_command(char *token, char **envcpy);
-t_list *parsecmd(char *prompt);
+t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head);
+t_list *add_head_node(t_list *node, t_list **head, char **envcpy);
+char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head);
+t_list *parsecmd(char *prompt, char **envcpy);
 
 //ft_lexer.c
 int is_it_whitespace(char c);
 int handle_quotes(char *last_str, char quote);
-char    *ft_lexer_helper(char *last_str);
-char *ft_lexer(char *str);
+char *ft_lexer(char *str, char **envcpy, t_list *head);
 
 //errors.c
 void exitmsg(char *msg);
 void free_list(t_list *head);
 void free_env(char **env);
+void free_env_and_list(char **env, t_list *head);
+void free_array(char **arr);
+void free_array_and_env(char **array, char **envcpy, t_list *head);
 
 //builtin utils
 char *ft_strcat(char *dest, const char *src);

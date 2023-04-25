@@ -128,29 +128,44 @@ int is_it_shell_command(char *token, char **envcpy)
 	return (1); //jos ginostaa ni täst voi suoraa palauttaa oikee path binaryyn
 }
 
-t_list *add_node(t_list *node, char *token)
+t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 {
 	t_list  *prev;
 
 	prev = NULL;
 	prev = node;
-	node = malloc(sizeof(t_list)); //protect
+	node = malloc(sizeof(t_list));
+	if (!node)
+		free_env_and_list(envcpy, head);
 	if (token != NULL)
 		node->value = token;
 	node->argc = 0;
 	node->prev = prev;
 	prev->next = node;
 	node->args = malloc(sizeof(char **));
+	if (!node->args)
+		free_env_and_list(envcpy, head);
 	node->args[0] = NULL;
 	node->input = STDIN_FILENO;
 	node->output = STDOUT_FILENO;
 	return (node);
 }
 
-t_list *add_head_node(t_list *node, t_list **head)
+t_list *add_head_node(t_list *node, t_list **head, char **envcpy)
 {
 	node = malloc(sizeof(t_list)); //protect malloc
-	node->args = malloc(sizeof(char **)); //protect
+	if (!node)
+	{
+		free_env(envcpy);
+		exitmsg("node malloc failed");
+	}
+	node->args = malloc(sizeof(char **));
+	if (!node)
+	{
+		free_env(envcpy);
+		free(node);
+		exitmsg("node malloc failed");
+	}
 	node->args[0] = NULL;
 	node->argc = 0;
 	node->input = STDIN_FILENO;
@@ -161,7 +176,7 @@ t_list *add_head_node(t_list *node, t_list **head)
 	return (node);
 }
 
-char **realloc_array(t_list *node, char *token)
+char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 {
 	char **array;
 	int i;
@@ -169,62 +184,59 @@ char **realloc_array(t_list *node, char *token)
 	array = NULL;
 	i = 0;
 	array = malloc((node->argc + 2) * sizeof(char **));
+	if (!array)
+		free_env_and_list(envcpy, head);
 	while (1)
 	{
 		array[i] = malloc(sizeof(char *));
-		// if (!array[i]) 
+		if (!array[i])
+			free_array_and_env(array, envcpy, head);
 		array[i] = node->args[i];
+		node->args[i] = NULL;
 		if (array[i] == NULL)
 			break ;
 		i++;
 	}
+	node->argc = i + 1;
+	free(node->args);
+	node->args = NULL;
 	array[i] = token;
 	array[i + 1] = NULL;
-	// i = 0; SOMEHOW SEGFAULT With >= 5 args!!!!
-	// while (node->args[i] != NULL && node->prev != NULL)
-	// {
-	// 	free(node->args[i]);
-	// 	i++;
-	// }
 	return (array);
 }
 
-t_list *parsecmd(char *prompt)
+void init_parsecmd(t_list **node, t_list **head, int *argflag)
+{
+	*node = NULL;
+	*head = NULL;
+	*argflag = -1;
+}
+
+t_list *parsecmd(char *prompt, char **envcpy)
 {
 	t_list  *node;
 	t_list  *head;
 	char    *token;
 	int     argflag;
 
-	node = NULL;
-	head = NULL;
-	argflag = -1;
-	token = ft_lexer(prompt);
-	node = add_head_node(node, &head);
-	// mallocprotect(head);
+	init_parsecmd(&node, &head, &argflag);
+	token = ft_lexer(prompt, envcpy, head);
+	node = add_head_node(node, &head, envcpy);
 	while(token)
 	{
 		if (is_it_redirection(token) > 0 || is_it_log_operator(token) > 0)
 		{
 			argflag = -1;
-			node = add_node(node, token);
-			node = add_node(node, NULL);
-			token = ft_lexer(NULL);
+			node = add_node(node, token, envcpy, head);
+			node = add_node(node, NULL, envcpy, head);
+			token = ft_lexer(NULL, envcpy, head);
 		}
 		if (argflag == -1)
 			node->value = token;
 		else
-		{
-			node->args = realloc_array(node, token);
-			// if (argflag == 0)
-			//     node->args = malloc(sizeof(char **));
-			// node->args[argflag] = malloc(sizeof(char *));
-			// node->args[argflag + 1] = NULL;
-			// node->args[argflag] = token;
-			node->argc = argflag + 1;
-		}
+			node->args = realloc_array(node, token, envcpy, head);
 		argflag++;
-		token = ft_lexer(NULL);
+		token = ft_lexer(NULL, envcpy, head);
 	}
 	return (head);
 }

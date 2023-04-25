@@ -31,14 +31,25 @@ char get_next_quote(char quote)
         return ('\"');
 }
 
+void init_handle_quotes(int *len, int *quotes)
+{
+    *len = 2;
+    *quotes = 1;
+}
+
+void move_pointer(int *len, char **str)
+{
+    (*str)++;
+    *len = *len + 1;
+}
+
 //echo a"b">testing.c |grep b>" test"moi"'b'"'ing' ' '
 int handle_quotes(char *str, char quote)
 {
     int len;
     int quotes;
 
-    quotes = 1; //0 on auki, 1 on kiinni
-    len = 2;
+    init_handle_quotes(&len, &quotes);
     str++;
     while(1)
     {
@@ -52,20 +63,13 @@ int handle_quotes(char *str, char quote)
             else if (str[1] == '\'' || str[1] == '\"')
             {
                 quote = get_next_quote(str[1]);
-                str++;
-                str++;
-                len++;
-                len++;
+                str = str + 2;
+                len = len + 2;
                 continue ;
             }
-            // else
-            //     continue ;
         }
-        len++;
-        str++;
+        move_pointer(&len, &str);
     }
-    // if (len == 3)
-    //     len = 2;
     return (len);
 }
 
@@ -94,16 +98,27 @@ int get_token_len(char *str)
     return (len);
 }
 
-char *ft_lexer(char *str)
+void fill_token(int tokenlen, char *token, char *last_str)
+{
+    int i;
+
+    i = 0;
+    token[tokenlen] = '\0';
+    while (i < tokenlen)
+    {
+        token[i] = last_str[i];
+        i++;
+    }
+}
+
+char *ft_lexer(char *str, char **envcpy, t_list *head)
 {
     static char *last_str;
     char *token;
     int tokenlen;
-    int i;
 
     token = NULL;
     tokenlen = 0;
-    i = 0;
     if (str != NULL)
         last_str = str;
     while (*last_str && is_it_whitespace(*last_str)) //skip WS
@@ -112,18 +127,10 @@ char *ft_lexer(char *str)
         return (NULL);
     tokenlen = get_token_len(last_str); //how many chars
     token = malloc((tokenlen + 1) * sizeof(char));
-    token[tokenlen] = '\0';
-    while (i < tokenlen)
-    {
-        token[i] = last_str[i];
-        i++;
-    }
-    i = 0;
-    while (i < tokenlen)
-    {
-        last_str++;
-        i++;
-    }
+    if (!token)
+        free_env_and_list(envcpy, head);
+    fill_token(tokenlen, token, last_str);
+    last_str = last_str + tokenlen;
     if (*token == '\0')
         return (NULL);
     return (token);
