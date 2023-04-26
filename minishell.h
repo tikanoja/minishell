@@ -66,7 +66,16 @@ typedef struct  s_list
     struct s_list *prev; //prev node
 }               t_list;
 //gatekeeper
-void expand_envs(t_list *head);
+void    expand_envs(t_list *head);
+void    check_args_for_dollar(t_list *current);
+void    check_value_for_dollar(t_list *current);
+int     get_env_len(char *str);
+int     is_valid_env_char(char c);
+char	*ft_strndup(const char *s1, size_t n);
+size_t	ft_strnlen(const char *s, size_t n);
+int     check_dollar_end(char c);
+int     check_for_dollar(char *string);
+char	*char_join(char *string, char c);
 
 //ft_split_utils.c
 int	wordcount_p(const char *s, char c);
