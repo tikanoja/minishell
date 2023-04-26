@@ -215,8 +215,10 @@ void expand_envs(t_list *head)
 	current = head;
 	while(current)
 	{
-		check_value_for_dollar(current);
-		check_args_for_dollar(current);
+		if(current->value)
+			check_value_for_dollar(current);
+		if(current->args)
+			check_args_for_dollar(current);
 		current = current->next;
 	}
 }
