@@ -57,20 +57,20 @@ size_t	ft_strnlen(const char *s, size_t n)
 	return (i);
 }
 
-char	*ft_strndup(const char *s1, size_t n)
+char	*ft_strndup(const char *string, size_t n)
 {
-	char	*dup;
+	char		*dup;
 	size_t		len;
 	size_t		i;
 
 	i = 0;
-	len = ft_strnlen((char *)s1, n);
+	len = ft_strnlen((char *)string, n);
 	dup = (char *)malloc(sizeof(char) * len + 1);
 	if (dup == NULL)
 		return (NULL);
 	while (i < len || i <=n)
 	{
-		dup[i] = s1[i];
+		dup[i] = string[i];
 		i++;
 	}
 	dup[i] = '\0';
@@ -205,10 +205,88 @@ void check_args_for_dollar(t_list *current)
         j++;
     }
 }
+char *parse_quotes(char *str)
+{
+	int i;
+	char *new_string;
+	char quote;
 
+	i = 0;
+	new_string = malloc(1);
+	quote = '\0';
+	while(str[i])
+	{
+		if(str[i] == '\'' && !quote)
+			quote = '\'';
+		else if (str[i] == '\"' && !quote)
+			quote = '\"';
+		while(quote != '\0')
+		{
+			printf("stuck here?\n");
+			//i++;
+			if(str[i++] == quote)
+			{
+				//i++;
+				quote = '\0';
+				break;
+			}
+			char_join(new_string, str[i]);
+			i++;
+		}
+		char_join(new_string, str[i]);
+		i++;
+	}
+	return(new_string);
+}
 
+int check_if_quotes(char *str)
+{
+	int i;
+	int double_quote;
+	int single_quote;
 
-void expand_envs(t_list *head)
+	i = 0;
+	double_quote = 0;
+	single_quote = 0;
+	while(str[i])
+	{
+		if (str[i] == '\'' && double_quote == 0)
+			single_quote++;
+		else if (str[i] == '\"' && single_quote == 0)
+			double_quote++;
+		i++;
+	}
+	if(single_quote == 0 && double_quote > 0)
+	{
+		if(double_quote % 2 != 0)
+			exit(printf("wrong amount of quotes")); //handle error
+		return(1);
+	}
+	else if(double_quote == 0 && single_quote > 0)
+	{
+		if(single_quote % 2 != 0)
+			exit(printf("wrong amount of quotes")); //handle error
+		return(1);
+	}
+	return (0);
+}
+
+void	open_quotes(t_list *current)
+{
+	int	i;
+
+	i = 0;
+	if(check_if_quotes(current->value))
+		current->value = parse_quotes(current->value);
+	while(i < current->argc)
+	{
+		if(check_if_quotes(current->args[i]))
+			current->args[i] = parse_quotes(current->args[i]);
+		i++;
+	}
+}
+
+void gatekeeper(t_list *head)
 {
 	t_list *current;
 
@@ -219,6 +297,7 @@ void expand_envs(t_list *head)
 			check_value_for_dollar(current);
 		if(current->args)
 			check_args_for_dollar(current);
+		open_quotes(current);
 		current = current->next;
 	}
 }
