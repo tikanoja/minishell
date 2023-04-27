@@ -65,6 +65,11 @@ typedef struct  s_list
     struct s_list *next; //next node
     struct s_list *prev; //prev node
 }               t_list;
+
+//open_fds_and_pipes.c
+t_list    *handle_redirection_out(t_list *current);
+void    open_fds_and_pipes(t_list *head);
+
 //gatekeeper
 void    gatekeeper(t_list *head);
 void    check_args_for_dollar(t_list *current);
