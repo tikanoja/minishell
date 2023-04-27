@@ -78,7 +78,7 @@ int ft_echo(t_list *echo)
 	if (echo->argc <= n_flag)
 		return (0);	
 	i = n_flag;
-	string = malloc(sizeof(char) * (echo->argc - n_flag));
+	string = ft_calloc((echo->argc - n_flag), sizeof(char));
 	ft_strcat(string, echo->args[i]);
 	i++;
 	while(i < echo->argc)

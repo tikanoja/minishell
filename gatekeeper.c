@@ -7,7 +7,7 @@
 // 	char* new_str;
 	 
 // 	len = ft_strlen(string);
-// 	new_str = (char *)malloc(len + 2);
+// 	new_str = (char *)ft_calloc(len + 2);
 // 	if (!new_str)
 // 	{
 // 		//somekind of error handler?
@@ -37,7 +37,7 @@ char *ft_strcpy(char *dest, char *src)
 char *char_join(char *string, char c)
 {
     size_t len = ft_strlen(string);
-    char *new_str = malloc(len + 2);
+    char *new_str = ft_calloc(len + 2, sizeof(char));
     if (!new_str) {
         // handle allocation error
         exit(1);
@@ -95,7 +95,7 @@ char	*ft_strndup(const char *string, size_t n)
 
 	i = 0;
 	len = ft_strnlen((char *)string, n);
-	dup = (char *)malloc(sizeof(char) * len + 1);
+	dup = ft_calloc(len + 1, sizeof(char));
 	if (dup == NULL)
 		return (NULL);
 	while (i < len || i <=n)
@@ -146,8 +146,8 @@ void check_value_for_dollar(t_list *current)
 	flag = 0;
 	len = ft_strlen(current->value);
 	i = 0;
-	env = malloc(1);
-	new_value = malloc(1);
+	env = ft_calloc(1, sizeof(char));
+	new_value = ft_calloc(1, sizeof(char));
 	if (check_for_dollar(current->value) == 1)
 	{
 		while (i < len)
@@ -196,8 +196,8 @@ void check_args_for_dollar(t_list *current)
 	{
 		flag = 0;
 		i = 0;
-		env = malloc(1);
-		new_value = malloc(1);
+		env = ft_calloc(1, sizeof(char));
+		new_value = ft_calloc(1, sizeof(char));
 		len = ft_strlen(current->args[j]);
 		if (check_for_dollar(current->args[j]) == 1)
 		{
@@ -244,18 +244,16 @@ char *parse_quotes(char *str)
 	int i = 0;
 	char *new_string;
 	char quote;
-
-	new_string = NULL;
 	quote = '\0';
 	if (str == NULL)
 		return NULL;
-	new_string = (char*)malloc(ft_strlen(str) + 1);
-	printf("len is %zu\n", ft_strlen(str));
+	new_string = NULL;
+	new_string = ft_calloc(ft_strlen(str), sizeof(char));
 	if (new_string == NULL)
 		return NULL;
 	while (str[i])
 	{
-		//printf("str is %s\n", str);
+		//printf("str c is %c\n", str[i]);
 		if (str[i] == '\'' && !quote)
 			quote = '\'';
 		else if (str[i] == '\"' && !quote)
@@ -327,9 +325,8 @@ void	gatekeeper(t_list *head)
 			check_value_for_dollar(current);
 		if (current->args)
 			check_args_for_dollar(current);
-		printf("we are going to open some quotes!\n");
 		if(current->value)
-		open_quotes(current);
+			open_quotes(current);
 		current = current->next;
 	}
 }
