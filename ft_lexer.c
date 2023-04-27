@@ -63,6 +63,7 @@ int handle_quotes(char *str, char quote)
             else if (str[1] == '\'' || str[1] == '\"')
             {
                 quote = get_next_quote(str[1]);
+                quotes++;
                 str = str + 2;
                 len = len + 2;
                 continue ;
@@ -92,8 +93,7 @@ int get_token_len(char *str)
     else if (is_it_operator(str) > 0)
         return (is_it_operator(str));
     while(str[len] && is_it_whitespace(str[len]) == 0 &&\
-    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0&&\
-    str[len] != '\'' && str[len] != '\"')
+    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0)//&& str[len] != '\'' && str[len] != '\"')
         len++;
     return (len);
 }
