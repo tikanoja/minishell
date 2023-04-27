@@ -24,34 +24,34 @@
 // }
 int n_definer(char *arg)
 {
-    int j = 1;
-    int seen_n = 0;
+	int j = 1;
+	int seen_n = 0;
 
-    if (!arg)
-        return (0);
-    if (ft_strncmp(arg, "-n", 2) == 0)
-    {
-        if (arg[2] != 'n' &&  arg[2] == '\0')
-            return (1);
-        while (arg[j] == 'n')
-        {
-            j++;
-            if (arg[j] == '\0')
-                return (1);
-            if (arg[j] != 'n')
-                seen_n = 1;
-            else if (seen_n)
-                return (0);
-        }
-    }
-    return (0);
+	if (!arg)
+		return (0);
+	if (ft_strncmp(arg, "-n", 2) == 0)
+	{
+		if (arg[2] != 'n' &&  arg[2] == '\0')
+			return (1);
+		while (arg[j] == 'n')
+		{
+			j++;
+			if (arg[j] == '\0')
+				return (1);
+			if (arg[j] != 'n')
+				seen_n = 1;
+			else if (seen_n)
+				return (0);
+		}
+	}
+	return (0);
 }
 
 int one_n_checker(t_list *echo)
 {
 	if (echo->argc < 1)
 		return(printf("\n"));
-	if(echo->argc == 1)
+	if (echo->argc == 1)
 	{
 		if (n_definer(echo->args[0]) == 1)
 			return (1);
@@ -95,23 +95,23 @@ int ft_echo(t_list *echo)
 
 void ft_pwd()
 {
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        printf("%s\n", cwd); 
+	char cwd[1024];
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd); 
 	else
 	{
-        perror("getcwd() error");
-        exit (EXIT_FAILURE);
-    }
+		perror("getcwd() error");
+		exit (EXIT_FAILURE);
+	}
 }
 
 void ft_exit(t_list *exit_arg) //siirrä omaan filuun?
 {
-    int exit_status;
-    if(exit_arg->argc < 1) 
-        exit(0);
-    exit_status = ft_atoi(exit_arg->args[0]) % 256;
-    exit (exit_status);
+	int exit_status;
+	if (exit_arg->argc < 1) 
+		exit (0);
+	exit_status = ft_atoi(exit_arg->args[0]) % 256;
+	exit (exit_status);
 }
 /*int main()
 {
