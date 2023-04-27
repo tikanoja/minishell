@@ -13,12 +13,10 @@ char	*char_join(char *string, char c)
 		//somekind of error handler?
 		exit(1);
 	}
-	//ft_strlcpy(new_str, string, len - 1);
-	new_str = string;
+	ft_strlcpy(new_str, string, len + 1);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
 	//free (string);
-	//free(string);
 	return (new_str);
 }
 
@@ -205,43 +203,39 @@ void check_args_for_dollar(t_list *current)
         j++;
     }
 }
+
+
 char *parse_quotes(char *str)
 {
-	int i;
-	char *new_string;
-	char quote;
+    int i = 0;
+    char *new_string;
+    char quote;
 
-	i = 0;
-	new_string = malloc(1);
+	new_string = NULL;
 	quote = '\0';
-	while(str[i])
+    if (str == NULL)
+        return NULL;
+    new_string = (char*) malloc(ft_strlen(str) + 1);
+    if (new_string == NULL)
+        return NULL;
+    while (str[i])
 	{
-		if(str[i] == '\'' && !quote)
-			quote = '\'';
-		else if (str[i] == '\"' && !quote)
-			quote = '\"';
-		while(quote != '\0')
-		{
-			printf("stuck here?\n");
-			//i++;
-			if(str[i++] == quote)
-			{
-				//i++;
-				quote = '\0';
-				break;
-			}
-			char_join(new_string, str[i]);
-			i++;
-		}
-		char_join(new_string, str[i]);
-		i++;
-	}
-	return(new_string);
+        if (str[i] == '\'' && !quote)
+            quote = '\'';
+        else if (str[i] == '\"' && !quote)
+            quote = '\"';
+        else if (str[i] == quote)
+            quote = '\0';
+        else
+            new_string[ft_strlen(new_string)] = str[i];
+        i++;
+    }
+    return (new_string);
 }
 
 int check_if_quotes(char *str)
 {
-	int i;
+	
 	int double_quote;
 	int single_quote;
 
