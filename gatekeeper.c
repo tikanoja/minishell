@@ -16,7 +16,7 @@ char	*char_join(char *string, char c)
 	ft_strlcpy(new_str, string, len + 1);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
-	//free (string);
+	free (string);
 	return (new_str);
 }
 
@@ -235,7 +235,7 @@ char *parse_quotes(char *str)
 
 int check_if_quotes(char *str)
 {
-	
+	int i;
 	int double_quote;
 	int single_quote;
 
