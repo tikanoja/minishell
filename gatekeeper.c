@@ -37,8 +37,12 @@ int check_for_dollar(char *string)
 int check_dollar_end(char c)
 {
 	//printf("char c is %d\n", c);
-	if(c == '\'' || c == '\"' || c == '<' || c == '>' || is_it_whitespace(c) == 1 || c == '|' || c == '$' || c == '\0')
-		return(1);
+	if(c == '\'' || c == '\"' || c == '<' || c == '>') 
+		return (1);
+	else if (c == '|' || c == '$' || c == '\0')
+		return (1);
+	else if (is_it_whitespace(c) == 1)
+		return (1);
 	return (0);
 }
 
@@ -78,27 +82,28 @@ char	*ft_strndup(const char *string, size_t n)
 int is_valid_env_char(char c)
 {
     if (c >= 'A' && c <= 'Z')
-        return 1;
+        return (1);
     if (c >= 'a' && c <= 'z')
-        return 1;
+        return (1);
     if (c >= '0' && c <= '9')
-        return 1;
+        return (1);
     if (c == '_')
-        return 1;
-    return 0;
+        return (1);
+    return (0);
 }
 
 int get_env_len(char *str)
 {
-    int len = 0;
-    int i = 1; // start from 1 to skip the $ character
-
+    int len;
+    int i;
+	
+	len = 0;
+	i = 1; // start from 1 to skip the $ character
     while (str[i] != '\0' && is_valid_env_char(str[i])) {
         len++;
         i++;
     }
-
-    return len;
+    return (len);
 }
 
 void check_value_for_dollar(t_list *current)
