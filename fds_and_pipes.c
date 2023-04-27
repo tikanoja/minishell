@@ -17,16 +17,14 @@ t_list    *handle_redirection_out(t_list *current)
             printf("error opening file %s\n", next->value);
         prev->output = fd;
     }
-    if (next && next->next)
-    {
+    if (next->next)
         prev->next = next->next;
-        free(current->value);
-        free(next->value);
-        free(current);
-        free(next);
-        return (next->next);
-    }
-    prev->next = NULL;
+    else
+        prev->next = NULL;
+    free(current->value);
+    free(next->value);
+    free(current);
+    free(next);
     return (prev);
 }
 
