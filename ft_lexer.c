@@ -43,7 +43,6 @@ void move_pointer(int *len, char **str)
     *len = *len + 1;
 }
 
-//echo a"b">testing.c |grep b>" test"moi"'b'"'ing' ' '
 int handle_quotes(char *str, char quote)
 {
     int len;
