@@ -1,23 +1,51 @@
 
 #include "minishell.h"
 
-char	*char_join(char *string, char c)
-{
-	size_t len;
-	char* new_str;
+// char	*char_join(char *string, char c)
+// {
+// 	size_t len;
+// 	char* new_str;
 	 
-	len = ft_strlen(string);
-	new_str = (char *)malloc(len + 2);
-	if (!new_str)
+// 	len = ft_strlen(string);
+// 	new_str = (char *)malloc(len + 2);
+// 	if (!new_str)
+// 	{
+// 		//somekind of error handler?
+// 		exit(1);
+// 	}
+// 	ft_strlcpy(new_str, string, len + 1);
+// 	new_str[len] = c;
+// 	new_str[len + 1] = '\0';
+// 	free (string);
+// 	return (new_str);
+// }
+
+char *ft_strcpy(char *dest, char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != '\0')
 	{
-		//somekind of error handler?
-		exit(1);
+		dest[i] = src[i];
+		i++;
 	}
-	ft_strlcpy(new_str, string, len + 1);
-	new_str[len] = c;
-	new_str[len + 1] = '\0';
-	free (string);
-	return (new_str);
+	dest[i] = '\0';
+	return (dest);
+}
+
+char *char_join(char *string, char c)
+{
+    size_t len = ft_strlen(string);
+    char *new_str = malloc(len + 2);
+    if (!new_str) {
+        // handle allocation error
+        exit(1);
+    }
+    ft_strcpy(new_str, string);
+    new_str[len] = c;
+    new_str[len + 1] = '\0';
+    return new_str;
 }
 
 int check_for_dollar(char *string)
@@ -106,6 +134,7 @@ int get_env_len(char *str)
 	return (len);
 }
 
+
 void check_value_for_dollar(t_list *current)
 {
 	int flag;
@@ -135,6 +164,7 @@ void check_value_for_dollar(t_list *current)
 					new_value = ft_strjoin(new_value, getenv(env));
 				i += ft_strlen(env);
 				free(env);
+				//i++;
 			}
 			else
 			{
@@ -142,7 +172,6 @@ void check_value_for_dollar(t_list *current)
 				i++;
 			}
 		}
-		//new_value[i] = '\0';
 		free(current->value);
 		current->value = new_value;
 	}
@@ -195,9 +224,9 @@ void check_args_for_dollar(t_list *current)
 				}
 			}
 			free(current->args[j]);
-			printf("\nthe new_val is %s\n", new_value);
+			//printf("\nthe new_val is %s\n", new_value);
 			current->args[j] = new_value;
-			printf("\nthe args is %s\n", current->args[j]);
+			//printf("\nthe args is %s\n", current->args[j]);
 		}
 		else
 		{
@@ -221,10 +250,12 @@ char *parse_quotes(char *str)
 	if (str == NULL)
 		return NULL;
 	new_string = (char*)malloc(ft_strlen(str) + 1);
+	printf("len is %zu\n", ft_strlen(str));
 	if (new_string == NULL)
 		return NULL;
 	while (str[i])
 	{
+		//printf("str is %s\n", str);
 		if (str[i] == '\'' && !quote)
 			quote = '\'';
 		else if (str[i] == '\"' && !quote)
@@ -296,6 +327,8 @@ void	gatekeeper(t_list *head)
 			check_value_for_dollar(current);
 		if (current->args)
 			check_args_for_dollar(current);
+		printf("we are going to open some quotes!\n");
+		if(current->value)
 		open_quotes(current);
 		current = current->next;
 	}
