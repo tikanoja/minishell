@@ -72,18 +72,24 @@ void    open_fds_and_pipes(t_list *head);
 
 //gatekeeper
 void    gatekeeper(t_list *head);
+void	open_quotes(t_list *current);
+int check_if_quotes(char *str);
+char *parse_quotes(char *str);
+
+//gatekeeper utils
+char	*char_join(char *string, char c);
+char *ft_strcpy(char *dest, char *src);
+size_t	ft_strnlen(const char *s, size_t n);
+char	*ft_strndup(const char *string, size_t n);
+int     check_for_dollar(char *string);
+
+//open_envs
 void    check_args_for_dollar(t_list *current);
 void    check_value_for_dollar(t_list *current);
 int     get_env_len(char *str);
 int     is_valid_env_char(char c);
-char	*ft_strndup(const char *string, size_t n);
-size_t	ft_strnlen(const char *s, size_t n);
 int     check_dollar_end(char c);
-int     check_for_dollar(char *string);
-char	*char_join(char *string, char c);
-void	open_quotes(t_list *current);
-int check_if_quotes(char *str);
-char *parse_quotes(char *str);
+
 
 //ft_split_utils.c
 int	wordcount_p(const char *s, char c);
