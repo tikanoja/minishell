@@ -66,15 +66,6 @@ typedef struct  s_list
     struct s_list *prev; //prev node
 }               t_list;
 
-typedef struct s_dollar
-{
-	int flag;
-	int len;
-	int i;
-    int j;
-	char *env;
-	char *new_value;
-} t_dollar;
 //open_fds_and_pipes.c
 t_list    *handle_redirection_out(t_list *current);
 void    open_fds_and_pipes(t_list *head);
