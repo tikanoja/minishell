@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+void free_redirection_out(t_list *current)
+{
+    t_list *next;
+
+    next = current->next;
+    free(current->value);
+    free(next->value);
+    free(current);
+    free(next);
+    current = NULL;
+    next = NULL;
+}
+
 t_list    *handle_redirection_out(t_list *current)
 {
     t_list *prev;
@@ -18,13 +31,13 @@ t_list    *handle_redirection_out(t_list *current)
         prev->output = fd;
     }
     if (next->next)
+    {
         prev->next = next->next;
+        next->next->prev = prev;
+    }
     else
         prev->next = NULL;
-    free(current->value);
-    free(next->value);
-    free(current);
-    free(next);
+    free_redirection_out(current);
     return (prev);
 }
 
