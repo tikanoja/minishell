@@ -59,3 +59,17 @@ char	*ft_strndup(const char *string, size_t n)
 	dup[i] = '\0';
 	return (dup);
 }
+
+int check_for_dollar(char *string)
+{
+	int i;
+
+	i = 0;
+	while(string[i])
+	{
+		if (string[i] == '$' && string[i + 1])
+			return (1);
+		i++;
+	}
+	return (0);
+}
