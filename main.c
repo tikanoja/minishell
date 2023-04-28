@@ -129,8 +129,9 @@ int main(int argc, char **argv, const char **envp)
         head = parsecmd(prompt, envcpy);
         gatekeeper(head);
         open_fds_and_pipes(head);
+        parse_system_commands(envcpy, head);
         printlist(head);
-        //runcmd(head);
+        runcmd(head);
         free(prompt);
         free_list(head);
     }

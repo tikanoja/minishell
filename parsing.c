@@ -72,61 +72,6 @@ int is_it_log_operator(char *prompt)
 	return (0);
 }
 
-char	*get_path(char **patharr, char *token)
-{
-	char	*tmp;
-	char    *binarypath;
-	int     i;
-
-	i = 0;
-	while (patharr[i])
-	{
-		tmp = ft_strjoin(patharr[i], "/");
-		//protect
-		binarypath = ft_strjoin(tmp, token);
-		//protect
-		if (access(binarypath, F_OK) == 0)
-			break ;
-		else
-		{
-			free(tmp);
-			free(binarypath);
-			i++;
-		}
-		if (!patharr[i])
-			return (NULL);
-	}
-	free(tmp);
-	return (binarypath);
-}
-
-int is_it_shell_command(char *token, char **envcpy)
-{
-	int i;
-	char **patharr;
-	char *pathcmd;
-
-	i = 0;
-	patharr = NULL;
-	while(1)
-	{
-		if (ft_strncmp(envcpy[i], "PATH=", 5) == 0)
-			break ;
-		i++;
-		if (envcpy[i] == NULL)
-		{
-			printf("missing path variable\n");
-			//exit(1);
-		}
-	}
-	patharr = ft_split(envcpy[i] + 5, ':');
-	//protect
-	pathcmd = get_path(patharr, token);
-	//protect
-	if (pathcmd == NULL)
-		return (0);
-	return (1); //jos ginostaa ni täst voi suoraa palauttaa oikee path binaryyn
-}
 
 t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 {

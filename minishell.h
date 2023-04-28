@@ -70,6 +70,12 @@ typedef struct  s_list
 t_list    *handle_redirection_out(t_list *current);
 void    open_fds_and_pipes(t_list *head);
 
+//system_commands.c
+int     findpath(char **env);
+void    convert_to_lowercase(char *str);
+int     variable_assign_check(char *str);
+void    parse_system_commands(char **env, t_list *head);
+
 //gatekeeper
 void    gatekeeper(t_list *head);
 void	open_quotes(t_list *current);
