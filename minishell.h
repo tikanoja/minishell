@@ -147,7 +147,7 @@ void ft_exit(t_list *exit);
 
 //runcmd.c
 void    redirection_check(t_list *current);
-void    runcmd(t_list *head);
+void    runcmd(t_list *head, char **envcpy);
 
 //main.c
 // int ft_echo(char *prompt);

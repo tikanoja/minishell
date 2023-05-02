@@ -48,8 +48,8 @@ char *get_path(char **patharr, char *cmd)
     int i;
 
     i = 0;
-    if (access(cmd, F_OK) == 0)
-        return (cmd);
+    // if (access(cmd, F_OK) == 0)
+    //     return (cmd);
     while (patharr[i])
 	{
 		tmp = ft_strjoin(patharr[i], "/");
@@ -69,6 +69,26 @@ char *get_path(char **patharr, char *cmd)
 	return (pathcmd);
 }
 
+void move_value_to_args(t_list *current)
+{
+    char **arr;
+    int i;
+
+    i = 0;
+    arr = malloc((current->argc + 2) * sizeof(char *)); //protect
+    while(current->argc > 0 && current->args[i])
+    {
+        arr[i + 1] = ft_strdup(current->args[i]);
+        free(current->args[i]);
+        i++;
+    }
+    arr[0] = ft_strdup(current->value);
+    free(current->value);
+    free(current->args);
+    arr[i + 1] = NULL;
+    current->args = arr;
+}
+
 void    parse_system_commands(char **env, t_list *head)
 {
     int i;
@@ -86,8 +106,8 @@ void    parse_system_commands(char **env, t_list *head)
         && variable_assign_check(current->value) == 0)
         {
             convert_to_lowercase(current->value);
-            printf("converted: %s\n", current->value);
-            current->value = get_path(patharr, current->value);
+            move_value_to_args(current);
+            current->value = get_path(patharr, current->args[0]);
             if (current->value == NULL)
                 printf("error fetching path\n");
         }

@@ -23,6 +23,8 @@ int check_quotes(char *str)
         printf("unclosed quotes...\n");
         return (1);
     }
+    if (i == 0)
+        return (1);
     return (0);
 }
 
@@ -130,8 +132,8 @@ int main(int argc, char **argv, const char **envp)
         gatekeeper(head);
         open_fds_and_pipes(head);
         parse_system_commands(envcpy, head);
-        printlist(head);
-        runcmd(head);
+        //printlist(head);
+        runcmd(head, envcpy);
         free(prompt);
         free_list(head);
     }
