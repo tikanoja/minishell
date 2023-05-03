@@ -49,11 +49,24 @@ void    execute_system_command(t_list *current, char **envcpy)
             close(current->output);
         }
         execve(current->value, current->args, envcpy);
-        exit(0);
+        exit(1);
     }
-    // else{waitpid}
-    // close(current->input);
-    // close(current->output);
+    else
+    {
+        if (current->input != STDIN_FILENO)
+            close(current->input);
+        if (current->output != STDOUT_FILENO)
+            close(current->output);
+        int status;
+        printf("Parent waiting for child process to finish... %d\n", pid);
+        if (waitpid(pid, &status, 0) == -1)
+        {
+            perror("waitpid failed");
+            exit(EXIT_FAILURE);
+        }
+        printf("Child process finished :D %d\n", pid);
+        // you can check the status here to see if the child process exited successfully
+    }
 }
 
 void    runcmd(t_list *head, char **envcpy)
