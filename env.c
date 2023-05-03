@@ -21,3 +21,15 @@ char *ft_getenv(const char *name)
 	}
 	return (NULL);
 }
+
+void ft_env(void)
+{
+	int i;
+
+	i = 0;
+	while(envcpy[i])
+	{
+		printf("%s\n", envcpy[i]);
+		i++;
+	}
+}
