@@ -41,10 +41,10 @@ int get_env_len(char *str)
 
 void handle_single_quotes(char c, int *flag)
 {
-    if (c == '\'' && *flag == 0)
-        *flag = 1;
-    else if (c == '\'' && *flag == 1)
-        *flag = 0;
+	if (c == '\'' && *flag == 0)
+		*flag = 1;
+	else if (c == '\'' && *flag == 1)
+		*flag = 0;
 }
 
 
@@ -65,13 +65,13 @@ void check_value_for_dollar(t_list *current)
 	{
 		while (i < len)
 		{
-            handle_single_quotes(current->value[i], &flag);
+			handle_single_quotes(current->value[i], &flag);
 			if (current->value[i] == '$' && flag == 0)
 			{
 				i++;
 				env = ft_strndup(current->value + i, get_env_len(current->value + i));
-				if (getenv(env))
-					new_value = ft_strjoin(new_value, getenv(env));
+				if (ft_getenv(env))
+					new_value = ft_strjoin(new_value, ft_getenv(env));
 				i += ft_strlen(env);
 				free(env);
 			}
@@ -112,13 +112,13 @@ void check_args_for_dollar(t_list *current)
 		{
 			while (i < len)
 			{
-                handle_single_quotes(current->args[j][i], &flag);
+				handle_single_quotes(current->args[j][i], &flag);
 				if (current->args[j][i] == '$' && flag == 0)
 				{
 					i++;
 					env = ft_strndup(current->args[j] + i, get_env_len(current->args[j] + i));
-					if(getenv(env))
-						new_value = ft_strjoin(new_value, getenv(env));
+					if(ft_getenv(env))
+						new_value = ft_strjoin(new_value, ft_getenv(env));
 					i += ft_strlen(env);
 					free(env);
 				}

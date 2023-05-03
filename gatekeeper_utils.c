@@ -18,7 +18,8 @@ char *char_join(char *string, char c)
 {
     size_t len = ft_strlen(string);
     char *new_str = ft_calloc(len + 2, sizeof(char));
-    if (!new_str) {
+    if (!new_str)
+	{
         // handle allocation error
         exit(1);
     }
