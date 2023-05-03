@@ -27,6 +27,8 @@ void    execute_builtin(t_list *current)
             ft_pwd();
     else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
             ft_exit(current);
+    else if (ft_strncmp_casein(current->value, "env", 5) == 0)
+            ft_env();
 }
 
 void    execute_system_command(t_list *current, char **envcpy)
