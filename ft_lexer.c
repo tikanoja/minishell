@@ -125,7 +125,7 @@ char *ft_lexer(char *str, char **envcpy, t_list *head)
     if (*last_str == '\0')
         return (NULL);
     tokenlen = get_token_len(last_str); //how many chars
-    token = malloc((tokenlen + 1) * sizeof(char));
+    token = ft_calloc((tokenlen + 1), sizeof(char));
     if (!token)
         free_env_and_list(envcpy, head);
     fill_token(tokenlen, token, last_str);

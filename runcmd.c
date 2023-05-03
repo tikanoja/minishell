@@ -64,9 +64,6 @@ void    runcmd(t_list *head, char **envcpy)
     current = head;
     while (current)
     {
-        //onko builtin? onko env var set eli = ? jos ei niin sit sen pitäis olla sys cmd tai bullshit
-        // if (is_it_builtin(current->value) == 0 && assignment_check == 0)
-        //     execve hommii
         if (variable_assign_check(current->value) == 1)
             printf("how to set var ???");
         else if (is_it_builtin(current->value) > 0)

@@ -32,13 +32,13 @@ void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i)
 {
     while(envp[rows] != NULL)
         rows++;
-    (*envcpy) = malloc((rows + 1) * sizeof(char *));
+    (*envcpy) = ft_calloc((rows + 1), sizeof(char *));
     if (!envcpy)
         exitmsg("envcpy malloc fail");
     (*envcpy)[rows] = NULL;
     while(i < rows)
     {
-        (*envcpy)[i] = malloc((ft_strlen(envp[i]) + 1) * sizeof(char));
+        (*envcpy)[i] = ft_calloc((ft_strlen(envp[i]) + 1), sizeof(char));
         if ((*envcpy)[i] == NULL)
         {
             i = 0;
@@ -132,7 +132,7 @@ int main(int argc, char **argv, const char **envp)
         gatekeeper(head);
         open_fds_and_pipes(head);
         parse_system_commands(envcpy, head);
-        //printlist(head);
+        printlist(head);
         runcmd(head, envcpy);
         free(prompt);
         free_list(head);
