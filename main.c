@@ -109,11 +109,9 @@ int main(int argc, char **argv, const char **envp)
 {
     char *prompt;
     t_list *head;
-    char **envcpy;
 
     prompt = NULL;
     head = NULL;
-    envcpy = NULL;
     if (argc > 1 || argv == NULL)
         exitmsg("too many args");
     get_env_copy(&envcpy, envp);

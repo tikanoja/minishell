@@ -66,6 +66,10 @@ typedef struct  s_list
     struct s_list *prev; //prev node
 }               t_list;
 
+char **envcpy;
+//env.c
+char *my_getenv(const char *name);
+
 //open_fds_and_pipes.c
 t_list    *handle_redirection_out(t_list *current);
 void    open_fds_and_pipes(t_list *head);
