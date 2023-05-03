@@ -12,7 +12,7 @@ char *ft_getenv(const char *name)
 		char *equals = ft_strchr(*env, '=');
 		if (equals != NULL)
         {
-			size_t namelen = equals - *env;
+			namelen = equals - *env;
 			if (ft_strncmp(name, *env, namelen) == 0 && name[namelen] == '\0') {
 				return (equals + 1);
 			}
