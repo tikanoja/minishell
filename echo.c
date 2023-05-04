@@ -109,7 +109,7 @@ void ft_pwd()
 	}
 }
 
-void ft_exit(t_list *exit_arg) //siirrä omaan filuun?
+void ft_exit(t_list *exit_arg) //siirrä omaan filuun? ja selvitä mitä kaikkea puuttuu, esim mitä tapahtuu jos kirjimia
 {
 	int exit_status;
 	if (exit_arg->argc < 1) 
