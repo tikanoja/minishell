@@ -68,6 +68,9 @@ typedef struct  s_list
 }               t_list;
 
 char **envcpy;
+//export.c
+void ft_export(t_list *current);
+
 //env.c
 char *ft_getenv(const char *name);
 void ft_env(void);

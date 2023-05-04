@@ -105,16 +105,15 @@ void ft_unsetenv(char *key)
     int index;
     int row_count;
 	int len;
+	char **new_env;
 
 	index = -1;
 	row_count = 0;
 	len = ft_strlen(key);
     while (envcpy[row_count])
     {
-        printf("value is %d\n", ft_strncmp(envcpy[row_count], key, len));
         if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && envcpy[row_count][len] == '=')
         {
-			printf("we herer\n");
             index = row_count;
             break;
         }
@@ -123,8 +122,7 @@ void ft_unsetenv(char *key)
     if (index == -1)
         return;
     free(envcpy[index]);
-
-    char **new_env = (char **)malloc(sizeof(char *) * row_count);
+    new_env = (char **)malloc(sizeof(char *) * row_count);
     int i = 0;
     int j = 0;
     while (envcpy[i])
@@ -134,7 +132,7 @@ void ft_unsetenv(char *key)
         i++;
     }
     new_env[j] = NULL;
-
     free(envcpy);
     envcpy = new_env;
 }
+
