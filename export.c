@@ -6,4 +6,4 @@
             return ;
         ft_setenv(current->args[0]);
     }   
-    
+    //now work please
