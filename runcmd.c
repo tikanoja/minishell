@@ -31,9 +31,10 @@ void    execute_builtin(t_list *current)
             ft_env();
 }
 
-void    execute_system_command(t_list *current, char **envcpy)
+pid_t   execute_system_command(t_list *current, char **envcpy)
 {
     pid_t pid;
+    // int status; passaa taa waitpid jos haluu selvittaa miten se meni
 
     pid = fork();
     if (pid == -1)
@@ -59,32 +60,42 @@ void    execute_system_command(t_list *current, char **envcpy)
             close(current->input);
         if (current->output != STDOUT_FILENO)
             close(current->output);
-        int status;
-        printf("Parent waiting for child process to finish... %d\n", pid);
-        if (waitpid(pid, &status, 0) == -1)
-        {
-            perror("waitpid failed");
-            exit(EXIT_FAILURE);
-        }
-        printf("Child process finished :D %d\n", pid);
-        // you can check the status here to see if the child process exited successfully
     }
+    return (pid);
 }
 
 void    runcmd(t_list *head, char **envcpy)
 {
     t_list *current;
-
+    pid_t pid[3];
+    
+    int i = 0;
+    int j = 0;
     current = NULL;
     current = head;
     while (current)
     {
         if (variable_assign_check(current->value) == 1)
-            printf("how to set var ???");
+            ft_setenv(current->value);
         else if (is_it_builtin(current->value) > 0)
+        {
             execute_builtin(current);
+            if (current->input != STDIN_FILENO)
+                close(current->input);
+            if (current->output != STDOUT_FILENO)
+                close(current->output);
+        }
         else
-            execute_system_command(current, envcpy);
+        {
+            pid[i] = execute_system_command(current, envcpy);
+            i++;
+        }
         current = current->next;
+    }
+    while (j <= i)
+    {
+        write(1, "terve\n", 6);
+        waitpid(pid[j], NULL, 0);
+        j++;
     }
 }

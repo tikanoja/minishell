@@ -115,6 +115,7 @@ int main(int argc, char **argv, const char **envp)
     if (argc > 1 || argv == NULL)
         exitmsg("too many args");
     get_env_copy(&envcpy, envp);
+    write(1, "SEGF?/n", 6);
     while (1)
     {
         prompt = readline("\033[0;32mshelly\033[0m> ");
