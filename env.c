@@ -4,12 +4,13 @@ char	*ft_getenv(const char *name)
 {
 	char **env;
     size_t namelen;
+	char *equals;
 
     env = envcpy;
     namelen = 0;
 	while (*env != NULL)
     {
-		char *equals = ft_strchr(*env, '=');
+		equals = ft_strchr(*env, '=');
 		if (equals != NULL)
         {
 			namelen = equals - *env;
