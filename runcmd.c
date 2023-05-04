@@ -10,6 +10,8 @@ int     assignment_check(char *str)
     int i;
 
     i = 0;
+    if (str == NULL)
+        return (0);
     while (str[i])
     {
         if (str[i] == '=')
@@ -31,7 +33,7 @@ void    execute_builtin(t_list *current)
             ft_env();
 }
 
-pid_t   execute_system_command(t_list *current, char **envcpy)
+void  execute_system_command(t_list *current, char **envcpy)
 {
     pid_t pid;
     // int status; passaa taa waitpid jos haluu selvittaa miten se meni
@@ -61,21 +63,21 @@ pid_t   execute_system_command(t_list *current, char **envcpy)
         if (current->output != STDOUT_FILENO)
             close(current->output);
     }
-    return (pid);
 }
 
 void    runcmd(t_list *head, char **envcpy)
 {
     t_list *current;
-    pid_t pid[3];
+    pid_t pid;
     
     int i = 0;
-    int j = 0;
     current = NULL;
     current = head;
     while (current)
     {
-        if (variable_assign_check(current->value) == 1)
+        if (current->value == NULL)
+            printf("shelly: %s: command not found\n", current->args[0]);
+        else if (variable_assign_check(current->value) == 1)
             ft_setenv(current->value);
         else if (is_it_builtin(current->value) > 0)
         {
@@ -85,17 +87,26 @@ void    runcmd(t_list *head, char **envcpy)
             if (current->output != STDOUT_FILENO)
                 close(current->output);
         }
-        else
+        else if (current->system_command == 1)
         {
-            pid[i] = execute_system_command(current, envcpy);
+            execute_system_command(current, envcpy);
             i++;
         }
         current = current->next;
     }
-    while (j <= i)
-    {
-        write(1, "terve\n", 6);
-        waitpid(pid[j], NULL, 0);
-        j++;
+    // while (j <= i)
+    // {
+    //     write(1, "terve\n", 6);
+    //     waitpid(pid[j], NULL, 0);
+    //     j++;
+    // }
+    int status;
+    while ((pid = waitpid(-1, &status, 0)) > 0) {
+    // handle child process exit status
+    if (WIFEXITED(status)) {
+        printf("Child process %d exited with status %d\n", pid, WEXITSTATUS(status));
+    } else if (WIFSIGNALED(status)) {
+        printf("Child process %d terminated by signal %d\n", pid, WTERMSIG(status));
     }
+}
 }

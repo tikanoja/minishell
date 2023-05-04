@@ -62,6 +62,7 @@ typedef struct  s_list
     int output; //fd for output
     int append; //flag if output redirection should append to file
     int background; //ei oo mitää hajuu
+    int system_command; //is it a sys cmd
     struct s_list *next; //next node
     struct s_list *prev; //prev node
 }               t_list;

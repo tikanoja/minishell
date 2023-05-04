@@ -109,7 +109,9 @@ void    parse_system_commands(char **env, t_list *head)
             move_value_to_args(current);
             current->value = get_path(patharr, current->args[0]);
             if (current->value == NULL)
-                printf("error fetching path\n");
+                current->system_command = -1;
+            else
+                current->system_command = 1;
         }
         current = current->next;
     }
