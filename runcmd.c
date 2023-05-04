@@ -31,6 +31,8 @@ void    execute_builtin(t_list *current)
             ft_exit(current);
     else if (ft_strncmp_casein(current->value, "env", 5) == 0)
             ft_env();
+    else if (ft_strncmp_casein(current->value, "unset", 6) == 0 && current->argc == 1)
+            ft_unsetenv(current->args[0]);
 }
 
 void  execute_system_command(t_list *current, char **envcpy)
@@ -78,7 +80,9 @@ void    runcmd(t_list *head, char **envcpy)
         if (current->value == NULL)
             printf("shelly: %s: command not found\n", current->args[0]);
         else if (variable_assign_check(current->value) == 1)
+        {   
             ft_setenv(current->value);
+        }
         else if (is_it_builtin(current->value) > 0)
         {
             execute_builtin(current);

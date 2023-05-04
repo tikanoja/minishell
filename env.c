@@ -90,34 +90,51 @@ void	ft_setenv(char *value)
 	free(valuepair);
 }
 
+int	ft_strcmp(char *s1, char *s2)
+{
+	int i;
 
-// void	ft_unsetenv(char *value)
-// {
-// 	char 	**temp;
-// 	char	**new_env;
-// 	int		i;
-// 	int		j;
-// 	int		row_count;
-// 	int		len;
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+		i++;
+	return (s1[i] - s2[i]);
+}
 
-// 	temp = envcpy;
-// 	i = 0;
-// 	j = 0;
-// 	row_count = 0;
-// 	len = ft_strlen(value);
-// 	while(temp[row_count])
-// 		row_count++;
-// 	new_env = (char **)malloc(sizeof(char *) * (row_count));
-// 	while(i < row_count)
-// 	{
-// 		printf("value from count %d\n",ft_strncmp(temp[i], value, len));
-// 		if(ft_strncmp(temp[i], value, len) == 0 && temp[i][len] == '=')
-// 			i++;
-// 		new_env[j] = ft_strdup(temp[i]);
-// 		i++;
-// 		j++;
-// 	}
-// 	//new_env[i++] = "\0";
-// 	envcpy = new_env;
-// 	free(temp); //pitääkö vapauttaa koko sisältö
-// }
+void ft_unsetenv(char *key)
+{
+    int index;
+    int row_count;
+	int len;
+
+	index = -1;
+	row_count = 0;
+	len = ft_strlen(key);
+    while (envcpy[row_count])
+    {
+        printf("value is %d\n", ft_strncmp(envcpy[row_count], key, len));
+        if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && envcpy[row_count][len] == '=')
+        {
+			printf("we herer\n");
+            index = row_count;
+            break;
+        }
+        row_count++;
+    }
+    if (index == -1)
+        return;
+    free(envcpy[index]);
+
+    char **new_env = (char **)malloc(sizeof(char *) * row_count);
+    int i = 0;
+    int j = 0;
+    while (envcpy[i])
+    {
+        if (i != index)
+            new_env[j++] = ft_strdup(envcpy[i]);
+        i++;
+    }
+    new_env[j] = NULL;
+
+    free(envcpy);
+    envcpy = new_env;
+}
