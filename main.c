@@ -1,6 +1,30 @@
 #include "minishell.h"
 
 //pitää varmaa olla int return error handling ja clean exit varten...
+
+int empty_input(char *str)
+{
+    int i;
+    int len;
+
+    i = 0;
+    len = ft_strlen(str);
+    while (str[i])
+    {
+        if (is_it_whitespace(str[i]) == 1)
+            i++;
+        else
+            break ;
+    }
+    if (i == len || len == 0)
+    {
+        free(str);
+        return (1);
+    }
+    else
+        return (0);
+}
+
 int check_quotes(char *str)
 {
     int i;
@@ -21,10 +45,9 @@ int check_quotes(char *str)
     if (single_quotes % 2 == 1 || double_quotes % 2 == 1)
     {
         printf("unclosed quotes...\n");
+        free (str);
         return (1);
     }
-    if (i == 0)
-        return (1);
     return (0);
 }
 
@@ -125,7 +148,7 @@ int main(int argc, char **argv, const char **envp)
             exitmsg("readline malloc fail");
         }
         add_history(prompt);
-        if (check_quotes(prompt) == 1)
+        if (check_quotes(prompt) == 1 || empty_input(prompt) == 1)
             continue ;
         head = parsecmd(prompt, envcpy);
         gatekeeper(head);

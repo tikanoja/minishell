@@ -48,8 +48,8 @@ char *get_path(char **patharr, char *cmd)
     int i;
 
     i = 0;
-    // if (access(cmd, F_OK) == 0)
-    //     return (cmd);
+    if (access(cmd, F_OK) == 0)
+        return (cmd);
     while (patharr[i])
 	{
 		tmp = ft_strjoin(patharr[i], "/");
