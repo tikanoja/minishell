@@ -70,6 +70,8 @@ char **envcpy;
 //env.c
 char *ft_getenv(const char *name);
 void ft_env(void);
+void	ft_setenv(char *value);
+void	ft_unsetenv(char *value);
 
 //open_fds_and_pipes.c
 t_list    *handle_redirection_out(t_list *current);
