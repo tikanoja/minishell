@@ -134,11 +134,11 @@ t_list  *handle_heredoc(t_list *current)
         input = readline(">");
         if (ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0')
         {
-            ft_putchar_fd('\n', pipefd[1]);
             free(input);
             break ;
         }
         ft_putstr_fd(input, pipefd[1]);
+        ft_putchar_fd('\n', pipefd[1]);
         free(input);
     }
     close(pipefd[1]);
