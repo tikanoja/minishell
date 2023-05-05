@@ -131,19 +131,27 @@ t_list  *handle_heredoc(t_list *current)
         printf("error opening heredoc pipe\n");
     while(1)
     {
-        dup2(1, STDOUT_FILENO);
         input = readline(">");
-        if (ft_strncmp(input, delim, ft_strlen(delim)) == 0)
+        if (ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0')
+        {
+            ft_putchar_fd('\n', pipefd[1]);
+            free(input);
             break ;
-        dup2(pipefd[1], STDOUT_FILENO);
-        ft_printf("%s", input);
+        }
+        ft_putstr_fd(input, pipefd[1]);
         free(input);
     }
-    printf("this should print\n");
     close(pipefd[1]);
-    current->prev->input = pipefd[0];
-    current->prev->next = current->next->next;
-    current->next->next = current->prev;
+    prev->input = pipefd[0];
+    if (current->next->next)
+    {
+        prev->next = current->next->next;
+        current->next->next->prev = prev;
+    }
+    else
+        prev->next = NULL;
+    free(current->next->value);
+    free(current->next);
     free(current->value);
     free(current);
     return (prev);
@@ -158,8 +166,8 @@ void    open_fds_and_pipes(t_list *head)
     {
         if (ft_strncmp(current->value, "|\0", 1) == 0) 
 		    current = handle_pipe(current);
-	    // else if (ft_strncmp(current->value, "<<\0", 2) == 0)
-		//     current = handle_heredoc(current);
+	    else if (ft_strncmp(current->value, "<<\0", 2) == 0)
+		    current = handle_heredoc(current);
 	    else if (ft_strncmp(current->value, ">>\0", 2) == 0)
 		    current = handle_redirection_out_append(current);
 	    else if (ft_strncmp(current->value, "<\0", 1) == 0)

@@ -100,19 +100,13 @@ void    runcmd(t_list *head, char **envcpy)
         }
         current = current->next;
     }
-    // while (j <= i)
-    // {
-    //     write(1, "terve\n", 6);
-    //     waitpid(pid[j], NULL, 0);
-    //     j++;
-    // }
     int status;
-    while ((pid = waitpid(-1, &status, 0)) > 0) {
-    // handle child process exit status
-    if (WIFEXITED(status)) {
-        printf("Child process %d exited with status %d\n", pid, WEXITSTATUS(status));
-    } else if (WIFSIGNALED(status)) {
-        printf("Child process %d terminated by signal %d\n", pid, WTERMSIG(status));
-    }
-}
+    while ((pid = waitpid(-1, &status, 0)) > 0);
+    // {
+    // // handle child process exit status
+    //     if (WIFEXITED(status))
+    //         printf("Child process %d exited with status %d\n", pid, WEXITSTATUS(status));
+    //     else if (WIFSIGNALED(status))
+    //         printf("Child process %d terminated by signal %d\n", pid, WTERMSIG(status));
+    // }
 }
