@@ -29,11 +29,38 @@ void	ft_env(void)
 	i = 0;
 	while(envcpy[i])
 	{
-		printf("%s\n", envcpy[i]);
+		if(ft_strchr(envcpy[i], '='))
+			printf("%s\n", envcpy[i]);
 		i++;
 	}
 }
 
+int check_key_chars(char c, int flag)
+{
+	if(c >= '0' && c <= '9' && flag)
+		return(1);
+	else if (c >= 'a' && c <= 'z')
+		return(1);
+	else if (c >= 'A' && c <= 'Z')
+		return(1);
+	else if (c == '_')
+		return(1);
+	return (0);
+}
+
+int		is_valid_key(char *key)
+{
+	int i;
+
+	i = 0;
+	while(key[i])
+	{
+		if(!check_key_chars(key[i], i))
+			return(0);
+		i++;
+	}
+	return (1);
+}
 void	ft_setenv(char *value)
 {
 	char 	**temp;
@@ -50,13 +77,16 @@ void	ft_setenv(char *value)
 	row_count = 0;
 	flag = 0;
 	j = 0;
-	if (ft_strchr(value, '=') == NULL)
-	{
-		//handle error
-		return ;
-	}
+	/*if (ft_strchr(value, '=') == NULL)
+		valuepair[0] = ft_strdup(value);*/
+	//else
 	valuepair = ft_split(value, '=');
 	len = ft_strlen(valuepair[0]);
+	if (!is_valid_key(valuepair[0]))
+	{
+		printf("'%s' : not a valid identifier", value);
+		return ;
+	}
 	while(temp[row_count])
 		row_count++;
 	if(ft_strncmp(valuepair[0], "_\0", 2) == 0)
@@ -67,7 +97,7 @@ void	ft_setenv(char *value)
 	new_env = (char **)malloc(sizeof(char *) * (row_count + 2));
 	while(i < row_count - 1)
 	{
-		if(!flag && ft_strncmp(temp[i], valuepair[0], len) == 0 && temp[i][len] == '=')
+		if(!flag && ft_strncmp(temp[i], valuepair[0], len) == 0 && (temp[i][len] == '=' || temp[i][len] == '\0'))
 		{
 			new_env[i] = ft_strdup(value);
 			flag = 1;
@@ -112,7 +142,7 @@ void ft_unsetenv(char *key)
 	len = ft_strlen(key);
     while (envcpy[row_count])
     {
-        if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && envcpy[row_count][len] == '=')
+        if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && (envcpy[row_count][len] == '=' || envcpy[row_count][len] == '\0'))
         {
             index = row_count;
             break;

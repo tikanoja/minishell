@@ -2,8 +2,22 @@
 
     void ft_export(t_list *current)
     {
-        if (current->argc != 1)
+        int i;
+
+        i = 0;
+        if (current->argc == 0)
+        {
+            while(envcpy[i] && current->argc == 0 && envcpy[i+1] != NULL)
+            {
+                printf("declare -x %s\n", envcpy[i]);
+                i++;
+            }
             return ;
-        ft_setenv(current->args[0]);
+        }
+        while(current->argc > i)
+        {
+            ft_setenv(current->args[i]);
+            i++;
+        }
     }   
     //now work please
