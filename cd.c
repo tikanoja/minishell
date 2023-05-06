@@ -1,28 +1,6 @@
 #include "minishell.h"
-
-/*int ft_cd(const char *user_path, int argc, char **envp) //palauttaako varmasti int, pitäisköhän niiden ENV:ien olla jossain globaalissa vai miten toimii
-{
-	char *path;
-	char *oldpwd;
-
-	path = (char *)malloc(sizeof(char) * ft_strlen(user_path) + 1);
-	path = user_path;
-	//oldpwd = $PWD; 
-	if (argc == 0 || *path == 126) //tyhjä input vaihtaa kotiin, myös ~ vaihtaa kotiin?
-		path = ;//ENV $HOME?
-	else if (*path == 46) // 46 = '.'
-		path = ;//ENV $PWD?
-	else if(*path == 46 && *(path + 1) == 46) // onks vähän ratchett
-		path = ;//ENV $PWD - eka sana until '/' duunaa joku PWD cutter?
-	else if (ft_strncmp(user_path, "$OLDPWD", 7) == 0 || *user_path == 45) //45 = '-', 7 strncmp koska toi ENV on 7 pitkä
-		path = ; //ENV $OLDPWD
-	//pitääkö PWD päivittää kaipa?
-	if(chdir(path) != 0)
-		printf("cd: %s: No such file or directory\n", path); //mikä error tähän?
-	//ENV PWD = path;?
-}*/
-
 #include <limits.h> //tän vois vissiin vaan definaa PATH_MAX 1024?
+
 char *ft_strcat(char *dest, const char *src)
 {
 	char *result; 
@@ -75,77 +53,41 @@ char *ft_realpath(const char *path, char *resolved_path) //
 	return (resolved_path);
 }
 
-int ft_cd(const char *user_path, int argc) 
+void ft_cd(t_list *current) //vitusti lisaa error management pitaako ottaa real path kayttoon
 {
+	int i;
+	int path_len;
 	char *path;
-	char *oldpwd;
-	char cwd[1024]; //current working directory
-	char *last_slash;
+	char *pwd;
+	char *old_pwd;
+	char cwd[PATH_MAX];
 
-	path = (char *)malloc(sizeof(char) * (ft_strlen(user_path) + 1));
-	if (!path)
+	i = 0;
+	path = current->args[0];
+	path_len = ft_strlen(path);
+	if(current->argc == 0 || (current->args[0][0] == '~' && current->args[0][1] == '\0'))
 	{
-		perror("malloc failed");
-		return (-1);
-	}
-	ft_strlcpy(path, user_path, ft_strlen(user_path));
-	if (argc == 0 || *path == '~')
-		path = getenv("HOME");
-	else if (*path == '.')
-	{
-		if (*(path + 1) == '/')
+		if(chdir(ft_getenv("HOME")) == -1)
 		{
-			getcwd(cwd, sizeof(cwd));
-			ft_strcat(cwd, "/");
-			ft_strcat(cwd, path);
-			path = ft_realpath(cwd, NULL);
-		}
-		else if (*(path + 1) == '\0')
-			path = getenv("PWD");
-		else if (*(path + 1) == '.' && *(path + 2) == '/') //näitä pitää varmaan vähän rukata
-		{
-			getcwd(cwd, sizeof(cwd));
-			last_slash = ft_strrchr(cwd, '/');
-			*last_slash = '\0';
-			ft_strcat(cwd, "/");
-			ft_strcat(cwd, path + 2);
-			path = ft_realpath(cwd, NULL);
+			printf("cd: HOME not set\n");
+			return ;
 		}
 	}
-	else if (ft_strncmp(user_path, "$OLDPWD", 7) == 0 || *user_path == '-')
-		path = getenv("OLDPWD");
-	oldpwd = getenv("PWD");
-	if(chdir(path) != 0)
+	else
 	{
-		perror(path);
-		return -1;
+		old_pwd = getcwd(cwd, PATH_MAX);
+		old_pwd = ft_strjoin("OLDPWD=", old_pwd);
+		//printf("old_pwd is %s\n", old_pwd);
+		if(chdir(path) == -1)
+		{
+			printf("cd: error\n");
+			return ;
+		}
+		pwd = getcwd(cwd, PATH_MAX);
+		pwd = ft_strjoin("PWD=", pwd);
+		ft_setenv(old_pwd);
+		ft_setenv(pwd);
+		//printf("pwd is %s\n", pwd);
+		return ;
 	}
-	setenv("OLDPWD", oldpwd, 1);
-	setenv("PWD", getcwd(cwd, sizeof(cwd)), 1);
-	return (0);
 }
-
-// int main(){//, char **envp) {
-// 	char path[PATH_MAX];
-// 	char resolved_path[PATH_MAX];
-// 	printf("PATH_MAX = %d\n", PATH_MAX);
-
-// 	// Test my_realpath() function
-
-// 	printf("Enter a path to resolve: ");
-// 	scanf("%s", path);
-// 	if (ft_realpath(path, resolved_path) == NULL) {
-// 		perror("my_realpath() failed");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	printf("Resolved path: %s\n", resolved_path);
-
-// 	// Test ft_cd() function
-// 	char *home_dir = path;//getenv("OLDPWD");
-// 	if (ft_cd(home_dir, 1) != 0) {
-// 		perror("ft_cd() failed");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	printf("Current working directory after cd to %s: %s\n",home_dir, getcwd(NULL, 0));
-// 	return 0;
-// }

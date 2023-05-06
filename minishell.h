@@ -68,6 +68,9 @@ typedef struct  s_list
 }               t_list;
 
 char **envcpy;
+//cd.c
+void ft_cd(t_list *current);
+
 //export.c
 void ft_export(t_list *current);
 
