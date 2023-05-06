@@ -77,7 +77,7 @@ void ft_cd(t_list *current) //vitusti lisaa error management pitaako ottaa real 
 	{
 		old_pwd = getcwd(cwd, PATH_MAX);
 		old_pwd = ft_strjoin("OLDPWD=", old_pwd);
-		//printf("old_pwd is %s\n", old_pwd);
+		//printf("path is %s\n", path);
 		if(chdir(path) == -1)
 		{
 			printf("cd: error\n");
@@ -88,6 +88,8 @@ void ft_cd(t_list *current) //vitusti lisaa error management pitaako ottaa real 
 		ft_setenv(old_pwd);
 		ft_setenv(pwd);
 		//printf("pwd is %s\n", pwd);
+		free(pwd);
+		free(old_pwd);
 		return ;
 	}
 }

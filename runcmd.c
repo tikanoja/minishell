@@ -35,6 +35,8 @@ void    execute_builtin(t_list *current)
             ft_unsetenv(current->args[0]);
     else if (ft_strncmp_casein(current->value, "export", 7) == 0)
             ft_export(current);
+    else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
+            ft_cd(current);
 }
 
 void  execute_system_command(t_list *current, char **envcpy)
