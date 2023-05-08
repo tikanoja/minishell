@@ -25,7 +25,7 @@ t_list    *handle_redirection_out(t_list *current)
         printf("file not found / syntax error\n");
     else
     {
-        fd = open(next->value, O_WRONLY | O_CREAT, 0644);
+        fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd == -1)
             printf("error opening file %s\n", next->value);
         prev->output = fd;
@@ -97,6 +97,22 @@ t_list    *handle_redirection_out_append(t_list *current)
     return (prev);
 }
 
+t_list *fill_node_from_stdin(t_list *current)
+{
+    t_list *new;
+
+    new = malloc(sizeof(t_list)); //protect
+    new->args = malloc(sizeof(char **)); //protect
+    new->args[0] = NULL;
+    new->argc = 0;
+    new->input = STDIN_FILENO;
+	new->output = STDOUT_FILENO;
+    new->prev = current;
+    new->next = NULL;
+    new->value = readline(">"); // ehk pitaa lisaa splitti!
+    return (new);
+}
+
 t_list    *handle_pipe(t_list *current)
 {
     t_list *prev;
@@ -106,7 +122,7 @@ t_list    *handle_pipe(t_list *current)
     prev = current->prev;
     next = current->next;
     if (!next || !next->value || ft_strlen(next->value) == 0)
-        printf("nothing will read the pipe :(\n");
+        next = fill_node_from_stdin(current);
     if (pipe(pipefd) == -1)
         printf("error opening pipe\n");
     prev->output = pipefd[1];
