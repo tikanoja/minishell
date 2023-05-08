@@ -102,6 +102,11 @@ void    parse_system_commands(char **env, t_list *head)
     current = head;
     while (current)
     {
+        if (current->value[0] == '\0')
+        {
+            current = current->next;
+            continue;
+        }
         if (is_it_builtin(current->value) == 0\
         && variable_assign_check(current->value) == 0)
         {

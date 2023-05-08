@@ -76,9 +76,9 @@ typedef struct  s_list
 // int 
 
 char **envcpy;
+
 //signals.c
 void init_signals();
-void handle_ctrl_d(int signum);
 void handle_ctrl_c(int signum);
 void rl_replace_line (const char *text, int clear_undo);
 
@@ -105,7 +105,7 @@ int     variable_assign_check(char *str);
 void    parse_system_commands(char **env, t_list *head);
 
 //gatekeeper
-void    gatekeeper(t_list *head);
+void    gatekeeper(t_list *head, int status);
 void	open_quotes(t_list *current);
 int check_if_quotes(char *str);
 char *parse_quotes(char *str);
@@ -118,8 +118,8 @@ char	*ft_strndup(const char *string, size_t n);
 int     check_for_dollar(char *string);
 
 //open_envs
-void    check_args_for_dollar(t_list *current);
-void    check_value_for_dollar(t_list *current);
+void    check_args_for_dollar(t_list *current, int status);
+void    check_value_for_dollar(t_list *current, int status);
 int     get_env_len(char *str);
 int     is_valid_env_char(char c);
 int     check_dollar_end(char c);
@@ -175,7 +175,7 @@ void ft_exit(t_list *exit);
 
 //runcmd.c
 void    redirection_check(t_list *current);
-void    runcmd(t_list *head, char **envcpy);
+int    runcmd(t_list *head, char **envcpy);
 
 //main.c
 // int ft_echo(char *prompt);

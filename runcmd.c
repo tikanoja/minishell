@@ -71,18 +71,24 @@ void  execute_system_command(t_list *current, char **envcpy)
     }
 }
 
-void    runcmd(t_list *head, char **envcpy)
+int    runcmd(t_list *head, char **envcpy)
 {
     t_list *current;
     pid_t pid;
+    int status;
     
     int i = 0;
     current = NULL;
     current = head;
+    status = 0;
     while (current)
     {
         if (current->value == NULL)
+        {
             printf("shelly: %s: command not found\n", current->args[0]);
+            current = current->next;
+            continue;
+        }
         else if (variable_assign_check(current->value) == 1)
         {   
             ft_setenv(current->value);
@@ -102,7 +108,6 @@ void    runcmd(t_list *head, char **envcpy)
         }
         current = current->next;
     }
-    int status;
     while ((pid = waitpid(-1, &status, 0)) > 0);
     // {
     // // handle child process exit status
@@ -111,4 +116,5 @@ void    runcmd(t_list *head, char **envcpy)
     //     else if (WIFSIGNALED(status))
     //         printf("Child process %d terminated by signal %d\n", pid, WTERMSIG(status));
     // }
+    return(status);
 }

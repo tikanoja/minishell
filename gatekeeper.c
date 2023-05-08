@@ -76,7 +76,7 @@ void	open_quotes(t_list *current)
 	}
 }
 
-void	gatekeeper(t_list *head)
+void	gatekeeper(t_list *head, int status)
 {
 	t_list	*current;
 
@@ -84,9 +84,9 @@ void	gatekeeper(t_list *head)
 	while (current)
 	{
 		if (current->value)
-			check_value_for_dollar(current);
+			check_value_for_dollar(current, status);
 		if (current->args)
-			check_args_for_dollar(current);
+			check_args_for_dollar(current, status);
 		if(current->value)
 			open_quotes(current);
 		current = current->next;
