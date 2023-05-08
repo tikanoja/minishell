@@ -132,23 +132,25 @@ int main(int argc, char **argv, const char **envp)
 {
     char *prompt;
     t_list *head;
+    //struct termios orig_termios;
 
     prompt = NULL;
     head = NULL;
     if (argc > 1 || argv == NULL)
         exitmsg("too many args");
     get_env_copy(&envcpy, envp);
+    init_signals();
     while (1)
     {
-        init_signals();
         prompt = readline("\033[0;32mshelly\033[0m> ");
         //termios_fix
         if (!prompt)
         {
+            printf("\033[0;32mshelly\033[0m>\033[A exit\n");
             free_env(envcpy);
             exit(0);
-            //exitmsg("readline malloc fail");
         }
+        //tcsetattr(STDIN_FILENO, TCSANOW, &orig_termios);
         if (prompt[0] == '\0')
             continue ;
         add_history(prompt);
