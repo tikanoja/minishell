@@ -162,8 +162,8 @@ int main(int argc, char **argv, const char **envp)
         printlist(head);
         parse_system_commands(envcpy, head);
         runcmd(head, envcpy);
-        rl_replace_line(prompt, 0);
-        rl_on_new_line();
+        // rl_replace_line(prompt, 0);
+        // rl_on_new_line();
         free(prompt);
         free_list(head);
     }
