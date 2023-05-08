@@ -69,6 +69,8 @@ int ft_echo(t_list *echo)
 
 	n_flag = 0;
 	i = 0;
+	if (echo->argc == 0)
+		return (0);
 	int original_fd = dup(STDOUT_FILENO);
 	dup2(echo->output, STDOUT_FILENO);
 	if (one_n_checker(echo) == 1)
