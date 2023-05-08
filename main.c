@@ -138,7 +138,6 @@ int main(int argc, char **argv, const char **envp)
     if (argc > 1 || argv == NULL)
         exitmsg("too many args");
     get_env_copy(&envcpy, envp);
-    write(1, "SEGF?/n", 6);
     while (1)
     {
         prompt = readline("\033[0;32mshelly\033[0m> ");
@@ -147,15 +146,19 @@ int main(int argc, char **argv, const char **envp)
             free_env(envcpy);
             exitmsg("readline malloc fail");
         }
+        if (prompt[0] == '\0')
+            continue ;
         add_history(prompt);
         if (check_quotes(prompt) == 1 || empty_input(prompt) == 1)
             continue ;
         head = parsecmd(prompt, envcpy);
         gatekeeper(head);
         open_fds_and_pipes(head);
-        parse_system_commands(envcpy, head);
         printlist(head);
+        parse_system_commands(envcpy, head);
         runcmd(head, envcpy);
+        rl_replace_line(prompt, 0);
+        rl_on_new_line();
         free(prompt);
         free_list(head);
     }
