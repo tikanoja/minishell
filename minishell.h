@@ -67,7 +67,21 @@ typedef struct  s_list
     struct s_list *prev; //prev node
 }               t_list;
 
+// typedef struct s_signals
+// {
+//     struct sigaction sa_c;
+//     struct sigaction sa_d;
+//     struct sigaction sa_bs;
+// } t_signals;
+// int 
+
 char **envcpy;
+//signals.c
+void init_signals();
+void handle_ctrl_d(int signum);
+void handle_ctrl_c(int signum);
+void rl_replace_line (const char *text, int clear_undo);
+
 //cd.c
 void ft_cd(t_list *current);
 

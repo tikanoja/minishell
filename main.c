@@ -140,11 +140,14 @@ int main(int argc, char **argv, const char **envp)
     get_env_copy(&envcpy, envp);
     while (1)
     {
+        init_signals();
         prompt = readline("\033[0;32mshelly\033[0m> ");
+        //termios_fix
         if (!prompt)
         {
             free_env(envcpy);
-            exitmsg("readline malloc fail");
+            exit(0);
+            //exitmsg("readline malloc fail");
         }
         if (prompt[0] == '\0')
             continue ;
