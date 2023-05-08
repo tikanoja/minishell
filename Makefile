@@ -18,7 +18,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(MAKE) -C libft
-	cc $(FLAGS) $(OBJ) -L./libft -lft -o $(NAME) -lreadline
+	cc $(FLAGS) $(OBJ) -L./libft -lft -o $(NAME) -lreadline -L ~/.brew/opt/readline/lib -I ~/.brew/opt/readline/include
 
 clean:
 	$(MAKE) clean -C libft
