@@ -128,6 +128,7 @@ t_list    *handle_pipe(t_list *current)
     prev->output = pipefd[1];
     prev->pipe = 1;
     next->input = pipefd[0];
+    next->pipe = 1;
     prev->next = next;
     next->prev = prev;
     free(current->value);

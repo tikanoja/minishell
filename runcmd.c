@@ -43,6 +43,22 @@ int     assignment_check(char *str)
 
 void    execute_builtin(t_list *current)
 {
+    pid_t pid;
+    int forkflag;
+
+    pid = 1;
+    forkflag = 0;
+    if (current->pipe == 1)
+    {
+        forkflag = 1;
+        pid = fork();
+        if (pid == -1)
+		    exitmsg("fork fail\n");
+        if (pid == 0)
+            forkflag = 0;
+    }
+    if (forkflag == 0)
+    {
     if (ft_strncmp_casein(current->value, "echo", 5) == 0)
             ft_echo(current);
     else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
@@ -57,6 +73,13 @@ void    execute_builtin(t_list *current)
             ft_export(current);
     else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
             ft_cd(current);
+    if (pid == 0)
+        ft_exit(current);
+    }
+    if (current->input != STDIN_FILENO)
+        close(current->input);
+    if (current->output != STDOUT_FILENO)
+        close(current->output);
 }
 
 void  execute_system_command(t_list *current, char **envcpy)
@@ -97,7 +120,6 @@ int    runcmd(t_list *head, char **envcpy)
     pid_t pid;
     int status;
     
-    int i = 0;
     current = NULL;
     current = head;
     status = 0;
@@ -106,41 +128,21 @@ int    runcmd(t_list *head, char **envcpy)
         if (current->value == NULL)
         {
             printf("shelly: %s: command not found\n", current->args[0]);
-            current = current->next;
-            continue;
+            status = 127;
         }
-        if (slash_check(current) == 1 && directory_check(current) == 1)
+        else if (slash_check(current) == 1 && directory_check(current) == 1)
         {
             printf("shelly: %s: is a directory\n", current->value);
-            current = current->next;
-            continue;
+            status = 126;
         }
         else if (variable_assign_check(current->value) == 1)
-        {   
             ft_setenv(current->value);
-        }
         else if (is_it_builtin(current->value) > 0)
-        {
             execute_builtin(current);
-            if (current->input != STDIN_FILENO)
-                close(current->input);
-            if (current->output != STDOUT_FILENO)
-                close(current->output);
-        }
         else if (current->system_command == 1)
-        {
             execute_system_command(current, envcpy);
-            i++;
-        }
         current = current->next;
     }
     while ((pid = waitpid(-1, &status, 0)) > 0);
-    // {
-    // // handle child process exit status
-    //     if (WIFEXITED(status))
-    //         printf("Child process %d exited with status %d\n", pid, WEXITSTATUS(status));
-    //     else if (WIFSIGNALED(status))
-    //         printf("Child process %d terminated by signal %d\n", pid, WTERMSIG(status));
-    // }
     return(status);
 }
