@@ -25,31 +25,77 @@ int empty_input(char *str)
         return (0);
 }
 
-int check_quotes(char *str)
+int find_next_quote(char quote, int i, char *str)
 {
-    int i;
-    int single_quotes;
-    int double_quotes;
-
-    i = 0;
-    single_quotes = 0;
-    double_quotes = 0;
+    i++;
     while(str[i])
     {
-        if (str[i] == '\'')
-            single_quotes++;
-        else if (str[i] == '"')
-            double_quotes++;
+        if (str[i] == quote)
+            return (i);
         i++;
     }
-    if (single_quotes % 2 == 1 || double_quotes % 2 == 1)
-    {
-        printf("unclosed quotes...\n");
-        free (str);
-        return (1);
-    }
-    return (0);
+    return (-1);
 }
+
+int check_quotes(char *str)
+{
+    int	i;
+    int ret;
+
+	i = 0;
+    ret = 0;
+	while (str[i])
+    {
+        if (str[i] == '\'' || str[i] == '"')
+        {
+            ret = find_next_quote(str[i], i, str);
+            if (ret == -1)
+            {
+                write(2, "unclosed quotes\n", 16);
+                return (1);
+            }
+            i = ret;
+        }
+        i++;
+    }
+	return (0);
+}
+
+// int check_quotes(char *str)
+// {
+//     int	i;
+// 	int	double_quote;
+// 	int	single_quote;
+
+// 	i = 0;
+// 	double_quote = 0;
+// 	single_quote = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '\'' && double_quote == 0)
+// 			single_quote++;
+// 		else if (str[i] == '\"' && single_quote == 0)
+// 			double_quote++;
+// 		i++;
+// 	}
+// 	if (single_quote == 0 && double_quote > 0)
+// 	{
+// 		if (double_quote % 2 != 0)
+//         {
+// 			printf("unclosed quotes"); //handle error
+// 		    return (1);
+//         }
+// 	}
+// 	else if (double_quote == 0 && single_quote > 0)
+// 	{
+// 		if (single_quote % 2 != 0)
+//         {
+// 			printf("wrong amount of quotes"); //handle error
+// 		    return (1);
+//         }
+// 	}
+// 	return (0);
+// }
 
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i)
 {
@@ -123,6 +169,7 @@ void printlist(t_list *head)
         printf("argc: %d\n", current->argc);
         j = 0;
         printf("in: %d, out: %d\n", current->input, current->output);
+        printf("pipeflag: %d\n", current->pipe);
         current = current->next;
         i++;
     }
