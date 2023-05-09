@@ -105,7 +105,7 @@ t_list *add_head_node(t_list *node, t_list **head, char **envcpy)
 		exitmsg("node malloc failed");
 	}
 	node->args = malloc(sizeof(char **));
-	if (!node)
+	if (!node->args)
 	{
 		free_env(envcpy);
 		free(node);
