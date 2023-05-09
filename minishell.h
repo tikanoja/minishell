@@ -65,6 +65,7 @@ typedef struct  s_list
     int system_command; //is it a sys cmd
     struct s_list *next; //next node
     struct s_list *prev; //prev node
+    int pipe;
 }               t_list;
 
 // typedef struct s_signals
