@@ -116,6 +116,12 @@ void	ft_setenv(char *value)
 	//new_env[i++] = "\0";
 	new_env[j] = ft_strdup(temp[i]);
 	envcpy = new_env;
+	i = 0;
+	while(temp[i])
+	{
+		free(temp[i]);
+		i++;
+	}
 	free(temp); //pitääkö vapauttaa koko sisältö
 	free(valuepair);
 }

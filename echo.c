@@ -1,27 +1,5 @@
 #include "minishell.h"
 
-// int n_definer(char *arg)
-// {
-// 	int	j;
-
-// 	j = 1;
-// 	if (!arg)
-// 		return (0);
-// 	if (ft_strncmp(arg, "-n", 2) == 0)
-//     {
-//         if (arg[2] != 'n' && (is_it_whitespace(arg[2]) == 1 || arg[2] == '\0'))
-//             return (1);
-//         while (arg[j] == 'n')
-//         {
-//             j++;
-//             if (is_it_whitespace(arg[j]) == 1 || arg[j] == '\0')
-// 				return (1);
-// 			if (arg[j] != 'n')
-// 				return (0);
-//         }
-//     }
-// 	return (0);
-// }
 int n_definer(char *arg)
 {
 	int j = 1;
@@ -98,40 +76,3 @@ int ft_echo(t_list *echo)
 	close(original_fd);
 	return (0);
 }
-
-void ft_pwd()
-{
-	char cwd[1024];
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		printf("%s\n", cwd); 
-	else
-	{
-		perror("getcwd() error");
-		exit (EXIT_FAILURE);
-	}
-}
-
-void ft_exit(t_list *exit_arg) //siirrä omaan filuun? ja selvitä mitä kaikkea puuttuu, esim mitä tapahtuu jos kirjimia
-{
-	int exit_status;
-	if (exit_arg->argc < 1) 
-		exit (0);
-	exit_status = ft_atoi(exit_arg->args[0]) % 256;
-	exit (exit_status);
-}
-/*int main()
-{
-	t_list *echos;
-	echos = malloc(sizeof(t_list) * 1);
-	echos->value = "echo"; //esim "echo", ">" taiii "file.txt"
-	char *args[20] = {"-n","-n","hello world","hello $ECHOagain", "fucker"}; //esim "-n" ja "terve $ARG"
-	echos->args = args;
-	echos->argc = 5; //you already know
-	echos->input = 0; //fd for input
-	echos->output = 0; //fd for output
-	echos->append = 0; //flag if output redirection should append to file
-	echos->background = 0; //ei oo mitää hajuu
-	echo (echos);
-	pwd();
-	free(echos);
-}*/

@@ -15,7 +15,6 @@ char *parse_quotes(char *str)
 		return NULL;
 	while (str[i])
 	{
-		//printf("str c is %c\n", str[i]);
 		if (str[i] == '\'' && !quote)
 			quote = '\'';
 		else if (str[i] == '\"' && !quote)
