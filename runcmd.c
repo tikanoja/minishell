@@ -11,6 +11,20 @@ int     directory_check(t_list *current)
     return (0);
 }
 
+int     slash_check(t_list *current)
+{
+    int i;
+
+    i = 0;
+    while (current->value[i])
+    {
+        if (current->value[i] == '\\')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
 int     assignment_check(char *str)
 {
     int i;
@@ -95,7 +109,7 @@ int    runcmd(t_list *head, char **envcpy)
             current = current->next;
             continue;
         }
-        if (directory_check(current) == 1)
+        if (slash_check(current) == 1 && directory_check(current) == 1)
         {
             printf("shelly: %s: is a directory\n", current->value);
             current = current->next;

@@ -126,6 +126,7 @@ t_list    *handle_pipe(t_list *current)
     if (pipe(pipefd) == -1)
         printf("error opening pipe\n");
     prev->output = pipefd[1];
+    prev->pipe = 1;
     next->input = pipefd[0];
     prev->next = next;
     next->prev = prev;
