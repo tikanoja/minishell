@@ -78,6 +78,9 @@ typedef struct  s_list
 
 char **envcpy;
 
+//exit.c
+void ft_exit(t_list *exit_arg);
+
 //signals.c
 void init_signals();
 void handle_ctrl_c(int signum);
@@ -104,7 +107,7 @@ void    open_fds_and_pipes(t_list *head);
 int     findpath(char **env);
 void    convert_to_lowercase(char *str);
 int     variable_assign_check(char *str);
-void    parse_system_commands(char **env, t_list *head);
+void    parse_system_commands(t_list *head);
 
 //gatekeeper
 void    gatekeeper(t_list *head, int status);
@@ -172,9 +175,9 @@ char *ft_strcat(char *dest, const char *src);
 //echo.c
 int n_definer(char *arg);
 int ft_echo(t_list *echo);
-void ft_pwd();
-void ft_exit(t_list *exit);
 
+//pwd.d
+void ft_pwd();
 //runcmd.c
 void    redirection_check(t_list *current);
 int    runcmd(t_list *head, char **envcpy);

@@ -89,16 +89,19 @@ void move_value_to_args(t_list *current)
     current->args = arr;
 }
 
-void    parse_system_commands(char **env, t_list *head)
+void    parse_system_commands(t_list *head)
 {
     int i;
     char **patharr;
     t_list *current;
 
-    i = findpath(env);
+    i = findpath(envcpy);
     if (i == -1)
-        printf("path not found in env :(\n");
-    patharr = ft_split(env[i] + 5, ':'); //protect
+    {
+        printf("%s: no such file or directory\n", head->value);
+        return ;
+    }
+    patharr = ft_split(envcpy[i] + 5, ':'); //protect
     current = head;
     while (current)
     {
