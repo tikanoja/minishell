@@ -1,15 +1,14 @@
 #include "minishell.h"
 
-int handle_ctrl_c(int signum __attribute__((unused)))
+void handle_ctrl_c(int signum __attribute__((unused)))
 {
     write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
-    return (1);
 }
 
-int init_signals(int interrupted)
+void init_signals()
 {
     struct sigaction sa_c;
     // Save original terminal settings
