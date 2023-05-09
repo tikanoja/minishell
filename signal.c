@@ -33,3 +33,4 @@ int termios_handler(int flag) //should this return status then?
     tcsetattr(STDOUT_FILENO, TCSAFLUSH, &term);
     return(0);
 }
+
