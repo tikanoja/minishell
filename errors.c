@@ -16,6 +16,7 @@ void free_list(t_list *head)
 	i = 0;
 	while (current != NULL)
 	{
+		i = 0;
 		if (current->input != STDIN_FILENO)
 			close(current->input);
 		if (current->output != STDOUT_FILENO)
@@ -23,7 +24,7 @@ void free_list(t_list *head)
 		free(current->value);
 		while (current->args[i])
 		{
-			//free(current->args[i]);
+			free(current->args[i]);
 			i++;
 		}
 		free(current->args);
