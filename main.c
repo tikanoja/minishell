@@ -133,7 +133,6 @@ int main(int argc, char **argv, const char **envp)
     char *prompt;
     t_list *head;
     int status;
-    //struct termios orig_termios;
 
     prompt = NULL;
     head = NULL;
@@ -141,18 +140,18 @@ int main(int argc, char **argv, const char **envp)
     if (argc > 1 || argv == NULL)
         exitmsg("too many args");
     get_env_copy(&envcpy, envp);
-    init_signals();
     while (1)
     {
+        init_signals();
+        termios_handler(1);
         prompt = readline("\033[0;32mshelly\033[0m> ");
-        //termios_fix
         if (!prompt)
         {
             printf("\033[0;32mshelly\033[0m>\033[A exit\n");
             free_env(envcpy);
             exit(0);
         }
-        //tcsetattr(STDIN_FILENO, TCSANOW, &orig_termios);
+        termios_handler(0);
         if (prompt[0] == '\0')
             continue ;
         add_history(prompt);
@@ -165,7 +164,7 @@ int main(int argc, char **argv, const char **envp)
         printlist(head);
         status = runcmd(head, envcpy);
         // rl_replace_line(prompt, 0);
-        // rl_on_new_line();
+        //rl_on_new_line();
         free(prompt);
         free_list(head);
     }

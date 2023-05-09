@@ -81,6 +81,7 @@ char **envcpy;
 void init_signals();
 void handle_ctrl_c(int signum);
 void rl_replace_line (const char *text, int clear_undo);
+int termios_handler(int flag);
 
 //cd.c
 void ft_cd(t_list *current);
