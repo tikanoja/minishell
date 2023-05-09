@@ -1,9 +1,15 @@
 #include "minishell.h"
 
-// void    redirection_check(t_list *current)
-// {
-//     if (current->next != NULL && is_it_redirection(current->next->value) == 1)
-// }
+int     directory_check(t_list *current)
+{
+    struct stat file_info;
+
+    if (stat(current->value, &file_info) == -1)
+        printf("stat call failed"); //protect?
+    if (S_ISDIR(file_info.st_mode))
+        return (1);
+    return (0);
+}
 
 int     assignment_check(char *str)
 {
@@ -86,6 +92,12 @@ int    runcmd(t_list *head, char **envcpy)
         if (current->value == NULL)
         {
             printf("shelly: %s: command not found\n", current->args[0]);
+            current = current->next;
+            continue;
+        }
+        if (directory_check(current) == 1)
+        {
+            printf("shelly: %s: is a directory\n", current->value);
             current = current->next;
             continue;
         }
