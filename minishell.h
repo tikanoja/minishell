@@ -81,6 +81,7 @@ char **envcpy;
 
 //exit.c
 void ft_exit(t_list *exit_arg, int pid);
+int check_for_non_numeric(char *str);
 
 //signals.c
 void init_signals();
