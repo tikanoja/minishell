@@ -80,7 +80,7 @@ typedef struct  s_list
 char **envcpy;
 
 //exit.c
-void ft_exit(t_list *exit_arg);
+void ft_exit(t_list *exit_arg, int pid);
 
 //signals.c
 void init_signals();
