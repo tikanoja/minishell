@@ -85,7 +85,7 @@ void    execute_builtin(t_list *current)
 void  execute_system_command(t_list *current, char **envcpy)
 {
     pid_t pid;
-    // int status; passaa taa waitpid jos haluu selvittaa miten se meni
+    //int status; //passaa taa waitpid jos haluu selvittaa miten se meni
 
     pid = fork();
     if (pid == -1)
@@ -135,8 +135,6 @@ int    runcmd(t_list *head, char **envcpy)
             printf("shelly: %s: is a directory\n", current->value);
             status = 126;
         }
-        else if (variable_assign_check(current->value) == 1)
-            ft_setenv(current->value);
         else if (is_it_builtin(current->value) > 0)
             execute_builtin(current);
         else if (current->system_command == 1)
