@@ -105,6 +105,8 @@ t_list *fill_node_from_stdin(t_list *current)
     new->args = malloc(sizeof(char **)); //protect
     new->args[0] = NULL;
     new->argc = 0;
+    new->pipe = 1;
+    new->pipe_position = 0;
     new->input = STDIN_FILENO;
 	new->output = STDOUT_FILENO;
     new->prev = current;
