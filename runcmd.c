@@ -50,6 +50,7 @@ void    execute_builtin(t_list *current)
     forkflag = 0;
     if (current->pipe == 1)
     {
+        init_child_signals();
         forkflag = 1;
         pid = fork();
         if (pid == -1)
@@ -88,6 +89,7 @@ void  execute_system_command(t_list *current, char **envcpy)
     //int status; //passaa taa waitpid jos haluu selvittaa miten se meni
 
     pid = fork();
+    init_child_signals();
     if (pid == -1)
 		exitmsg("fork fail\n");
     else if (pid == 0)

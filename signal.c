@@ -8,6 +8,11 @@ void handle_ctrl_c(int signum __attribute__((unused)))
     rl_redisplay();
 }
 
+void handle_ctrl_c_child(int signum __attribute__((unused)))
+{
+    write(STDOUT_FILENO, "\n", 1);
+}
+
 void init_signals()
 {
     struct sigaction sa_c;
@@ -32,5 +37,17 @@ int termios_handler(int flag) //should this return status then?
         term.c_lflag |= ECHOCTL;
     tcsetattr(STDOUT_FILENO, TCSAFLUSH, &term);
     return(0);
+}
+
+void init_child_signals()
+{
+    struct sigaction sa_c;
+    // Save original terminal settings
+    //tcgetattr(STDIN_FILENO, orig_termios);
+       /* ECHO off, other bits unchanged */
+    sa_c.sa_handler = handle_ctrl_c_child;
+    sigemptyset(&sa_c.sa_mask);
+    sa_c.sa_flags = 0;
+    sigaction(SIGINT, &sa_c, NULL);
 }
 
