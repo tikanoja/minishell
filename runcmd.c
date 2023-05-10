@@ -77,10 +77,52 @@ void    execute_builtin(t_list *current)
     if (pid == 0)
         ft_exit(current);
     }
-    if (current->input != STDIN_FILENO)
-        close(current->input);
-    if (current->output != STDOUT_FILENO)
-        close(current->output);
+    // if (current->input != STDIN_FILENO)
+    //     close(current->input);
+    // if (current->output != STDOUT_FILENO)
+    //     close(current->output);
+}
+
+void    fd_handling(t_list *current)
+{
+    if (current->pipe == 0)
+    {
+        if (current->input != STDIN_FILENO)
+        {
+            dup2(current->input, STDIN_FILENO);
+            close(current->input);
+        }
+        if (current->output != STDOUT_FILENO)
+        {
+            close(current->next->input);
+            dup2(current->output, STDOUT_FILENO);
+            close(current->output);
+        }
+    }
+    else
+    {
+        if (current->pipe_position == 1)
+        {
+            close(current->next->input);
+            dup2(current->output, STDOUT_FILENO);
+            close(current->output);
+        }
+        else if (current->pipe_position == 2)
+        {
+            close(current->prev->output);
+            close(current->next->input);
+            dup2(current->input, STDIN_FILENO);
+            close(current->input);
+            dup2(current->output, STDOUT_FILENO);
+            close(current->output);
+        }
+        else if (current->pipe_position == 3)
+        {
+            close(current->prev->output);
+            dup2(current->input, STDIN_FILENO);
+            close(current->input);
+        }
+    }
 }
 
 void  execute_system_command(t_list *current, char **envcpy)
@@ -94,25 +136,28 @@ void  execute_system_command(t_list *current, char **envcpy)
 		exitmsg("fork fail\n");
     else if (pid == 0)
 	{
-        if (current->input != STDIN_FILENO)
-        {
-            dup2(current->input, STDIN_FILENO);
-            close(current->input);
-        }
-        if (current->output != STDOUT_FILENO)
-        {
-            dup2(current->output, STDOUT_FILENO);
-            close(current->output);
-        }
+        fd_handling(current);
         execve(current->value, current->args, envcpy);
         exit(1);
     }
-    else
+    // else
+    // {
+    //     if (current->input != STDIN_FILENO)
+    //         close(current->input);
+    //     if (current->output != STDOUT_FILENO)
+    //         close(current->output);
+    // }
+}
+
+void close_all_fds(t_list *current)
+{
+    while (current)
     {
         if (current->input != STDIN_FILENO)
             close(current->input);
         if (current->output != STDOUT_FILENO)
             close(current->output);
+        current = current->next;
     }
 }
 
@@ -143,6 +188,8 @@ int    runcmd(t_list *head, char **envcpy)
             execute_system_command(current, envcpy);
         current = current->next;
     }
+    current = head;
+    close_all_fds(current);
     while ((pid = waitpid(-1, &status, 0)) > 0);
     return(status);
 }
