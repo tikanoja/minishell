@@ -61,42 +61,6 @@ int check_quotes(char *str)
 	return (0);
 }
 
-// int check_quotes(char *str)
-// {
-//     int	i;
-// 	int	double_quote;
-// 	int	single_quote;
-
-// 	i = 0;
-// 	double_quote = 0;
-// 	single_quote = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '\'' && double_quote == 0)
-// 			single_quote++;
-// 		else if (str[i] == '\"' && single_quote == 0)
-// 			double_quote++;
-// 		i++;
-// 	}
-// 	if (single_quote == 0 && double_quote > 0)
-// 	{
-// 		if (double_quote % 2 != 0)
-//         {
-// 			printf("unclosed quotes"); //handle error
-// 		    return (1);
-//         }
-// 	}
-// 	else if (double_quote == 0 && single_quote > 0)
-// 	{
-// 		if (single_quote % 2 != 0)
-//         {
-// 			printf("wrong amount of quotes"); //handle error
-// 		    return (1);
-//         }
-// 	}
-// 	return (0);
-// }
-
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i)
 {
     while(envp[rows] != NULL)
@@ -170,6 +134,7 @@ void printlist(t_list *head)
         j = 0;
         printf("in: %d, out: %d\n", current->input, current->output);
         printf("pipeflag: %d\n", current->pipe);
+        printf("pipe pos: %d\n", current->pipe_position);
         current = current->next;
         i++;
     }

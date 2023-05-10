@@ -177,6 +177,23 @@ t_list  *handle_heredoc(t_list *current)
     return (prev);
 }
 
+void    fill_pipe_position(t_list *current)
+{
+    while (current)
+    {
+        if (current->pipe == 1)
+        {
+            if (current->prev == NULL || current->prev->pipe == 0)
+                current->pipe_position = 1;
+            else if (current->prev->pipe == 1 && (current->next == NULL || current->next->pipe == 0))
+                current->pipe_position = 3;
+            else if (current->prev->pipe == 1 && current->next->pipe == 1)
+                current->pipe_position = 2;
+        }
+        current = current->next;
+    }
+}
+
 void    open_fds_and_pipes(t_list *head)
 {
     t_list *current;
@@ -196,4 +213,5 @@ void    open_fds_and_pipes(t_list *head)
 		    current = handle_redirection_out(current);
         current = current->next;
     }
+    fill_pipe_position(head);
 }
