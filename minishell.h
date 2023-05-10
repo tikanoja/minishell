@@ -88,6 +88,9 @@ void rl_replace_line (const char *text, int clear_undo);
 int termios_handler(int flag);
 void init_child_signals();
 void handle_ctrl_c_child(int signum __attribute__((unused)));
+void handle_ctrl_d_child(int signum __attribute__((unused)));
+void handle_ctrl_c_heredoc(int signum __attribute__((unused)));
+void handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //cd.c
 void ft_cd(t_list *current);

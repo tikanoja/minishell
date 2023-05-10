@@ -13,6 +13,22 @@ void handle_ctrl_c_child(int signum __attribute__((unused)))
     write(STDOUT_FILENO, "\n", 1);
 }
 
+void handle_ctrl_d_child(int signum __attribute__((unused)))
+{
+    write(STDOUT_FILENO, "\n", 1);
+}
+
+void handle_ctrl_c_heredoc(int signum __attribute__((unused)))
+{
+    write(STDOUT_FILENO, "\n", 1);
+}
+
+void handle_ctrl_d_heredoc(int signum __attribute__((unused)))
+{
+    write(STDOUT_FILENO, "\n", 1);
+}
+
+
 void init_signals()
 {
     struct sigaction sa_c;
@@ -42,6 +58,7 @@ int termios_handler(int flag) //should this return status then?
 void init_child_signals()
 {
     struct sigaction sa_c;
+    struct sigaction sa_d;
     // Save original terminal settings
     //tcgetattr(STDIN_FILENO, orig_termios);
        /* ECHO off, other bits unchanged */
@@ -49,5 +66,30 @@ void init_child_signals()
     sigemptyset(&sa_c.sa_mask);
     sa_c.sa_flags = 0;
     sigaction(SIGINT, &sa_c, NULL);
+
+        /* Handle Ctrl-D (EOF) signal */
+    sa_d.sa_handler = handle_ctrl_d_child;
+    sigemptyset(&sa_d.sa_mask);
+    sa_d.sa_flags = 0;
+    sigaction(SIGQUIT, &sa_d, NULL);
+}
+
+void init_heredoc_signals()
+{
+    struct sigaction sa_c;
+    struct sigaction sa_d;
+    // Save original terminal settings
+    //tcgetattr(STDIN_FILENO, orig_termios);
+       /* ECHO off, other bits unchanged */
+    sa_c.sa_handler = handle_ctrl_c_child;
+    sigemptyset(&sa_c.sa_mask);
+    sa_c.sa_flags = 0;
+    sigaction(SIGINT, &sa_c, NULL);
+
+        /* Handle Ctrl-D (EOF) signal */
+    sa_d.sa_handler = handle_ctrl_d_child;
+    sigemptyset(&sa_d.sa_mask);
+    sa_d.sa_flags = 0;
+    sigaction(SIGQUIT, &sa_d, NULL);
 }
 
