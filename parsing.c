@@ -86,6 +86,7 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 		node->value = token;
 	node->argc = 0;
 	node->pipe = 0;
+	node->pipe_position = 0;
 	node->prev = prev;
 	prev->next = node;
 	node->args = malloc(sizeof(char **));
@@ -115,6 +116,7 @@ t_list *add_head_node(t_list *node, t_list **head, char **envcpy)
 	node->args[0] = NULL;
 	node->argc = 0;
 	node->pipe = 0;
+	node->pipe_position = 0;
 	node->input = STDIN_FILENO;
 	node->output = STDOUT_FILENO;
 	node->prev = NULL;

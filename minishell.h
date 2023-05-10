@@ -66,6 +66,7 @@ typedef struct  s_list
     struct s_list *next; //next node
     struct s_list *prev; //prev node
     int pipe;
+    int pipe_position;
 }               t_list;
 
 // typedef struct s_signals
