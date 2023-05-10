@@ -96,7 +96,7 @@ void    parse_system_commands(t_list *head)
     t_list *current;
 
     i = findpath(envcpy);
-    if (i == -1)
+    if (i == -1) //this might need some tweaking, why free error when exitting if path unset???
     {
         printf("%s: no such file or directory\n", head->value);
         return ;
@@ -123,5 +123,12 @@ void    parse_system_commands(t_list *head)
         }
         current = current->next;
     }
+    i = 0;
+    while(patharr[i]) //much of the leaks went away :)
+    {
+        free(patharr[i]);
+        i++;
+    }
+    free(patharr);
     return ;
 }
