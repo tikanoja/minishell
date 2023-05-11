@@ -18,7 +18,7 @@ void ft_exit(t_list *exit_arg, int pid)
 	int exit_status;
 
 	exit_status = 0;
-	if (check_for_non_numeric(exit_arg->args[0]) == 1)
+	if (check_for_non_numeric(exit_arg->args[0]) == 1 && exit_arg->argc >= 1)
 	{
 		printf("minishell: exit: %s: numeric argument required\n", exit_arg->args[0]);
 		exit_status = 255;
