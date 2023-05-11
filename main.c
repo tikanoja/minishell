@@ -52,6 +52,7 @@ int check_quotes(char *str)
             if (ret == -1)
             {
                 write(2, "unclosed quotes\n", 16);
+                free(str);
                 return (1);
             }
             i = ret;
@@ -135,8 +136,24 @@ void printlist(t_list *head)
         printf("in: %d, out: %d\n", current->input, current->output);
         printf("pipeflag: %d\n", current->pipe);
         printf("pipe pos: %d\n", current->pipe_position);
+        printf("pipe index: %d\n", current->index);
         current = current->next;
         i++;
+    }
+}
+
+void    add_index(t_list *head)
+{
+    t_list *current;
+    int i;
+
+    current = head;
+    i = 1;
+    while(current)
+    {
+        current->index = i;
+        i++;
+        current = current->next;
     }
 }
 
@@ -165,7 +182,10 @@ int main(int argc, char **argv, const char **envp)
         }
         termios_handler(0);
         if (prompt[0] == '\0')
+        {
+            free(prompt);
             continue ;
+        }
         add_history(prompt);
         if (check_quotes(prompt) == 1 || empty_input(prompt) == 1)
             continue ;
@@ -173,6 +193,9 @@ int main(int argc, char **argv, const char **envp)
         gatekeeper(head, status);
         open_fds_and_pipes(head);
         parse_system_commands(head);
+        add_index(head);
+        //status = error_handling(head);
+
         printlist(head);
         status = runcmd(head, envcpy);
         // rl_replace_line(prompt, 0);

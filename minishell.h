@@ -67,6 +67,7 @@ typedef struct  s_list
     struct s_list *prev; //prev node
     int pipe;
     int pipe_position;
+    int index;
 }               t_list;
 
 // typedef struct s_signals
@@ -175,6 +176,7 @@ void free_env(char **env);
 void free_env_and_list(char **env, t_list *head);
 void free_array(char **arr);
 void free_array_and_env(char **array, char **envcpy, t_list *head);
+int	error_handling(t_list *head);
 
 //builtin utils
 char *ft_strcat(char *dest, const char *src);

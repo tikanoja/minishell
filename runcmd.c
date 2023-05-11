@@ -25,20 +25,86 @@ int     slash_check(t_list *current)
     return (0);
 }
 
-int     assignment_check(char *str)
-{
-    int i;
+// void    fd_handling(t_list *current, t_list *head)
+// {
+//     int i = 1;
+//     int index = current->index;
+    
+//     if (current->pipe == 0)
+//     {
+//         if (current->input != STDIN_FILENO)
+//         {
+//             dup2(current->input, STDIN_FILENO);
+//             close(current->input);
+//         }
+//         if (current->output != STDOUT_FILENO)
+//         {
+//             dup2(current->output, STDOUT_FILENO);
+//             close(current->output);
+//         }
+//     }
+//     else
+//     {
+//         current = head;
+//         while(i <= index)
+//         {
+//         if (current->pipe_position == 1)
+//         {
+//             close(current->next->input);
+//             dup2(current->output, STDOUT_FILENO);
+//             close(current->output);
+//         }
+//         else if (current->pipe_position == 2)
+//         {
+//             close(current->prev->output);
+//             dup2(current->input, STDIN_FILENO);
+//             close(current->input);
+//             close(current->next->input);
+//             dup2(current->output, STDOUT_FILENO);
+//             close(current->output);
+//         }
+//         else if (current->pipe_position == 3)
+//         {
+//             close(current->prev->output);
+//             dup2(current->input, STDIN_FILENO);
+//             close(current->input);
+//         }
+//         i++;
+//         current = current->next;
+//         }
+//     }
+// }
 
-    i = 0;
-    if (str == NULL)
-        return (0);
-    while (str[i])
+void    fd_handling2(t_list *current, t_list *head)
+{
+    int index;
+
+    index = current->index;
+    current = head;
+    while (current)
     {
-        if (str[i] == '=')
-            return (1);
-        i++;
+        if (current->index != index)
+        {
+            if (current->input != STDIN_FILENO)
+                close(current->input);
+            if (current->output != STDOUT_FILENO)
+                close(current->output);
+        }
+        else
+        {
+            if (current->input != STDIN_FILENO)
+            {
+                dup2(current->input, STDIN_FILENO);
+                close(current->input);
+            }
+            if (current->output != STDOUT_FILENO)
+            {
+                dup2(current->output, STDOUT_FILENO);
+                close(current->output);
+            }
+        }
+        current = current->next;
     }
-    return (0);
 }
 
 void    execute_builtin(t_list *current)
@@ -56,7 +122,10 @@ void    execute_builtin(t_list *current)
         if (pid == -1)
 		    exitmsg("fork fail\n");
         if (pid == 0)
+        {
+            //fd_handling(current, head);
             forkflag = 0;
+        }
     }
     if (forkflag == 0)
     {
@@ -75,61 +144,13 @@ void    execute_builtin(t_list *current)
     else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
             ft_cd(current);
     if (pid == 0)
-        ft_exit(current, pid);
-    }
-    // if (current->input != STDIN_FILENO)
-    //     close(current->input);
-    // if (current->output != STDOUT_FILENO)
-    //     close(current->output);
-}
-
-
-void    fd_handling(t_list *current)
-{
-    if (current->pipe == 0)
-    {
-        if (current->input != STDIN_FILENO)
-        {
-            dup2(current->input, STDIN_FILENO);
-            close(current->input);
-        }
-        if (current->output != STDOUT_FILENO)
-        {
-            close(current->next->input);
-            dup2(current->output, STDOUT_FILENO);
-            close(current->output);
-        }
-    }
-    else
-    {
-        if (current->pipe_position == 1)
-        {
-            close(current->next->input);
-            dup2(current->output, STDOUT_FILENO);
-            close(current->output);
-        }
-        else if (current->pipe_position == 2)
-        {
-            close(current->prev->output);
-            close(current->next->input);
-            dup2(current->input, STDIN_FILENO);
-            close(current->input);
-            dup2(current->output, STDOUT_FILENO);
-            close(current->output);
-        }
-        else if (current->pipe_position == 3)
-        {
-            close(current->prev->output);
-            dup2(current->input, STDIN_FILENO);
-            close(current->input);
-        }
+        exit(0);
     }
 }
 
-void  execute_system_command(t_list *current, char **envcpy)
+void  execute_system_command(t_list *current, char **envcpy, t_list *head)
 {
     pid_t pid;
-    //int status; //passaa taa waitpid jos haluu selvittaa miten se meni
 
     pid = fork();
     init_child_signals();
@@ -137,17 +158,10 @@ void  execute_system_command(t_list *current, char **envcpy)
 		exitmsg("fork fail\n");
     else if (pid == 0)
 	{
-        fd_handling(current);
+        fd_handling2(current, head);
         execve(current->value, current->args, envcpy);
         exit(1);
     }
-    // else
-    // {
-    //     if (current->input != STDIN_FILENO)
-    //         close(current->input);
-    //     if (current->output != STDOUT_FILENO)
-    //         close(current->output);
-    // }
 }
 
 void close_all_fds(t_list *current)
@@ -186,7 +200,7 @@ int    runcmd(t_list *head, char **envcpy)
         else if (is_it_builtin(current->value) > 0)
             execute_builtin(current);
         else if (current->system_command == 1)
-            execute_system_command(current, envcpy);
+            execute_system_command(current, envcpy, head);
         current = current->next;
     }
     current = head;
