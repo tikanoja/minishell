@@ -200,7 +200,6 @@ int main(int argc, char **argv, const char **envp)
         status = runcmd(head, envcpy);
         // rl_replace_line(prompt, 0);
         //rl_on_new_line();
-        free(prompt);
         free_list(head);
     }
     return (0);

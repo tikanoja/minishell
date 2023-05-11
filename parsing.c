@@ -83,7 +83,7 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	if (!node)
 		free_env_and_list(envcpy, head);
 	if (token != NULL)
-		node->value = token;
+		node->value = ft_strdup(token);
 	node->argc = 0;
 	node->pipe = 0;
 	node->pipe_position = 0;
@@ -135,21 +135,19 @@ char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 	array = malloc((node->argc + 2) * sizeof(char **));
 	if (!array)
 		free_env_and_list(envcpy, head);
-	while (1)
+	while (node->args[i])
 	{
-		array[i] = malloc(sizeof(char *));
-		if (!array[i])
-			free_array_and_env(array, envcpy, head);
-		array[i] = node->args[i];
-		node->args[i] = NULL;
-		if (array[i] == NULL)
-			break ;
+		// array[i] = malloc(sizeof(char) * ft_strlen(node->args[i]));
+		// if (!array[i])
+		// 	free_array_and_env(array, envcpy, head); //fiksaa
+		array[i] = ft_strdup(node->args[i]);
+		free(node->args[i]);
 		i++;
 	}
 	node->argc = i + 1;
 	free(node->args);
 	node->args = NULL;
-	array[i] = token;
+	array[i] = ft_strdup(token);
 	array[i + 1] = NULL;
 	return (array);
 }
@@ -177,15 +175,19 @@ t_list *parsecmd(char *prompt, char **envcpy)
 		{
 			argflag = -1;
 			node = add_node(node, token, envcpy, head);
+			free(token);
 			node = add_node(node, NULL, envcpy, head);
 			token = ft_lexer(NULL, envcpy, head);
 		}
 		if (argflag == -1)
-			node->value = token;
+			node->value = ft_strdup(token);
 		else
 			node->args = realloc_array(node, token, envcpy, head);
 		argflag++;
+		if (token)
+			free(token);
 		token = ft_lexer(NULL, envcpy, head);
 	}
+	free(prompt);
 	return (head);
 }
