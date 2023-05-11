@@ -23,13 +23,13 @@ void ft_exit(t_list *exit_arg, int pid)
 		printf("minishell: exit: %s: numeric argument required\n", exit_arg->args[0]);
 		exit_status = 255;
 	}
-	else if(pid != 0)
-		printf("exit\n");
 	else if(exit_arg->argc > 1)
 	{
 		printf("minishell: exit: too many arguments\n");
 		return ;
 	}
+	else if(pid != 0)
+		printf("exit\n");
 	else if (exit_arg->argc < 1) 
 		exit (0);
 	else
