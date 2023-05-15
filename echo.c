@@ -42,11 +42,13 @@ int one_n_checker(t_list *echo)
 int ft_echo(t_list *echo)
 {
 	int i;
+	int j;
 	int n_flag;
 	char *string;
-
+	int len;
 	n_flag = 0;
 	i = 0;
+	len = 0;
 	if (echo->argc == 0)
 		return (0);
 	int original_fd = dup(STDOUT_FILENO);
@@ -60,7 +62,13 @@ int ft_echo(t_list *echo)
 	if (echo->argc <= n_flag)
 		return (0);	
 	i = n_flag;
-	string = ft_calloc((echo->argc - n_flag), sizeof(char));
+	j = n_flag;
+	while(echo->args[j])
+	{
+		len += ft_strlen(echo->args[j]);
+		j++;
+	}
+	string = ft_calloc(len + echo->argc, sizeof(char));
 	ft_strcat(string, echo->args[i]);
 	i++;
 	while(i < echo->argc)
