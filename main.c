@@ -62,6 +62,39 @@ int check_quotes(char *str)
 	return (0);
 }
 
+int check_log_operators(char *prompt)
+{
+    int i;
+
+    i = 0;
+    while (prompt[i])
+    {
+        if (prompt[i] == '\'' || prompt[i] == '"')
+		{
+			i = find_next_quote(prompt[i], i, prompt);
+            i++;
+            continue ;
+		}
+        if (ft_strncmp(&prompt[i], "&&", 2) == 0)
+        {
+            write(2, "&& not supported\n", 17);
+            return (1);
+        }
+        else if (prompt[i] == ';')
+        {
+            write(2, "; not supported\n", 16);
+            return (1);
+        }
+        else if (prompt[i] == '\\')
+        {
+            write(2, "\\ not supported\n", 16);
+            return (1);
+        }
+        i++;
+    }
+    return (0);
+}
+
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i)
 {
 	while(envp[rows] != NULL)
@@ -177,15 +210,15 @@ void run_minishell(char *prompt, t_list *head, int status)
 			continue ;
 		}
 		add_history(prompt);
-		if (check_quotes(prompt) == 1 || empty_input(prompt) == 1)
+		if (check_quotes(prompt) == 1 || empty_input(prompt) == 1 || check_log_operators(prompt) == 1)
 			continue ;
 		head = parsecmd(prompt, envcpy);
+		printlist(head);
 		gatekeeper(head, status);
 		open_fds_and_pipes(head);
 		parse_system_commands(head);
 		add_index(head);
 		//status = error_handling(head);
-		printlist(head);
 		status = runcmd(head, envcpy);
 		// rl_replace_line(prompt, 0);
 		//rl_on_new_line();
