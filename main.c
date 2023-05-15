@@ -80,6 +80,11 @@ int check_log_operators(char *prompt)
             write(2, "&& not supported\n", 17);
             return (1);
         }
+        if (ft_strncmp(&prompt[i], "||", 2) == 0)
+        {
+            write(2, "|| not supported\n", 17);
+            return (1);
+        }
         else if (prompt[i] == ';')
         {
             write(2, "; not supported\n", 16);
