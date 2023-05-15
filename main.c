@@ -195,8 +195,15 @@ void    add_index(t_list *head)
 	}
 }
 
-void run_minishell(char *prompt, t_list *head, int status)
+void run_minishell()
 {
+	char *prompt;
+	t_list *head;
+	int status;
+
+	prompt = NULL;
+	head = NULL;
+	status = 0;
 	while (1)
 	{
 		init_signals();
@@ -233,16 +240,16 @@ void run_minishell(char *prompt, t_list *head, int status)
 
 int main(int argc, char **argv, const char **envp)
 {
-	char *prompt;
-	t_list *head;
-	int status;
+	// char *prompt;
+	// t_list *head;
+	// int status;
 
-	prompt = NULL;
-	head = NULL;
-	status = 0;
+	// prompt = NULL;
+	// head = NULL;
+	// status = 0;
 	if (argc > 1 || argv == NULL)
 		exitmsg("too many args");
 	get_env_copy(&envcpy, envp);
-	run_minishell(prompt, head, status);
+	run_minishell();
 	return (0);
 }

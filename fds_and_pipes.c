@@ -149,10 +149,17 @@ t_list  *handle_heredoc(t_list *current)
     delim = current->next->value;
     if (pipe(pipefd) == -1)
         printf("error opening heredoc pipe\n");
+    printf("pipefd is %d\n", pipefd[1]);
     while(1)
     {
+        init_heredoc_signals();
         input = readline(">");
-        if (ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0')
+        if (!input)
+        {
+            printf("\033[1A> ");
+            break;
+        }
+        if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
         {
             free(input);
             break ;
@@ -162,6 +169,7 @@ t_list  *handle_heredoc(t_list *current)
         free(input);
     }
     close(pipefd[1]);
+    init_signals();
     prev->input = pipefd[0];
     if (current->next->next)
     {

@@ -78,7 +78,7 @@ typedef struct  s_list
 // } t_signals;
 // int 
 
-char **envcpy;
+char **envcpy; //chang this to be g_envcpy
 
 //exit.c
 void ft_exit(t_list *exit_arg, int pid);
@@ -90,6 +90,7 @@ void handle_ctrl_c(int signum);
 void rl_replace_line (const char *text, int clear_undo);
 int termios_handler(int flag);
 void init_child_signals();
+void init_heredoc_signals();
 void handle_ctrl_c_child(int signum __attribute__((unused)));
 void handle_ctrl_d_child(int signum __attribute__((unused)));
 void handle_ctrl_c_heredoc(int signum __attribute__((unused)));
@@ -193,7 +194,7 @@ int    runcmd(t_list *head, char **envcpy);
 
 //main.c
 // int ft_echo(char *prompt);
-void run_minishell(char *prompt, t_list *head, int status);
+void run_minishell();
 int check_quotes(char *str);
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
 void get_env_copy(char ***envcpy, const char **envp);
