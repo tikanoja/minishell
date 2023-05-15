@@ -53,7 +53,7 @@ int ft_echo(t_list *echo)
 	dup2(echo->output, STDOUT_FILENO);
 	if (one_n_checker(echo) == 1)
 		return (0);
-	// printf("nflag = %d && argc = %d\n", n_flag, echo->argc);
+	//printf("nflag = %d && argc = %d\n", n_flag, echo->argc);
 	while(n_definer(echo->args[n_flag]) == 1)
 		n_flag++;
 
@@ -74,5 +74,6 @@ int ft_echo(t_list *echo)
 		printf("\n");
 	dup2(original_fd, STDOUT_FILENO);
 	close(original_fd);
+	free (string);
 	return (0);
 }
