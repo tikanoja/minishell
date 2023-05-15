@@ -159,6 +159,24 @@ void init_parsecmd(t_list **node, t_list **head, int *argflag)
 	*argflag = -1;
 }
 
+void	remove_extra_node(t_list *head)
+{
+	t_list *current;
+
+	current = head;
+	while (current)
+	{
+		if (is_it_redirection(current->value) > 0 && current->next->value == NULL)
+		{
+			free(current->next->args);
+			free(current->next);
+			current->next = NULL;
+			break ;
+		}
+		current = current->next;
+	}
+}
+
 t_list *parsecmd(char *prompt, char **envcpy)
 {
 	t_list  *node;
@@ -179,15 +197,17 @@ t_list *parsecmd(char *prompt, char **envcpy)
 			node = add_node(node, NULL, envcpy, head);
 			token = ft_lexer(NULL, envcpy, head);
 		}
-		if (argflag == -1)
+		if (argflag == -1 && token)
 			node->value = ft_strdup(token);
-		else
+		else if (token)
 			node->args = realloc_array(node, token, envcpy, head);
 		argflag++;
 		if (token)
 			free(token);
 		token = ft_lexer(NULL, envcpy, head);
 	}
+	write(1, "HERE\n", 5);
+	remove_extra_node(head);
 	free(prompt);
 	return (head);
 }
