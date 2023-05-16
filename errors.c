@@ -18,12 +18,13 @@ void free_list(t_list *head)
 	{
 		i = 0;
 		free(current->value);
-		while (current->args[i])
+		while (current->args && current->args[i])
 		{
 			free(current->args[i]);
 			i++;
 		}
-		free(current->args);
+		if (current->args)
+			free(current->args);
 		next = current->next;
 		free(current);
 		current = next;

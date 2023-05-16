@@ -164,7 +164,7 @@ void printlist(t_list *head)
 	{
 		printf("\nNode number %d\n", i);
 		printf("value: %s\n", current->value);
-		while(current->args[j] != NULL)
+		while(current->args && current->args[j] != NULL)
 		{
 			printf("args: %s\n", current->args[j]);
 			j++;
@@ -174,7 +174,7 @@ void printlist(t_list *head)
 		printf("in: %d, out: %d\n", current->input, current->output);
 		printf("pipeflag: %d\n", current->pipe);
 		printf("pipe pos: %d\n", current->pipe_position);
-		printf("pipe index: %d\n", current->index);
+		printf("index: %d\n", current->index);
 		current = current->next;
 		i++;
 	}
@@ -225,13 +225,14 @@ void run_minishell()
 		if (check_quotes(prompt) == 1 || empty_input(prompt) == 1 || check_log_operators(prompt) == 1)
 			continue ;
 		head = parsecmd(prompt, envcpy);
-		printlist(head);
 		gatekeeper(head, status);
 		open_fds_and_pipes(head);
 		parse_system_commands(head);
 		add_index(head);
+		printlist(head);
 		//status = error_handling(head);
 		status = runcmd(head, envcpy);
+		printf("testing\n");
 		// rl_replace_line(prompt, 0);
 		//rl_on_new_line();
 		free_list(head);

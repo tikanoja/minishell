@@ -112,7 +112,7 @@ void    execute_builtin(t_list *current)
     pid_t pid;
     int forkflag;
 
-    pid = 1;
+    pid = 1; //getpid
     forkflag = 0;
     if (current->pipe == 1)
     {
@@ -182,7 +182,6 @@ int    runcmd(t_list *head, char **envcpy)
     pid_t pid;
     int status;
     
-    current = NULL;
     current = head;
     status = 0;
     while (current)

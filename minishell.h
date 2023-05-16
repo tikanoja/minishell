@@ -194,6 +194,7 @@ int    runcmd(t_list *head, char **envcpy);
 
 //main.c
 // int ft_echo(char *prompt);
+void printlist(t_list *head);
 void run_minishell();
 int check_quotes(char *str);
 void malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
