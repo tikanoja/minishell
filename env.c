@@ -122,7 +122,13 @@ void	ft_setenv(char *value)
 		free(temp[i]);
 		i++;
 	}
-	free(temp); //pitääkö vapauttaa koko sisältö
+	free(temp); 
+	i = 0;
+	while(valuepair[i])
+	{
+		free(valuepair[i]);
+		i++;
+	}
 	free(valuepair);
 }
 
