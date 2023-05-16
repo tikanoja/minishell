@@ -144,75 +144,47 @@ int is_it_quote(char c)
     else
         return (0);
 }
-
-t_list  *handle_heredoc(t_list *current)
+char    *heredoc_env_open(char *input)
 {
-    char    *delim;
-    char    *input;
-    int     pipefd[2];
-    t_list  *prev;
     char    input_env[1024];
     char    *input_opened;
     int     i;
     int     j;
-    int     flag;
 
-    prev = current->prev;
-    delim = ft_strdup(current->next->value);
     i = 0;
     j = 0;
-    flag = 0;
     input_opened = malloc(1);
-    if (pipe(pipefd) == -1)
-        printf("error opening heredoc pipe\n");
-    while(1)
+    ft_bzero(input_env, 1024);
+    while(input[i])
     {
-        flag = 0;
-        i = 0;
-        init_heredoc_signals();
-        input = readline(">");
-        if (!input)
+        //flag = 1;
+        if(input[i] == '$')
         {
-            printf("\033[1A> ");
-            break;
-        }
-        while(input[i] && check_for_dollar(input) == 1)
-        {
-            flag = 1;
-            if(input[i] == '$')
-            {
-                i++;
-                while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i])
-                {
-                    input_env[j] = input[i];
-                    i++;
-                    j++;
-                }
-                input_opened = ft_strjoin(input_opened, ft_getenv(input_env));
-                ft_bzero(input_env, (size_t)j);
-                j = 0;
-            }
-            input_opened = char_join(input_opened, input[i]);
             i++;
+            while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i])
+            {
+                input_env[j] = input[i];
+                i++;
+                j++;
+            }
+            input_opened = ft_strjoin(input_opened, ft_getenv(input_env));
+            ft_bzero(input_env, (size_t)j);
+            j = 0;
         }
-        if(flag == 1)
-        {
-            free(input);
-            input = ft_strdup(input_opened);
-            free(input_opened);
-        }
-        if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
-        {
-            free(input);
-            break ;
-        }
-        ft_putstr_fd(input, pipefd[1]);
-        ft_putchar_fd('\n', pipefd[1]);
-        free(input);
+        input_opened = char_join(input_opened, input[i]);
+        i++;
     }
-    close(pipefd[1]);
-    init_signals();
-    free(delim);
+    free(input);
+    input = ft_strdup(input_opened);
+    free(input_opened);
+    return(input);
+}
+
+t_list *end_heredoc(t_list *current, int pipefd[2])
+{
+    t_list  *prev;
+
+    prev = current->prev;
     prev->input = pipefd[0];
     if (current->next->next)
     {
@@ -226,6 +198,41 @@ t_list  *handle_heredoc(t_list *current)
     free(current->value);
     free(current);
     return (prev);
+}
+
+t_list  *handle_heredoc(t_list *current)
+{
+    char    *delim;
+    char    *input;
+    int     pipefd[2];
+    
+    delim = ft_strdup(current->next->value);
+    if (pipe(pipefd) == -1)
+        printf("error opening heredoc pipe\n");
+    while(1)
+    {
+        init_heredoc_signals();
+        input = readline(">");
+        if (!input)
+        {
+            printf("\033[1A> ");
+            break;
+        }
+        if(check_for_dollar(input) == 1)
+            input = heredoc_env_open(input);
+        if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
+        {
+            free(input);
+            break ;
+        }
+        ft_putstr_fd(input, pipefd[1]);
+        ft_putchar_fd('\n', pipefd[1]);
+        free(input);
+    }
+    close(pipefd[1]);
+    init_signals();
+    free(delim);
+    return (end_heredoc(current, pipefd));
 }
 
 void    fill_pipe_position(t_list *current)
