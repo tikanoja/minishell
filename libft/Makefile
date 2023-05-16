@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tuukka <tuukka@student.42.fr>              +#+  +:+       +#+         #
+#    By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/24 12:43:52 by ttikanoj          #+#    #+#              #
-#    Updated: 2023/02/12 12:06:53 by tuukka           ###   ########.fr        #
+#    Updated: 2023/05/16 13:57:23 by jaurasma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,12 +28,6 @@ OBJ = ./ft_atoi.o ft_bzero.o ft_calloc.o ft_isalnum.o ft_isalpha.o ft_isascii.o\
 	  ft_strncmp.o ft_strnstr.o ft_strrchr.o ft_strtrim.o ft_substr.o\
 	  ft_tolower.o ft_toupper.o
 
-GNLPATH = ./get_next_line/
-
-GNLSRC = get_next_line.c get_next_line_utils.c
-
-GNLOBJ = get_next_line.o get_next_line_utils.o
-
 PRINTFPATH = ./ft_printf/
 
 PRINTFSRC = ft_printf.c ft_printf_utils.c ft_printf_formats.c
@@ -47,7 +41,7 @@ FLAGS = -Wall -Werror -Wextra
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cc -c $(FLAGS) $(HEADERS) $(SRC) $(addprefix $(GNLPATH),$(GNLSRC)) $(addprefix $(PRINTFPATH),$(PRINTFSRC))
+	cc -c $(FLAGS) $(HEADERS) $(SRC) $(addprefix $(PRINTFPATH),$(PRINTFSRC))
 	ar rc $(NAME) $(OBJ) $(GNLOBJ) $(PRINTFOBJ)
 
 clean:

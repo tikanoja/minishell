@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tuukka <tuukka@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 12:49:07 by ttikanoj          #+#    #+#             */
-/*   Updated: 2023/02/12 10:51:40 by tuukka           ###   ########.fr       */
+/*   Updated: 2023/05/16 13:57:37 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include "./get_next_line/get_next_line.h"
 # include "./ft_printf/ft_printf.h"
 
 int		ft_atoi(const char *str);

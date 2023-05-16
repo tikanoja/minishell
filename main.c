@@ -232,22 +232,12 @@ void run_minishell()
 		printlist(head);
 		//status = error_handling(head);
 		status = runcmd(head, envcpy);
-		printf("testing\n");
-		// rl_replace_line(prompt, 0);
-		//rl_on_new_line();
 		free_list(head);
 	}
 }
 
 int main(int argc, char **argv, const char **envp)
 {
-	// char *prompt;
-	// t_list *head;
-	// int status;
-
-	// prompt = NULL;
-	// head = NULL;
-	// status = 0;
 	if (argc > 1 || argv == NULL)
 		exitmsg("too many args");
 	get_env_copy(&envcpy, envp);
