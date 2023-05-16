@@ -55,7 +55,7 @@ int termios_handler(int flag) //should this return status then?
 {
     struct termios term;
     tcgetattr(STDOUT_FILENO, &term);
-    if(flag)
+    if (flag)
         term.c_lflag &= ~ECHOCTL;
     else
         term.c_lflag |= ECHOCTL;

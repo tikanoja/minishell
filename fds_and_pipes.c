@@ -137,27 +137,69 @@ t_list    *handle_pipe(t_list *current)
     free(current);
     return (prev);
 }
+int is_it_quote(char c)
+{
+    if(c == '\'' || c == '\"')
+        return (1);
+    else
+        return (0);
+}
 
 t_list  *handle_heredoc(t_list *current)
 {
-    char *delim;
-    char *input;
-    int pipefd[2];
-    t_list *prev;
+    char    *delim;
+    char    *input;
+    int     pipefd[2];
+    t_list  *prev;
+    char    input_env[1024];
+    char    *input_opened;
+    int     i;
+    int     j;
+    int     flag;
 
     prev = current->prev;
-    delim = current->next->value;
+    delim = ft_strdup(current->next->value);
+    i = 0;
+    j = 0;
+    flag = 0;
+    input_opened = malloc(1);
     if (pipe(pipefd) == -1)
         printf("error opening heredoc pipe\n");
-    printf("pipefd is %d\n", pipefd[1]);
     while(1)
     {
+        flag = 0;
+        i = 0;
         init_heredoc_signals();
         input = readline(">");
         if (!input)
         {
             printf("\033[1A> ");
             break;
+        }
+        while(input[i] && check_for_dollar(input) == 1)
+        {
+            flag = 1;
+            if(input[i] == '$')
+            {
+                i++;
+                while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i])
+                {
+                    input_env[j] = input[i];
+                    i++;
+                    j++;
+                }
+                input_opened = ft_strjoin(input_opened, ft_getenv(input_env));
+                ft_bzero(input_env, (size_t)j);
+                j = 0;
+            }
+            input_opened = char_join(input_opened, input[i]);
+            i++;
+        }
+        if(flag == 1)
+        {
+            free(input);
+            input = ft_strdup(input_opened);
+            free(input_opened);
         }
         if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
         {
@@ -170,6 +212,7 @@ t_list  *handle_heredoc(t_list *current)
     }
     close(pipefd[1]);
     init_signals();
+    free(delim);
     prev->input = pipefd[0];
     if (current->next->next)
     {

@@ -26,7 +26,8 @@ char *char_join(char *string, char c)
     ft_strcpy(new_str, string);
     new_str[len] = c;
     new_str[len + 1] = '\0';
-    return new_str;
+	free(string);
+    return (new_str);
 }
 
 size_t	ft_strnlen(const char *s, size_t n)
