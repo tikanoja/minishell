@@ -127,8 +127,9 @@ void set_env_value(char **env, const char *key, const char *value)
         env[size + 1] = NULL;
     }
     free_setenv(envcpy);
-    envcpy = env;  // Update the global environment variable with the new array
+    envcpy = env;
 }
+
 void free_valuepair(char **valuepair)
 {
     int i;
@@ -144,12 +145,10 @@ void free_valuepair(char **valuepair)
 
 void ft_setenv(const char *value)
 {
-    //char **temp;
     char **valuepair;
     char **new_env;
     size_t row_count;
 
-    //temp = envcpy;
     valuepair = NULL;
     valuepair = (char **)malloc(2 * sizeof(char *));
     valuepair = ft_split(value, '=');
@@ -171,13 +170,6 @@ void ft_setenv(const char *value)
         return;
     }
     new_env = copy_env(envcpy);
-    for (int i = 0; new_env[i]; i++)
-    {
-        printf("%s\n", new_env[i]);
-    }
     set_env_value(new_env, valuepair[0], value);
     free_valuepair(valuepair);
-    // printf("we here\n");
-    // //envcpy = new_env;  // Update the global environment variable
-    // printf("we here again\n");
 }
