@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 19:35:12 by ttikanoj          #+#    #+#             */
-/*   Updated: 2023/05/16 14:05:53 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:34:58 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,26 @@
 
 char    *ft_strjoin(char const *s1, char const *s2)
 {
-        int             sum;
-        char    *ns;
-        int             i;
-        int             j;
+	char	*ns;
+	size_t	i;
+	size_t	j;
+	size_t	s1_len;
+	size_t	s2_len;
 
-        sum = ft_strlen(s1) + ft_strlen(s2);
-        if (s1 == NULL || s2 == NULL)
-                return (NULL);
-		ns = ft_calloc(sum + 1, sizeof(char));
-        if (!ns)
-                return (NULL);
-        i = 0;
-        j = 0;
-        while ((size_t)i < ft_strlen(s1))
-                ns[j++] = s1[i++];
-        i = 0;
-        while ((size_t)i < ft_strlen(s2))
-                ns[j++] = s2[i++];
-        ns[j] = '\0';
-        return (ns);
+	if (s1 == NULL || s2 == NULL)
+		return (NULL);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	ns = ft_calloc(s1_len + s2_len + 1, sizeof(char));
+	i = 0;
+	j = 0;
+	if (!ns)
+		return (NULL);
+	while (i < s1_len)
+		ns[j++] = s1[i++];
+	i = 0;
+	while (i < s2_len)
+		ns[j++] = s2[i++];
+	ns[j] = '\0';
+	return (ns);
 }
