@@ -35,102 +35,102 @@ void	ft_env(void)
 	}
 }
 
-int check_key_chars(char c, int flag)
-{
-	if(c >= '0' && c <= '9' && flag)
-		return(1);
-	else if (c >= 'a' && c <= 'z')
-		return(1);
-	else if (c >= 'A' && c <= 'Z')
-		return(1);
-	else if (c == '_')
-		return(1);
-	return (0);
-}
+// int check_key_chars(char c, int flag)
+// {
+// 	if(c >= '0' && c <= '9' && flag)
+// 		return(1);
+// 	else if (c >= 'a' && c <= 'z')
+// 		return(1);
+// 	else if (c >= 'A' && c <= 'Z')
+// 		return(1);
+// 	else if (c == '_')
+// 		return(1);
+// 	return (0);
+// }
 
-int		is_valid_key(char *key)
-{
-	int i;
+// int		is_valid_key(char *key)
+// {
+// 	int i;
 
-	i = 0;
-	while(key[i])
-	{
-		if(!check_key_chars(key[i], i))
-			return(0);
-		i++;
-	}
-	return (1);
-}
-void	ft_setenv(char *value)
-{
-	char 	**temp;
-	char	**new_env;
-	char	**valuepair;
-	int		i;
-	int		row_count;
-	int		len;
-	int		flag;
-	int		j;
+// 	i = 0;
+// 	while(key[i])
+// 	{
+// 		if(!check_key_chars(key[i], i))
+// 			return(0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
+// void	ft_setenv(char *value)
+// {
+// 	char 	**temp;
+// 	char	**new_env;
+// 	char	**valuepair;
+// 	int		i;
+// 	int		row_count;
+// 	int		len;
+// 	int		flag;
+// 	int		j;
 
-	temp = envcpy;
-	i = 0;
-	row_count = 0;
-	flag = 0;
-	j = 0;
-	/*if (ft_strchr(value, '=') == NULL)
-		valuepair[0] = ft_strdup(value);*/
-	//else
-	valuepair = ft_split(value, '=');
-	len = ft_strlen(valuepair[0]);
-	if (!is_valid_key(valuepair[0]))
-	{
-		printf("'%s' : not a valid identifier", value);
-		return ;
-	}
-	while(temp[row_count])
-		row_count++;
-	if(ft_strncmp(valuepair[0], "_\0", 2) == 0)
-	{
-		envcpy[row_count - 1] = ft_strdup(value);
-		return ;
-	}
-	new_env = (char **)malloc(sizeof(char *) * (row_count + 2));
-	while(i < row_count - 1)
-	{
-		if(!flag && ft_strncmp(temp[i], valuepair[0], len) == 0 && (temp[i][len] == '=' || temp[i][len] == '\0'))
-		{
-			new_env[i] = ft_strdup(value);
-			flag = 1;
-		}
-		else
-			new_env[i] = ft_strdup(temp[i]);
-		i++;
-	}
-	if (flag == 0)
-	{
-		new_env[i] = ft_strdup(value);
-		j = i + 1;
-	}
-	else
-		j = i;
-	//new_env[i++] = "\0";
-	new_env[j] = ft_strdup(temp[i]);
-	envcpy = new_env;
-	i = 0;
-	while(temp[i])
-	{
-		free(temp[i]);
-		i++;
-	}
-	free(temp); 
-	i = 0;
-	while(valuepair[i])
-	{
-		free(valuepair[i]);
-		i++;
-	}
-	free(valuepair);
-}
+// 	temp = envcpy;
+// 	i = 0;
+// 	row_count = 0;
+// 	flag = 0;
+// 	j = 0;
+// 	/*if (ft_strchr(value, '=') == NULL)
+// 		valuepair[0] = ft_strdup(value);*/
+// 	//else
+// 	valuepair = ft_split(value, '=');
+// 	len = ft_strlen(valuepair[0]);
+// 	if (!is_valid_key(valuepair[0]))
+// 	{
+// 		printf("'%s' : not a valid identifier", value);
+// 		return ;
+// 	}
+// 	while(temp[row_count])
+// 		row_count++;
+// 	if(ft_strncmp(valuepair[0], "_\0", 2) == 0)
+// 	{
+// 		envcpy[row_count - 1] = ft_strdup(value);
+// 		return ;
+// 	}
+// 	new_env = (char **)malloc(sizeof(char *) * (row_count + 2));
+// 	while(i < row_count - 1)
+// 	{
+// 		if(!flag && ft_strncmp(temp[i], valuepair[0], len) == 0 && (temp[i][len] == '=' || temp[i][len] == '\0'))
+// 		{
+// 			new_env[i] = ft_strdup(value);
+// 			flag = 1;
+// 		}
+// 		else
+// 			new_env[i] = ft_strdup(temp[i]);
+// 		i++;
+// 	}
+// 	if (flag == 0)
+// 	{
+// 		new_env[i] = ft_strdup(value);
+// 		j = i + 1;
+// 	}
+// 	else
+// 		j = i;
+// 	//new_env[i++] = "\0";
+// 	new_env[j] = ft_strdup(temp[i]);
+// 	envcpy = new_env;
+// 	i = 0;
+// 	while(temp[i])
+// 	{
+// 		free(temp[i]);
+// 		i++;
+// 	}
+// 	free(temp); 
+// 	i = 0;
+// 	while(valuepair[i])
+// 	{
+// 		free(valuepair[i]);
+// 		i++;
+// 	}
+// 	free(valuepair);
+// }
 
 int	ft_strcmp(char *s1, char *s2)
 {
