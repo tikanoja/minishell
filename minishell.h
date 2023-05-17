@@ -26,18 +26,6 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
-// typedef enum e_builtinCommand
-// {
-//     ft_echo,
-//     ft_cd,
-//     ft_pwd,
-//     ft_export,
-//     ft_unset,
-//     ft_env,
-//     ft_exit,
-//     ft_invalid
-// }       t_builtinCommand;
-
 typedef enum e_tokenType
 {
     COMMAND,
@@ -68,6 +56,7 @@ typedef struct  s_list
     int pipe;
     int pipe_position;
     int index;
+    int execflag;
 }               t_list;
 
 // typedef struct s_signals
@@ -170,6 +159,7 @@ int is_it_shell_command(char *token, char **envcpy);
 t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head);
 t_list *add_head_node(t_list *node, t_list **head, char **envcpy);
 char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head);
+t_list *get_head_node(t_list *node);
 t_list *parsecmd(char *prompt, char **envcpy);
 
 //ft_lexer.c
