@@ -93,6 +93,7 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	node->index = 0;
 	node->execflag = 0;
 	node->prev = prev;
+	node->next = NULL;
 	if (prev)
 		prev->next = node;
 	node->input = STDIN_FILENO;
@@ -259,7 +260,6 @@ t_list *parsecmd(char *prompt, char **envcpy)
 		free(token);
 		token = ft_lexer(NULL, envcpy, head);
 	}
-	node->next = NULL;
 	free(prompt);
 	free(token);
 	return (get_head_node(node));

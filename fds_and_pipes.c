@@ -1,16 +1,40 @@
 #include "minishell.h"
 
-void free_redirection_out(t_list *current)
+t_list *free_redirection_out(t_list *current)
 {
     t_list *next;
+    t_list *prev;
+    t_list *ret;
 
     next = current->next;
+    prev = current->prev;
+    ret = NULL;
+    if (prev && next && next->next)
+    {
+        prev->next = next->next;
+        next->next->prev = prev;
+        ret = next->next;
+    }
+    else if ((prev && next && !next->next) || (prev && !next))
+    {
+        prev->next = NULL;
+        ret = NULL;
+    }
+    else if (!prev && next && next->next)
+    {
+        next->next->prev = NULL;
+        ret = next->next;
+    }
     free(current->value);
-    free(next->value);
+    current->value = NULL;
     free(current);
-    free(next);
-    current = NULL;
-    next = NULL;
+    if (next)
+    {
+        free(next->value);
+        next->value = NULL;
+        free(next);
+    }
+    return (ret);
 }
 
 t_list    *handle_redirection_out(t_list *current)
@@ -22,23 +46,22 @@ t_list    *handle_redirection_out(t_list *current)
     prev = current->prev;
     next = current->next;
     if (!next || !next->value || ft_strlen(next->value) == 0)
-        printf("file not found / syntax error\n");
+    {
+        write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
+        if (prev)
+            prev->execflag = 1;
+    }
     else
     {
         fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd == -1)
             printf("error opening file %s\n", next->value);
-        prev->output = fd;
+        if (prev)
+            prev->output = fd;
+        else
+            close(fd);
     }
-    if (next->next)
-    {
-        prev->next = next->next;
-        next->next->prev = prev;
-    }
-    else
-        prev->next = NULL;
-    free_redirection_out(current);
-    return (prev);
+    return (free_redirection_out(current));
 }
 
 t_list    *handle_redirection_in(t_list *current)
@@ -185,14 +208,19 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
     t_list  *prev;
 
     prev = current->prev;
-    prev->input = pipefd[0];
-    if (current->next->next)
+    if (prev)
+        prev->input = pipefd[0];
+    else
+        close(pipefd[0]);
+    if (current->next->next && prev)
     {
         prev->next = current->next->next;
         current->next->next->prev = prev;
     }
-    else
+    else if (!current->next->next && prev)
         prev->next = NULL;
+    else if (current->next->next && !prev)
+        current->next->next->prev = NULL;
     free(current->next->value);
     free(current->next);
     free(current->value);
@@ -269,7 +297,8 @@ void    open_fds_and_pipes(t_list *head)
 		    current = handle_redirection_in(current);
 	    else if (ft_strncmp(current->value, ">\0", 1) == 0)
 		    current = handle_redirection_out(current);
-        current = current->next;
+        else
+            current = current->next;
     }
     fill_pipe_position(head);
 }

@@ -228,6 +228,8 @@ void run_minishell()
 		head = parsecmd(prompt, envcpy);
 		gatekeeper(head, status);
 		open_fds_and_pipes(head);
+		if (!head || (head->value == NULL))
+			continue ;
 		parse_system_commands(head);
 		add_index(head);
 		printlist(head);
