@@ -21,13 +21,13 @@ void handle_ctrl_d_child(int signum __attribute__((unused)))
 
 void handle_ctrl_c_heredoc(int signum __attribute__((unused)))
 {
-    // init_signals();
-    // termios_handler(0);
-    // close(4);
-    // write(STDERR_FILENO, "\n", 1);
-    // run_minishell();
+    init_signals();
+    termios_handler(0);
+    close(4);
+    write(STDERR_FILENO, "\n", 1);
+    run_minishell();
     // //exit (1);
-    write(STDERR_FILENO, "vittu\n", 6);
+    //write(STDERR_FILENO, "vittu\n", 6);
 }
 
 

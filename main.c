@@ -211,7 +211,8 @@ void run_minishell()
 		prompt = readline("\033[0;32mshelly\033[0m> ");
 		if (!prompt)
 		{
-			printf("\033[0;32mshelly\033[0m>\033[A exit\n");
+			//printf("\033[0;32mshelly\033[0m>\033[A exit\n");
+			printf("exit\n");
 			free_env(envcpy);
 			exit(0);
 		}
