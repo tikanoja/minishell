@@ -91,6 +91,7 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	node->pipe = 0;
 	node->pipe_position = 0;
 	node->index = 0;
+	node->execflag = 0;
 	node->prev = prev;
 	if (prev)
 		prev->next = node;
@@ -150,7 +151,6 @@ char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 	node->args = NULL;
 	array[i] = ft_strdup(token);
 	array[i + 1] = NULL;
-	printf("MORO\n");
 	return (array);
 }
 
@@ -222,6 +222,8 @@ void	remove_extra_node(t_list *head)
 
 t_list *get_head_node(t_list *node)
 {
+	if (node == NULL)
+		return (NULL);
 	while (node->prev)
 		node = node->prev;
 	return (node);
