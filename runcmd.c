@@ -25,56 +25,6 @@ int     slash_check(t_list *current)
     return (0);
 }
 
-// void    fd_handling(t_list *current, t_list *head)
-// {
-//     int i = 1;
-//     int index = current->index;
-    
-//     if (current->pipe == 0)
-//     {
-//         if (current->input != STDIN_FILENO)
-//         {
-//             dup2(current->input, STDIN_FILENO);
-//             close(current->input);
-//         }
-//         if (current->output != STDOUT_FILENO)
-//         {
-//             dup2(current->output, STDOUT_FILENO);
-//             close(current->output);
-//         }
-//     }
-//     else
-//     {
-//         current = head;
-//         while(i <= index)
-//         {
-//         if (current->pipe_position == 1)
-//         {
-//             close(current->next->input);
-//             dup2(current->output, STDOUT_FILENO);
-//             close(current->output);
-//         }
-//         else if (current->pipe_position == 2)
-//         {
-//             close(current->prev->output);
-//             dup2(current->input, STDIN_FILENO);
-//             close(current->input);
-//             close(current->next->input);
-//             dup2(current->output, STDOUT_FILENO);
-//             close(current->output);
-//         }
-//         else if (current->pipe_position == 3)
-//         {
-//             close(current->prev->output);
-//             dup2(current->input, STDIN_FILENO);
-//             close(current->input);
-//         }
-//         i++;
-//         current = current->next;
-//         }
-//     }
-// }
-
 void    fd_handling2(t_list *current, t_list *head)
 {
     int index;
@@ -122,10 +72,7 @@ void    execute_builtin(t_list *current)
         if (pid == -1)
 		    exitmsg("fork fail\n");
         if (pid == 0)
-        {
-            //fd_handling(current, head);
             forkflag = 0;
-        }
     }
     if (forkflag == 0)
     {
@@ -186,6 +133,11 @@ int    runcmd(t_list *head, char **envcpy)
     status = 0;
     while (current)
     {
+        if (current->execflag == 1)
+        {
+            current = current->next;
+            continue ;
+        }
         if (current->value == NULL)
         {
             printf("shelly: %s: command not found\n", current->args[0]);
