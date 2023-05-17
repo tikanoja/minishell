@@ -122,7 +122,7 @@ void set_env_value(char **env, const char *key, const char *value)
     }
     if (!found)
     {
-        size = env_index + 1;
+        size = env_index;
         env[size] = ft_strdup(value);
         env[size + 1] = NULL;
     }
