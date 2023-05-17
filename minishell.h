@@ -96,8 +96,17 @@ void handle_ctrl_d_child(int signum __attribute__((unused)));
 void handle_ctrl_c_heredoc(int signum __attribute__((unused)));
 void handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
+//setenv.c
+void	ft_setenv(const char *value);
+void set_env_value(char **env, const char *key, const char *value);
+char **copy_env(char **env);
+void free_setenv(char **env);
+char **allocate_new_env(size_t size);
+int check_key_chars(char c, int flag);
+int		is_valid_key(char *key);
+
 //cd.c
-void ft_cd(t_list *current);
+int   ft_cd(t_list *current);
 
 //export.c
 void ft_export(t_list *current);
@@ -105,7 +114,6 @@ void ft_export(t_list *current);
 //env.c
 char *ft_getenv(const char *name);
 void ft_env(void);
-void	ft_setenv(char *value);
 void	ft_unsetenv(char *key);
 
 //open_fds_and_pipes.c
