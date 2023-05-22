@@ -284,7 +284,9 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
 {
     t_list  *prev;
     t_list  *ret;
+    int i;
 
+    i = 0;
     ret = NULL;
     prev = current->prev;
     if (prev)
@@ -306,6 +308,15 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
     }
     else if (current->next && !current->next->next && prev)
         prev->next = NULL;
+    while(current->next && current->next->args && current->next->args[i])
+    {
+        if (prev)
+        {
+            current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
+            free(current->next->args[i]);
+        }
+        i++;
+    }
     if (current->next)
         free(current->next->value);
     if (current->next)
