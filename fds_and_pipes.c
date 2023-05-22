@@ -172,17 +172,30 @@ t_list    *handle_redirection_out_append(t_list *current)
 t_list *fill_node_from_stdin(t_list *current)
 {
     t_list *new;
+    char *input;
+    char **arr;
+    int i;
 
+    i = 1;
     new = malloc(sizeof(t_list)); //protect
-    new->args = malloc(sizeof(char **)); //protect
-    new->args[0] = NULL;
     new->argc = 0;
     new->pipe = 1;
     new->input = STDIN_FILENO;
 	new->output = STDOUT_FILENO;
     new->prev = current;
     new->next = NULL;
-    new->value = readline(">"); // ehk pitaa lisaa splitti!
+    input = readline(">"); // ehk pitaa lisaa splitti!
+    arr = ft_split(input, ' ');
+    free(input);
+    new->value = ft_strdup(arr[0]);
+    free(arr[0]);
+    while(arr[i])
+    {
+        new->args = realloc_array(new, arr[i], NULL, NULL);
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
     return (new);
 }
 
@@ -209,8 +222,6 @@ t_list    *handle_pipe(t_list *current)
     syntaxflag = 0;
     prev = current->prev;
     next = current->next;
-    if (!prev && current->execflag != 1)
-        ft_putstr_fd("shelly: syntax error near unexpected token `|'", 2); //ja mitaan ei tapahdu paitsi taa error msg
     if (!next || !next->value || ft_strlen(next->value) == 0)
         next = fill_node_from_stdin(current);
     if (pipe(pipefd) == -1)
@@ -285,11 +296,6 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
         prev->next = current->next->next;
         current->next->next->prev = prev;
         ret = current->next->next;
-        if (ft_strncmp(current->next->next->value, "|", 1) == 0)
-        {
-            current->next->next->execflag = 1;
-            printf("jeppp\n");
-        }
     }
     else if (!current->next && !current->next->next && prev)
         prev->next = NULL;
