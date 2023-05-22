@@ -273,7 +273,10 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
         current->next->next->prev = prev;
         ret = current->next->next;
         if (ft_strncmp(current->next->next->value, "|", 1) == 0)
+        {
             current->next->next->execflag = 1;
+            printf("jeppp\n");
+        }
     }
     else if (!current->next && !current->next->next && prev)
         prev->next = NULL;
@@ -344,15 +347,15 @@ void    open_fds_and_pipes(t_list *head)
     current = head;
     while (current)
     {
-        if (ft_strncmp(current->value, "|\0", 1) == 0) 
+        if (ft_strncmp(current->value, "|\0", 2) == 0) 
 		    current = handle_pipe(current);
-	    else if (ft_strncmp(current->value, "<<\0", 2) == 0)
+	    else if (ft_strncmp(current->value, "<<\0", 3) == 0)
 		    current = handle_heredoc(current);
-	    else if (ft_strncmp(current->value, ">>\0", 2) == 0)
+	    else if (ft_strncmp(current->value, ">>\0", 3) == 0)
 		    current = handle_redirection_out_append(current);
-	    else if (ft_strncmp(current->value, "<\0", 1) == 0)
+	    else if (ft_strncmp(current->value, "<\0", 2) == 0)
 		    current = handle_redirection_in(current);
-	    else if (ft_strncmp(current->value, ">\0", 1) == 0)
+	    else if (ft_strncmp(current->value, ">\0", 2) == 0)
 		    current = handle_redirection_out(current);
         else
             current = current->next;
