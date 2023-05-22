@@ -65,13 +65,21 @@ void check_value_for_dollar(t_list *current, int status)
 	{
 		while (i < len)
 		{
-			handle_single_quotes(current->value[i], &flag);
+			if (current->value[i] == '\"' && flag != 1)
+				{
+					if (flag == 0)
+						flag = 2;
+					else
+						flag = 0;
+				}
+			if (flag == 0)
+				handle_single_quotes(current->value[i], &flag);
 			if (current->value[i] == '$' && current->value[i+1] == '?' && current->value[i+2] == '\0' &&flag == 0)
 				{
 					new_value = ft_itoa(status);
 					i+=2;
 				}
-			else if (current->value[i] == '$' && flag == 0)
+			else if (current->value[i] == '$' && (flag == 0 || flag == 2))
 			{
 				i++;
 				env = ft_strndup(current->value + i, get_env_len(current->value + i));
@@ -117,14 +125,21 @@ void check_args_for_dollar(t_list *current, int status)
 		{
 			while (i < len)
 			{
-				printf("we fucked up!\n");
-				handle_single_quotes(current->args[j][i], &flag);
+				if(current->args[j][i] == '\"' && flag != 1)
+				{
+					if (flag == 0)
+						flag = 2;
+					else
+						flag = 0;
+				}
+				if(flag == 0)
+					handle_single_quotes(current->args[j][i], &flag);
 				if (current->args[j][i] == '$' && current->args[j][i+1] == '?' && current->args[j][i+2] == '\0' &&flag == 0)
 				{
 					new_value = ft_itoa(status);
 					i+=2;
 				}
-				else if (current->args[j][i] == '$' && flag == 0)
+				else if (current->args[j][i] == '$' && (flag == 0 || flag == 2))
 				{
 					i++;
 					env = ft_strndup(current->args[j] + i, get_env_len(current->args[j] + i));
