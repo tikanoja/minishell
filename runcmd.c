@@ -143,7 +143,9 @@ int    runcmd(t_list *head, char **envcpy)
         }
         if (current->value == NULL)
         {
-            printf("shelly: %s: command not found\n", current->args[0]);
+            ft_putstr_fd("shelly: ", 2);
+            ft_putstr_fd(current->args[0], 2);
+            ft_putstr_fd(": command not found\n", 2);
             status = 127;
         }
         else if (directory_check(current) == 1)
