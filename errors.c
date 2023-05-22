@@ -141,6 +141,14 @@ int double_redir_check(t_list *head)
 	t_list *current;
 	current = head;
 
+	if (ft_strncmp(current->value, "|", 1) == 0)
+	{
+		ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
+		ft_putstr_fd(current->value, 2);
+		ft_putstr_fd("'\n", 2);
+		free_list(head);
+		return(1);
+	}
 	while (current)
 	{
 		if (is_it_redirection_no_pipe(current->value) > 0 && current->next && is_it_redirection_no_pipe(current->next->value) > 0)
