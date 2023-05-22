@@ -100,33 +100,6 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	return (node);
 }
 
-// t_list *add_head_node(t_list *node, t_list **head, char **envcpy)
-// {
-// 	node = malloc(sizeof(t_list)); //protect malloc
-// 	if (!node)
-// 	{
-// 		free_env(envcpy);
-// 		exitmsg("node malloc failed");
-// 	}
-// 	node->args = malloc(sizeof(char **));
-// 	if (!node->args)
-// 	{
-// 		free_env(envcpy);
-// 		free(node);
-// 		exitmsg("node malloc failed");
-// 	}
-// 	node->args[0] = NULL;
-// 	node->argc = 0;
-// 	node->pipe = 0;
-// 	node->pipe_position = 0;
-// 	node->input = STDIN_FILENO;
-// 	node->output = STDOUT_FILENO;
-// 	node->prev = NULL;
-// 	node->next = NULL;
-// 	*head = node;
-// 	return (node);
-// }
-
 char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 {
 	char **array;
@@ -139,9 +112,6 @@ char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 		free_env_and_list(envcpy, head);
 	while (node->args && node->args[i])
 	{
-		// array[i] = malloc(sizeof(char) * ft_strlen(node->args[i]));
-		// if (!array[i])
-		// 	free_array_and_env(array, envcpy, head); //fiksaa
 		array[i] = ft_strdup(node->args[i]);
 		free(node->args[i]);
 		i++;
@@ -179,47 +149,6 @@ void	remove_extra_node(t_list *head)
 		current = current->next;
 	}
 }
-
-// t_list *parsecmd(char *prompt, char **envcpy)
-// {
-// 	t_list  *node;
-// 	t_list  *head;
-// 	char    *token;
-// 	int     argflag;
-
-// 	init_parsecmd(&node, &head, &argflag);
-// 	token = ft_lexer(prompt, envcpy, head);
-// 	node = add_head_node(node, &head, envcpy);
-// 	if (is_it_redirection(token) > 0)
-// 	{
-// 		node->value = ft_strdup(token);
-// 		free(token);
-// 		token = ft_lexer(NULL, envcpy, head);
-// 		node = add_node(node, NULL, envcpy, head);
-// 	}
-// 	while(token)
-// 	{
-// 		if (is_it_redirection(token) > 0 || is_it_log_operator(token) > 0)
-// 		{
-// 			argflag = -1;
-// 			node = add_node(node, token, envcpy, head);
-// 			free(token);
-// 			node = add_node(node, NULL, envcpy, head);
-// 			token = ft_lexer(NULL, envcpy, head);
-// 		}
-// 		if (argflag == -1 && token)
-// 			node->value = ft_strdup(token);
-// 		else if (token)
-// 			node->args = realloc_array(node, token, envcpy, head);
-// 		argflag++;
-// 		if (token)
-// 			free(token);
-// 		token = ft_lexer(NULL, envcpy, head);
-// 	}
-// 	remove_extra_node(head);
-// 	free(prompt);
-// 	return (head);
-// }
 
 t_list *get_head_node(t_list *node)
 {

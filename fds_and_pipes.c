@@ -201,13 +201,19 @@ t_list *fill_node_from_stdin(t_list *current)
 
 t_list *free_pipe(t_list *current, t_list *prev, t_list *next)
 {
-    if (prev)
+    if (prev && next)
+    {
         prev->next = next;
-    next->prev = prev;
+        next->prev = prev;
+    }
+    else if (!prev && next)
+        next->prev = NULL;
+    else if (prev && !next)
+        prev->next = NULL;
     free(current->value);
     free(current);
-    if (next->next)
-        return (next->next);
+    if (next)
+        return (next);
     else
         return (NULL);
 }
@@ -370,13 +376,15 @@ t_list  *handle_heredoc(t_list *current)
     return (end_heredoc(current, pipefd));
 }
 
-void    open_fds_and_pipes(t_list *head)
+t_list    *open_fds_and_pipes(t_list *head)
 {
     t_list *current;
 
     current = head;
     while (current)
     {
+        if (current->prev == NULL)     
+            head = current;
         if (ft_strncmp(current->value, "|\0", 2) == 0) 
 		    current = handle_pipe(current);
 	    else if (ft_strncmp(current->value, "<<\0", 3) == 0)
@@ -390,4 +398,5 @@ void    open_fds_and_pipes(t_list *head)
         else
             current = current->next;
     }
+    return (head);
 }

@@ -227,9 +227,9 @@ void run_minishell()
 		head = parsecmd(prompt, envcpy);
 		if (double_redir_check(head) == 1)
 			continue;
-		//printlist(head);
 		gatekeeper(head, status);
-		open_fds_and_pipes(head);
+		head = open_fds_and_pipes(head);
+		//printlist(head);
 		if (!head || (head->value == NULL))
 			continue ;
 		parse_system_commands(head);

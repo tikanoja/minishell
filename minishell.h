@@ -83,7 +83,7 @@ int		ft_unsetenv(char *key);
 
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
-void	open_fds_and_pipes(t_list *head);
+t_list	*open_fds_and_pipes(t_list *head);
 
 //system_commands.c
 int		findpath(char **env);
