@@ -25,6 +25,7 @@ char *parse_quotes(char *str)
 			new_string[ft_strlen(new_string)] = str[i];
 		i++;
 	}
+	free (str);
 	return (new_string);
 }
 
