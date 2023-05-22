@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ft_pwd()
+int ft_pwd(void)
 {
 	char cwd[1024];
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -10,4 +10,5 @@ void ft_pwd()
 		perror("getcwd() error");
 		exit (EXIT_FAILURE);
 	}
+	return (0);
 }

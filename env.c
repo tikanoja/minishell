@@ -3,16 +3,16 @@
 char	*ft_getenv(const char *name)
 {
 	char **env;
-    size_t namelen;
+	size_t namelen;
 	char *equals;
 
-    env = envcpy;
-    namelen = 0;
+	env = envcpy;
+	namelen = 0;
 	while (*env != NULL)
-    {
+	{
 		equals = ft_strchr(*env, '=');
 		if (equals != NULL)
-        {
+		{
 			namelen = equals - *env;
 			if (ft_strncmp(name, *env, namelen) == 0 && name[namelen] == '\0')
 				return (equals + 1);
@@ -22,17 +22,35 @@ char	*ft_getenv(const char *name)
 	return (NULL);
 }
 
-void	ft_env(void)
+int ft_env(t_list *current)
 {
 	int i;
 
 	i = 0;
+	if (current->args)
+	{
+		if (access(current->args[0], F_OK) == 0)
+		{
+			ft_putstr_fd("env: ", STDERR_FILENO);
+			ft_putstr_fd(current->args[0], STDERR_FILENO);
+			ft_putstr_fd(": Premission denied\n", STDERR_FILENO);
+			return (126);          
+		}
+		else
+		{
+			ft_putstr_fd("env: ", STDERR_FILENO);
+			ft_putstr_fd(current->args[0], STDERR_FILENO);
+			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+			return (127);               
+		}
+	}
 	while(envcpy[i])
 	{
 		if(ft_strchr(envcpy[i], '='))
 			printf("%s\n", envcpy[i]);
 		i++;
 	}
+	return (0);
 }
 
 // int check_key_chars(char c, int flag)
@@ -77,9 +95,6 @@ void	ft_env(void)
 // 	row_count = 0;
 // 	flag = 0;
 // 	j = 0;
-// 	/*if (ft_strchr(value, '=') == NULL)
-// 		valuepair[0] = ft_strdup(value);*/
-// 	//else
 // 	valuepair = ft_split(value, '=');
 // 	len = ft_strlen(valuepair[0]);
 // 	if (!is_valid_key(valuepair[0]))
@@ -142,39 +157,52 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-void ft_unsetenv(char *key)
+int ft_unsetenv(char *key)
 {
-    int index;
-    int row_count;
+	int index;
+	int row_count;
 	int len;
 	char **new_env;
 
-	index = -1;
+	index = 0;
 	row_count = 0;
 	len = ft_strlen(key);
-    while (envcpy[row_count])
-    {
-        if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && (envcpy[row_count][len] == '=' || envcpy[row_count][len] == '\0'))
-        {
-            index = row_count;
-            break;
-        }
-        row_count++;
-    }
-    if (index == -1)
-        return;
-    free(envcpy[index]);
-    new_env = (char **)malloc(sizeof(char *) * row_count);
-    int i = 0;
-    int j = 0;
-    while (envcpy[i])
-    {
-        if (i != index)
-            new_env[j++] = ft_strdup(envcpy[i]);
-        i++;
-    }
-    new_env[j] = NULL;
-    free(envcpy);
-    envcpy = new_env;
+	while(index < len)
+	{
+		if(check_key_chars(key[index], index) == 0)
+		{        
+			ft_putstr_fd("'", STDERR_FILENO);
+			ft_putstr_fd(key, STDERR_FILENO);
+			ft_putstr_fd("' : not a valid identifier\n", STDERR_FILENO);
+			return (1);
+		}
+		index++;
+	}
+	index = -1;
+	while (envcpy[row_count])
+	{
+		if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && (envcpy[row_count][len] == '=' || envcpy[row_count][len] == '\0'))
+		{
+			index = row_count;
+			break;
+		}
+		row_count++;
+	}
+	if (index == -1)
+		return (0);
+	free(envcpy[index]);
+	new_env = (char **)malloc(sizeof(char *) * row_count);
+	int i = 0;
+	int j = 0;
+	while (envcpy[i])
+	{
+		if (i != index)
+			new_env[j++] = ft_strdup(envcpy[i]);
+		i++;
+	}
+	new_env[j] = NULL;
+	free(envcpy);
+	envcpy = new_env;
+	return (0);
 }
 

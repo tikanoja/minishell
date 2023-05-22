@@ -143,7 +143,7 @@ void free_valuepair(char **valuepair)
     free(valuepair);
 }
 
-void ft_setenv(const char *value)
+int ft_setenv(const char *value)
 {
     char **valuepair;
     char **new_env;
@@ -154,12 +154,14 @@ void ft_setenv(const char *value)
     valuepair = ft_split(value, '=');
     row_count = 0;
     if (value == NULL)
-        return;
+        return (1);
     if (!is_valid_key(valuepair[0]))
     {
-        printf("'%s' : not a valid identifier", value);
+        ft_putstr_fd("'", STDERR_FILENO);
+        ft_putstr_fd((char *)value, STDERR_FILENO);
+        ft_putstr_fd("' : not a valid identifier\n", STDERR_FILENO);
         free(valuepair);
-        return;
+        return (1);
     }
     while (envcpy[row_count] != NULL)
         row_count++;
@@ -167,9 +169,10 @@ void ft_setenv(const char *value)
     {
         envcpy[row_count - 1] = ft_strdup(value);
         free_valuepair(valuepair);
-        return;
+        return (0);
     }
     new_env = copy_env(envcpy);
     set_env_value(new_env, valuepair[0], value);
     free_valuepair(valuepair);
+    return (0);
 }

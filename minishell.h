@@ -85,7 +85,7 @@ void handle_ctrl_c_heredoc(int signum __attribute__((unused)));
 void handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //setenv.c
-void	ft_setenv(const char *value);
+int	ft_setenv(const char *value);
 void set_env_value(char **env, const char *key, const char *value);
 char **copy_env(char **env);
 void free_setenv(char **env);
@@ -97,12 +97,12 @@ int		is_valid_key(char *key);
 int   ft_cd(t_list *current);
 
 //export.c
-void ft_export(t_list *current);
+int ft_export(t_list *current);
 
 //env.c
 char *ft_getenv(const char *name);
-void ft_env(void);
-void	ft_unsetenv(char *key);
+int ft_env(t_list *current);
+int	ft_unsetenv(char *key);
 
 //open_fds_and_pipes.c
 t_list    *handle_redirection_out(t_list *current);
@@ -185,7 +185,7 @@ int n_definer(char *arg);
 int ft_echo(t_list *echo);
 
 //pwd.d
-void ft_pwd();
+int ft_pwd(void);
 //runcmd.c
 void    redirection_check(t_list *current);
 int    runcmd(t_list *head, char **envcpy);

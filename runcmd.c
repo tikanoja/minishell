@@ -57,13 +57,15 @@ void    fd_handling2(t_list *current, t_list *head)
     }
 }
 
-void    execute_builtin(t_list *current)
+int    execute_builtin(t_list *current)
 {
     pid_t pid;
     int forkflag;
+    int status;
 
     pid = 1; //getpid
     forkflag = 0;
+    status = 0;
     if (current->pipe == 1)
     {
         init_child_signals();
@@ -76,23 +78,24 @@ void    execute_builtin(t_list *current)
     }
     if (forkflag == 0)
     {
-    if (ft_strncmp_casein(current->value, "echo", 5) == 0)
-            ft_echo(current);
-    else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
-            ft_pwd();
-    else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
-            ft_exit(current, pid);
-    else if (ft_strncmp_casein(current->value, "env", 5) == 0)
-            ft_env();
-    else if (ft_strncmp_casein(current->value, "unset", 6) == 0 && current->argc == 1)
-            ft_unsetenv(current->args[0]);
-    else if (ft_strncmp_casein(current->value, "export", 7) == 0)
-            ft_export(current);
-    else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
-            ft_cd(current);
-    if (pid == 0)
-        exit(0);
+        if (ft_strncmp_casein(current->value, "echo", 5) == 0)
+                status = ft_echo(current);
+        else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
+                status = ft_pwd();
+        else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
+                ft_exit(current, pid);
+        else if (ft_strncmp_casein(current->value, "env", 5) == 0)
+                status = ft_env(current);
+        else if (ft_strncmp_casein(current->value, "unset", 6) == 0 && current->argc == 1)
+                status = ft_unsetenv(current->args[0]);
+        else if (ft_strncmp_casein(current->value, "export", 7) == 0)
+                status = ft_export(current);
+        else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
+                status = ft_cd(current);
+        if (pid == 0)
+            exit(0);
     }
+    return (status);
 }
 
 void  execute_system_command(t_list *current, char **envcpy, t_list *head)
@@ -149,7 +152,7 @@ int    runcmd(t_list *head, char **envcpy)
             status = 126;
         }
         else if (is_it_builtin(current->value) > 0)
-            execute_builtin(current);
+            status = execute_builtin(current);
         else if (current->system_command == 1)
             execute_system_command(current, envcpy, head);
         current = current->next;

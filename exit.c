@@ -30,7 +30,7 @@ void ft_exit(t_list *exit_arg, int pid)
 	}
 	else if(pid != 0)
 		printf("exit\n");
-	else if (exit_arg->argc < 1)
+	if (exit_arg->argc < 1)
 		exit (0);
 	else
 		exit_status = ft_atoi(exit_arg->args[0]) % 256;
