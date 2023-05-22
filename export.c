@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 19:47:52 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/22 19:49:11 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/22 22:00:54 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_export(t_list *current)
 	status = 0;
 	if (current->argc == 0)
 	{
-		while (envcpy[i] && current->argc == 0 && envcpy[i + 1] != NULL)
+		while (envcpy[i] && current->argc == 0)
 		{
 			printf("declare -x %s\n", envcpy[i]);
 			i++;
@@ -30,9 +30,8 @@ int	ft_export(t_list *current)
 	}
 	while (current->argc > i)
 	{
-		status = ft_setenv(current->args[i]);
-		if (status == 1)
-			break ;
+		if (ft_setenv(current->args[i]) == 1)
+			status = 1;
 		i++;
 	}
 	return (status);

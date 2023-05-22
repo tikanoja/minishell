@@ -122,12 +122,12 @@ int ft_setenv(const char *value)
 	row_count = 0;
 	if (value == NULL)
 		return (1);
-	if (!is_valid_key(valuepair[0]))
+	if (!valuepair[0] || !is_valid_key(valuepair[0]))
 	{
-		ft_putstr_fd("'", STDERR_FILENO);
+		ft_putstr_fd("shelly: '", STDERR_FILENO);
 		ft_putstr_fd((char *)value, STDERR_FILENO);
 		ft_putstr_fd("' : not a valid identifier\n", STDERR_FILENO);
-		free(valuepair);
+		free_valuepair(valuepair);
 		return (1);
 	}
 	while (envcpy[row_count] != NULL)
