@@ -3,8 +3,10 @@
 t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 {
     t_list *ret;
+    int i;
 
     ret = NULL;
+    i = 0;
     if (prev && next && next->next)
     {
         prev->next = next->next;
@@ -20,6 +22,15 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
     {
         next->next->prev = NULL;
         ret = next->next;
+    }
+    while(current->next->args && current->next->args[i])
+    {
+        if (prev)
+        {
+            current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
+            free(current->next->args[i]);
+        }
+        i++;
     }
     free(current->value);
     current->value = NULL;
