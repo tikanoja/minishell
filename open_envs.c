@@ -59,10 +59,10 @@ void check_value_for_dollar(t_list *current, int status)
 	flag = 0;
 	len = ft_strlen(current->value);
 	i = 0;
-	env = ft_calloc(1, sizeof(char));
-	new_value = ft_calloc(1, sizeof(char));
 	if (check_for_dollar(current->value) == 1)
 	{
+		env = ft_calloc(1, sizeof(char));
+		new_value = ft_calloc(1, sizeof(char));
 		while (i < len)
 		{
 			if (current->value[i] == '\"' && flag != 1)
@@ -87,6 +87,7 @@ void check_value_for_dollar(t_list *current, int status)
 					new_value = ft_strdup(ft_getenv(env));
 				i += ft_strlen(env);
 				free(env);
+				env = NULL;
 			}
 			else
 			{
@@ -96,12 +97,14 @@ void check_value_for_dollar(t_list *current, int status)
 		}
 		free(current->value);
 		current->value = new_value;
+		if (env)
+			free(env);
 	}
-	else
-	{
-		free(env);
-		free(new_value);
-	}
+	// else
+	// {
+	// 	free(env);
+	// 	free(new_value);
+	// }
 }
 
 void check_args_for_dollar(t_list *current, int status)
@@ -118,11 +121,11 @@ void check_args_for_dollar(t_list *current, int status)
 	{
 		flag = 0;
 		i = 0;
-		env = ft_calloc(1, sizeof(char));
-		new_value = ft_calloc(1, sizeof(char));
 		len = ft_strlen(current->args[j]);
 		if (check_for_dollar(current->args[j]) == 1)
 		{
+			env = ft_calloc(1, sizeof(char));
+			new_value = ft_calloc(1, sizeof(char));
 			while (i < len)
 			{
 				if(current->args[j][i] == '\"' && flag != 1)
@@ -157,13 +160,11 @@ void check_args_for_dollar(t_list *current, int status)
 			free(current->args[j]);
 			current->args[j] = new_value;
 		}
-		else
-		{
-			new_value = ft_strdup(current->args[j]);
-			free(current->args[j]);
-			current->args[j] = new_value;
-			free(env);
-		}
+		// else
+		// {
+		// 	free(new_value);
+		// 	free(env);
+		// }
 		j++;
 	}
 }

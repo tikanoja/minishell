@@ -39,6 +39,8 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
     {
         free(next->value);
         next->value = NULL;
+        if (next->args)
+            free(next->args);
         free(next);
     }
     return (ret);
