@@ -146,9 +146,11 @@ int    runcmd(t_list *head, char **envcpy)
             printf("shelly: %s: command not found\n", current->args[0]);
             status = 127;
         }
-        else if (slash_check(current) == 1 && directory_check(current) == 1)
+        else if (directory_check(current) == 1)
         {
-            printf("shelly: %s: is a directory\n", current->value);
+            ft_putstr_fd("shelly: ", 2);
+            ft_putstr_fd(current->value, 2);
+            ft_putstr_fd(": is a directory\n", 2);
             status = 126;
         }
         else if (is_it_builtin(current->value) > 0)
