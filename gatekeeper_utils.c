@@ -16,8 +16,11 @@ char *ft_strcpy(char *dest, char *src)
 
 char *char_join(char *string, char c)
 {
-    size_t len = ft_strlen(string);
-    char *new_str = ft_calloc(len + 2, sizeof(char));
+    size_t len;
+    char *new_str;
+
+	len = ft_strlen(string);
+	new_str = ft_calloc(len + 2, sizeof(char));
     if (!new_str)
 	{
         // handle allocation error
