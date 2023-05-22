@@ -18,7 +18,7 @@ int     slash_check(t_list *current)
     i = 0;
     while (current->value[i])
     {
-        if (current->value[i] == '\\')
+        if (current->value[i] == '/')
             return (1);
         i++;
     }
@@ -148,7 +148,7 @@ int    runcmd(t_list *head, char **envcpy)
             ft_putstr_fd(": command not found\n", 2);
             status = 127;
         }
-        else if (directory_check(current) == 1)
+        else if (slash_check(current) && directory_check(current) == 1)
         {
             ft_putstr_fd("shelly: ", 2);
             ft_putstr_fd(current->value, 2);
