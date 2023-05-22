@@ -27,30 +27,14 @@
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
-typedef enum e_tokenType
-{
-	COMMAND,
-	ARGUMENT,
-	PIPE,
-	REDIRECTION,
-	INPUT,
-	OUPUT,
-	APPEND,
-	BACKGROUND,
-	INVALID
-}       t_tokenType;
-
 typedef struct  s_list
 {
-	t_tokenType tokenType; //COMMAND, PIPE, REDIRECTION etc...
-	// t_builtinCommand builtinCommand; //builtin commands
 	char			*value; //esim "echo", ">" taiii "file.txt"
 	char			**args; //esim "-n" ja "terve $ARG"
 	int				argc; //you already know
 	int				input; //fd for input
 	int				output; //fd for output
 	int				append; //flag if output redirection should append to file
-	int				background; //ei oo mitää hajuu
 	int				system_command; //is it a sys cmd
 	struct s_list	*next; //next node
 	struct s_list	*prev; //prev node
@@ -59,39 +43,31 @@ typedef struct  s_list
 	int				execflag;
 }               t_list;
 
-// typedef struct s_signals
-// {
-//     struct sigaction sa_c;
-//     struct sigaction sa_d;
-//     struct sigaction sa_bs;
-// } t_signals;
-// int 
-
 char **envcpy; //chang this to be g_envcpy
 
 //exit.c
-void ft_exit(t_list *exit_arg, int pid);
-int check_for_non_numeric(char *str);
+void	ft_exit(t_list *exit_arg, int pid);
+int		check_for_non_numeric(char *str);
 
 //signals.c
-void init_signals();
-void handle_ctrl_c(int signum);
-void rl_replace_line (const char *text, int clear_undo);
-int termios_handler(int flag);
-void init_child_signals();
-void init_heredoc_signals();
-void handle_ctrl_c_child(int signum __attribute__((unused)));
-void handle_ctrl_d_child(int signum __attribute__((unused)));
-void handle_ctrl_c_heredoc(int signum __attribute__((unused)));
-void handle_ctrl_d_heredoc(int signum __attribute__((unused)));
+void	init_signals();
+void	handle_ctrl_c(int signum);
+void	rl_replace_line (const char *text, int clear_undo);
+int		termios_handler(int flag);
+void	init_child_signals();
+void	init_heredoc_signals();
+void	handle_ctrl_c_child(int signum __attribute__((unused)));
+void	handle_ctrl_d_child(int signum __attribute__((unused)));
+void	handle_ctrl_c_heredoc(int signum __attribute__((unused)));
+void	handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //setenv.c
-int	ft_setenv(const char *value);
-void set_env_value(char **env, const char *key, const char *value);
-char **copy_env(char **env);
-void free_setenv(char **env);
-char **allocate_new_env(size_t size);
-int check_key_chars(char c, int flag);
+int		ft_setenv(const char *value);
+void	set_env_value(char **env, const char *key, const char *value);
+char	**copy_env(char **env);
+void	free_setenv(char **env);
+char	**allocate_new_env(size_t size);
+int		check_key_chars(char c, int flag);
 int		is_valid_key(char *key);
 
 //cd.c
