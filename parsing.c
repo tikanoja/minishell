@@ -89,7 +89,6 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	node->args = NULL;
 	node->argc = 0;
 	node->pipe = 0;
-	node->pipe_position = 0;
 	node->index = 0;
 	node->execflag = 0;
 	node->prev = prev;

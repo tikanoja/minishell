@@ -1,13 +1,9 @@
 #include "minishell.h"
 
-t_list *free_redirection_out(t_list *current)
+t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 {
-    t_list *next;
-    t_list *prev;
     t_list *ret;
 
-    next = current->next;
-    prev = current->prev;
     ret = NULL;
     if (prev && next && next->next)
     {
@@ -51,6 +47,14 @@ t_list    *handle_redirection_out(t_list *current)
         if (prev)
             prev->execflag = 1;
     }
+    else if (is_it_redirection(next->value) > 0)
+    {
+        ft_putstr_fd("shelly: syntax error near unexpected token '", 2);
+        ft_putstr_fd(next->value, 2);
+        ft_putstr_fd("'\n", 2);
+        if (prev)
+            prev->execflag = 1;
+    }
     else
     {
         fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -61,7 +65,7 @@ t_list    *handle_redirection_out(t_list *current)
         else
             close(fd);
     }
-    return (free_redirection_out(current));
+    return (free_redirection_out(current, prev, next));
 }
 
 t_list    *handle_redirection_in(t_list *current)
@@ -73,23 +77,48 @@ t_list    *handle_redirection_in(t_list *current)
     prev = current->prev;
     next = current->next;
     if (!next || !next->value || ft_strlen(next->value) == 0)
-        printf("file not found / syntax error\n"); //jos tää ni sitä cmd ei execute lainkaan!!
+    {
+        write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
+        if (prev)
+            prev->execflag = 1;
+    }
+    else if (is_it_redirection(next->value) > 0)
+    {
+        ft_putstr_fd("shelly: syntax error near unexpected token '", 2);
+        ft_putstr_fd(next->value, 2);
+        ft_putstr_fd("'\n", 2);
+        if (prev)
+            prev->execflag = 1;
+    }
     else
     {
-        fd = open(next->value, O_RDONLY, 0644);
-        if (fd == -1)
-            printf("error opening file %s\n", next->value);
-        prev->input = fd;
+        if (access(next->value, F_OK) == -1)
+        {
+            ft_putstr_fd("shelly: ", 2);
+            ft_putstr_fd(next->value, 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+            if (prev)
+                prev->execflag = 1;
+        }
+        else
+        {
+            fd = open(next->value, O_RDONLY, 0644);
+            if (fd == -1)
+            {
+                printf("error opening file %s\n", next->value);
+                if (prev)
+                    prev->execflag = 1;
+            }
+            else
+            {
+                if (prev)
+                    prev->input = fd;
+                else
+                    close(fd);
+            }
+        }
     }
-    if (next->next)
-    {
-        prev->next = next->next;
-        next->next->prev = prev;
-    }
-    else
-        prev->next = NULL;
-    free_redirection_out(current);
-    return (prev);
+    return (free_redirection_out(current, prev, next)); //pitäis toimii täs mut jos ei ni pitää tehä oma hehheh
 }
 
 t_list    *handle_redirection_out_append(t_list *current)
@@ -101,23 +130,30 @@ t_list    *handle_redirection_out_append(t_list *current)
     prev = current->prev;
     next = current->next;
     if (!next || !next->value || ft_strlen(next->value) == 0)
-        printf("file not found / syntax error\n");
+    {
+        write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
+        if (prev)
+            prev->execflag = 1;
+    }
+    else if (is_it_redirection(next->value) > 0)
+    {
+        ft_putstr_fd("shelly: syntax error near unexpected token '", 2);
+        ft_putstr_fd(next->value, 2);
+        ft_putstr_fd("'\n", 2);
+        if (prev)
+            prev->execflag = 1;
+    }
     else
     {
         fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
         if (fd == -1)
             printf("error opening file %s\n", next->value);
-        prev->output = fd;
+        if (prev)
+            prev->output = fd;
+        else
+            close(fd);
     }
-    if (next->next)
-    {
-        prev->next = next->next;
-        next->next->prev = prev;
-    }
-    else
-        prev->next = NULL;
-    free_redirection_out(current);
-    return (prev);
+    return (free_redirection_out(current, prev, next));
 }
 
 t_list *fill_node_from_stdin(t_list *current)
@@ -129,7 +165,6 @@ t_list *fill_node_from_stdin(t_list *current)
     new->args[0] = NULL;
     new->argc = 0;
     new->pipe = 1;
-    new->pipe_position = 0;
     new->input = STDIN_FILENO;
 	new->output = STDOUT_FILENO;
     new->prev = current;
@@ -138,27 +173,45 @@ t_list *fill_node_from_stdin(t_list *current)
     return (new);
 }
 
+t_list *free_pipe(t_list *current, t_list *prev, t_list *next)
+{
+    if (prev)
+        prev->next = next;
+    next->prev = prev;
+    free(current->value);
+    free(current);
+    if (next->next)
+        return (next->next);
+    else
+        return (NULL);
+}
+
 t_list    *handle_pipe(t_list *current)
 {
     t_list *prev;
     t_list *next;
     int pipefd[2];
+    int syntaxflag;
 
+    syntaxflag = 0;
     prev = current->prev;
     next = current->next;
+    if (!prev)
+        ft_putstr_fd("shelly: syntax error near unexpected token `|'", 2); //ja mitaan ei tapahdu paitsi taa error msg
     if (!next || !next->value || ft_strlen(next->value) == 0)
         next = fill_node_from_stdin(current);
     if (pipe(pipefd) == -1)
-        printf("error opening pipe\n");
-    prev->output = pipefd[1];
-    prev->pipe = 1;
+        printf("error opening pipe\n"); //protect
+    if (prev)
+    {
+        prev->output = pipefd[1];
+        prev->pipe = 1;
+    }
+    else
+        close (pipefd[1]);
     next->input = pipefd[0];
     next->pipe = 1;
-    prev->next = next;
-    next->prev = prev;
-    free(current->value);
-    free(current);
-    return (prev);
+    return (free_pipe(current, prev, next));
 }
 int is_it_quote(char c)
 {
@@ -212,17 +265,19 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
         prev->input = pipefd[0];
     else
         close(pipefd[0]);
-    if (current->next->next && prev)
+    if (current->next && current->next->next && prev)
     {
         prev->next = current->next->next;
         current->next->next->prev = prev;
     }
-    else if (!current->next->next && prev)
+    else if (!current->next && !current->next->next && prev)
         prev->next = NULL;
     else if (current->next->next && !prev)
         current->next->next->prev = NULL;
-    free(current->next->value);
-    free(current->next);
+    if (current->next)
+        free(current->next->value);
+    if (current->next)
+        free(current->next);
     free(current->value);
     free(current);
     return (prev);
@@ -234,50 +289,42 @@ t_list  *handle_heredoc(t_list *current)
     char    *input;
     int     pipefd[2];
     
-    delim = ft_strdup(current->next->value);
-    if (pipe(pipefd) == -1)
-        printf("error opening heredoc pipe\n");
-    while(1)
+    if (!current->next)
     {
-        init_heredoc_signals();
-        input = readline(">");
-        if (!input)
+        ft_putstr_fd("shelly: syntax error near unexpected token `newline'", 2);
+        if (current->prev)
+            current->prev->execflag = 1;
+    }
+    else
+    {
+        delim = ft_strdup(current->next->value);
+        if (pipe(pipefd) == -1)
+            printf("error opening heredoc pipe\n");
+        while(1)
         {
-            printf("\033[1A> ");
-            break;
-        }
-        if(check_for_dollar(input) == 1)
-            input = heredoc_env_open(input);
-        if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
-        {
+            init_heredoc_signals();
+            input = readline(">");
+            if (!input)
+            {
+                printf("\033[1A> ");
+                break;
+            }
+            if(check_for_dollar(input) == 1)
+                input = heredoc_env_open(input);
+            if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
+            {
+                free(input);
+                break ;
+            }
+            ft_putstr_fd(input, pipefd[1]);
+            ft_putchar_fd('\n', pipefd[1]);
             free(input);
-            break ;
         }
-        ft_putstr_fd(input, pipefd[1]);
-        ft_putchar_fd('\n', pipefd[1]);
-        free(input);
+        close(pipefd[1]);
+        init_signals();
+        free(delim);
     }
-    close(pipefd[1]);
-    init_signals();
-    free(delim);
     return (end_heredoc(current, pipefd));
-}
-
-void    fill_pipe_position(t_list *current)
-{
-    while (current)
-    {
-        if (current->pipe == 1)
-        {
-            if (current->prev == NULL || current->prev->pipe == 0)
-                current->pipe_position = 1;
-            else if (current->prev->pipe == 1 && (current->next == NULL || current->next->pipe == 0))
-                current->pipe_position = 3;
-            else if (current->prev->pipe == 1 && current->next->pipe == 1)
-                current->pipe_position = 2;
-        }
-        current = current->next;
-    }
 }
 
 void    open_fds_and_pipes(t_list *head)
@@ -300,5 +347,4 @@ void    open_fds_and_pipes(t_list *head)
         else
             current = current->next;
     }
-    fill_pipe_position(head);
 }

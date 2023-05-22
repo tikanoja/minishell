@@ -54,7 +54,6 @@ typedef struct  s_list
     struct s_list *next; //next node
     struct s_list *prev; //prev node
     int pipe;
-    int pipe_position;
     int index;
     int execflag;
 }               t_list;

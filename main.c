@@ -173,7 +173,6 @@ void printlist(t_list *head)
 		j = 0;
 		printf("in: %d, out: %d\n", current->input, current->output);
 		printf("pipeflag: %d\n", current->pipe);
-		printf("pipe pos: %d\n", current->pipe_position);
 		printf("index: %d\n", current->index);
 		current = current->next;
 		i++;
@@ -228,11 +227,11 @@ void run_minishell()
 		head = parsecmd(prompt, envcpy);
 		gatekeeper(head, status);
 		open_fds_and_pipes(head);
+		printlist(head);
 		if (!head || (head->value == NULL))
 			continue ;
 		parse_system_commands(head);
 		add_index(head);
-		printlist(head);
 		//status = error_handling(head);
 		status = runcmd(head, envcpy);
 		free_list(head);
