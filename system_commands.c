@@ -48,8 +48,6 @@ char *get_path(char **patharr, char *cmd)
     int i;
 
     i = 0;
-    if (access(cmd, F_OK) == 0)
-        return (cmd);
     while (patharr[i])
 	{
 		tmp = ft_strjoin(patharr[i], "/");
@@ -83,7 +81,8 @@ void move_value_to_args(t_list *current)
         i++;
     }
     arr[0] = ft_strdup(current->value);
-    free(current->value);
+    if (access(current->value, F_OK) != 0)
+        free(current->value);
     free(current->args);
     arr[i + 1] = NULL;
     current->args = arr;
@@ -115,7 +114,8 @@ void    parse_system_commands(t_list *head)
         {
             convert_to_lowercase(current->value);
             move_value_to_args(current);
-            current->value = get_path(patharr, current->args[0]);
+            if (access(current->value, F_OK) != 0)
+                current->value = get_path(patharr, current->args[0]);
             if (current->value == NULL)
                 current->system_command = -1;
             else

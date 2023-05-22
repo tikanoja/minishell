@@ -12,21 +12,27 @@ void free_list(t_list *head)
 	t_list	*current;
 	int		i;
 
+	next = NULL;
 	current = head;
 	i = 0;
 	while (current != NULL)
 	{
 		i = 0;
-		free(current->value);
+		if(current->value)
+			free(current->value);
 		while (current->args && current->args[i])
 		{
-			free(current->args[i]);
+			if(current->args[i])
+				free(current->args[i]);
+			current->args[i] = NULL;
 			i++;
 		}
 		if (current->args)
 			free(current->args);
 		next = current->next;
-		free(current);
+		if (current)
+			free(current);
+		current = NULL;
 		current = next;
 	}
 }

@@ -147,7 +147,8 @@ char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 		i++;
 	}
 	node->argc = i + 1;
-	free(node->args);
+	if (node->args)
+		free(node->args);
 	node->args = NULL;
 	array[i] = ft_strdup(token);
 	array[i + 1] = NULL;
@@ -260,6 +261,7 @@ t_list *parsecmd(char *prompt, char **envcpy)
 		token = ft_lexer(NULL, envcpy, head);
 	}
 	free(prompt);
-	free(token);
+	if (token)
+		free(token);
 	return (get_head_node(node));
 }
