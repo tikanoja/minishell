@@ -6,13 +6,13 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 19:35:12 by ttikanoj          #+#    #+#             */
-/*   Updated: 2023/05/17 12:43:29 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/22 20:05:15 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char    *ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ns;
 	size_t	i;
