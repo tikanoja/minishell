@@ -100,3 +100,59 @@ int     assignment_check(char *str)
     }
     return (0);
 }
+
+int is_it_redirection_no_pipe(char *prompt)
+{
+	if (ft_strncmp(prompt, "<<\0", 3) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, ">>\0", 3) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, "<\0", 2) == 0)
+		return (1);
+	else if (ft_strncmp(prompt, ">\0", 2) == 0)
+		return (1);
+	return (0);
+}
+
+int is_it_redirection_redir_check(char *prompt)
+{
+	if (ft_strncmp(prompt, "|", 1) == 0) 
+		return (1);
+	else if (ft_strncmp(prompt, "<<", 2) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, ">>", 2) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, "<", 1) == 0)
+		return (1);
+	else if (ft_strncmp(prompt, ">", 1) == 0)
+		return (1);
+	return (0);
+}
+
+int double_redir_check(t_list *head)
+{
+	t_list *current;
+	current = head;
+
+	while (current)
+	{
+		if (is_it_redirection_no_pipe(current->value) > 0 && current->next && is_it_redirection_no_pipe(current->next->value) > 0)
+		{
+			ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
+			ft_putstr_fd(current->next->value, 2);
+			ft_putstr_fd("'\n", 2);
+			free_list(head);
+			return(1);
+		}
+		else if (current->args && is_it_redirection_redir_check(current->args[0]) > 0)
+		{
+			ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
+			ft_putstr_fd(current->args[0], 2);
+			ft_putstr_fd("'\n", 2);
+			free_list(head);
+			return(1);
+		}
+		current = current->next;
+	}
+	return (0);
+}

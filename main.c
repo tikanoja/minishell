@@ -225,9 +225,11 @@ void run_minishell()
 		if (check_quotes(prompt) == 1 || empty_input(prompt) == 1 || check_log_operators(prompt) == 1)
 			continue ;
 		head = parsecmd(prompt, envcpy);
+		if (double_redir_check(head) == 1)
+			continue;
+		//printlist(head);
 		gatekeeper(head, status);
 		open_fds_and_pipes(head);
-		printlist(head);
 		if (!head || (head->value == NULL))
 			continue ;
 		parse_system_commands(head);

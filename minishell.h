@@ -175,6 +175,7 @@ void free_env_and_list(char **env, t_list *head);
 void free_array(char **arr);
 void free_array_and_env(char **array, char **envcpy, t_list *head);
 int	error_handling(t_list *head);
+int double_redir_check(t_list *head);
 
 //builtin utils
 char *ft_strcat(char *dest, const char *src);
