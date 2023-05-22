@@ -196,7 +196,7 @@ t_list    *handle_pipe(t_list *current)
     syntaxflag = 0;
     prev = current->prev;
     next = current->next;
-    if (!prev)
+    if (!prev && current->execflag != 1)
         ft_putstr_fd("shelly: syntax error near unexpected token `|'", 2); //ja mitaan ei tapahdu paitsi taa error msg
     if (!next || !next->value || ft_strlen(next->value) == 0)
         next = fill_node_from_stdin(current);
@@ -259,7 +259,9 @@ char    *heredoc_env_open(char *input)
 t_list *end_heredoc(t_list *current, int pipefd[2])
 {
     t_list  *prev;
+    t_list  *ret;
 
+    ret = NULL;
     prev = current->prev;
     if (prev)
         prev->input = pipefd[0];
@@ -269,18 +271,26 @@ t_list *end_heredoc(t_list *current, int pipefd[2])
     {
         prev->next = current->next->next;
         current->next->next->prev = prev;
+        ret = current->next->next;
+        if (ft_strncmp(current->next->next->value, "|", 1) == 0)
+            current->next->next->execflag = 1;
     }
     else if (!current->next && !current->next->next && prev)
         prev->next = NULL;
-    else if (current->next->next && !prev)
+    else if (current->next && current->next->next && !prev)
+    {
         current->next->next->prev = NULL;
+        ret = current->next->next;
+    }
+    else if (current->next && !current->next->next && prev)
+        prev->next = NULL;
     if (current->next)
         free(current->next->value);
     if (current->next)
         free(current->next);
     free(current->value);
     free(current);
-    return (prev);
+    return (ret);
 }
 
 t_list  *handle_heredoc(t_list *current)
