@@ -63,6 +63,21 @@ int is_it_redirection(char *prompt)
 	return (0);
 }
 
+int is_it_redirection_parsing(char *prompt)
+{
+	if (ft_strncmp(prompt, "|", 1) == 0) 
+		return (1);
+	else if (ft_strncmp(prompt, "<<", 2) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, ">>", 2) == 0)
+		return (2);
+	else if (ft_strncmp(prompt, "<", 1) == 0)
+		return (1);
+	else if (ft_strncmp(prompt, ">", 1) == 0)
+		return (1);
+	return (0);
+}
+
 int is_it_log_operator(char *prompt)
 {
 	if (ft_strncmp(prompt, "||\0", 2) == 0) 
@@ -173,7 +188,7 @@ t_list *parsecmd(char *prompt, char **envcpy)
 	{
 		if (token == NULL)
 			break ;
-		if (is_it_redirection(token) > 0 || is_it_log_operator(token) > 0)
+		if (is_it_redirection_parsing(token) > 0 || is_it_log_operator(token) > 0)
 		{
 			argflag = -1;
 			node = add_node(node, token, envcpy, head);

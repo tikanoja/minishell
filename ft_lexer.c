@@ -16,7 +16,7 @@ int check_token_end(char *str)
         return (1);
     else if (is_it_whitespace(*str) > 0)
         return (1);
-    else if (is_it_redirection(str) > 0)
+    else if (is_it_redirection_parsing(str) > 0)
         return (1);
     else if (is_it_log_operator(str) > 0)
         return (1);
@@ -91,8 +91,10 @@ int get_token_len(char *str)
         return (handle_quotes(str, *str));
     else if (is_it_operator(str) > 0)
         return (is_it_operator(str));
+    else if (is_it_redirection_parsing(str) > 0)
+        return (is_it_redirection_parsing(str));
     while(str[len] && is_it_whitespace(str[len]) == 0 &&\
-    is_it_log_operator(&str[len]) == 0 && is_it_redirection(&str[len]) == 0)//&& str[len] != '\'' && str[len] != '\"')
+    is_it_log_operator(&str[len]) == 0 && is_it_redirection_parsing(&str[len]) == 0)
         len++;
     return (len);
 }
@@ -120,11 +122,11 @@ char *ft_lexer(char *str, char **envcpy, t_list *head)
     tokenlen = 0;
     if (str != NULL)
         last_str = str;
-    while (*last_str && is_it_whitespace(*last_str)) //skip WS
+    while (*last_str && is_it_whitespace(*last_str))
         last_str++;
     if (*last_str == '\0')
         return (NULL);
-    tokenlen = get_token_len(last_str); //how many chars
+    tokenlen = get_token_len(last_str);
     token = ft_calloc((tokenlen + 1), sizeof(char));
     if (!token)
         free_env_and_list(envcpy, head);
@@ -134,17 +136,3 @@ char *ft_lexer(char *str, char **envcpy, t_list *head)
         return (NULL);
     return (token);
 }
-
-// int main(void)
-// {
-//     char str[420] = "VAR=msakkura && echo $VAR || echo 'Variable not set'";
-//     char *token;
-
-//     token = ft_lexer(str);
-//     while (token != NULL)
-//     {
-//         printf("%s\n", token);
-//         token = ft_lexer(NULL);
-//     }
-//     return (0);
-// }

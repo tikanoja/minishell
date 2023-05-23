@@ -129,6 +129,7 @@ char	**ft_split_p(char const *s, char c);
 int		ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int		is_it_builtin(char *prompt);
 int		is_it_redirection(char *prompt);
+int		is_it_redirection_parsing(char *prompt);
 int		is_it_log_operator(char *prompt);
 char	*get_path(char **patharr, char *token);
 int		is_it_shell_command(char *token, char **envcpy);

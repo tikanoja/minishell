@@ -71,9 +71,15 @@ t_list    *handle_redirection_out(t_list *current)
     else
     {
         fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd == -1)
-            printf("error opening file %s\n", next->value);
-        if (prev)
+        if (fd == -1 && prev->execflag != 1)
+        {
+            ft_putstr_fd("shelly: ", 2);
+            ft_putstr_fd(next->value, 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+            if (prev)
+                prev->execflag = 1;
+        }
+        if (prev && prev->execflag != 1)
             prev->output = fd;
         else
             close(fd);
@@ -105,7 +111,7 @@ t_list    *handle_redirection_in(t_list *current)
     }
     else
     {
-        if (access(next->value, F_OK) == -1)
+        if (access(next->value, F_OK) == -1 && prev->execflag != 1)
         {
             ft_putstr_fd("shelly: ", 2);
             ft_putstr_fd(next->value, 2);
@@ -116,7 +122,7 @@ t_list    *handle_redirection_in(t_list *current)
         else
         {
             fd = open(next->value, O_RDONLY, 0644);
-            if (fd == -1)
+            if (fd == -1 && prev->execflag != 1)
             {
                 printf("error opening file %s\n", next->value);
                 if (prev)
@@ -124,7 +130,7 @@ t_list    *handle_redirection_in(t_list *current)
             }
             else
             {
-                if (prev)
+                if (prev && prev->execflag != 1)
                     prev->input = fd;
                 else
                     close(fd);
