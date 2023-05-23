@@ -21,8 +21,8 @@ int cd_home(void)
 	char *old_pwd;
 	char cwd[PATH_MAX];
 	
-	old_pwd = getcwd(cwd, PATH_MAX);
-	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
+	// old_pwd = getcwd(cwd, PATH_MAX);
+	old_pwd = ft_strjoin("OLDPWD=", getcwd(cwd, PATH_MAX));
 	if (chdir(ft_getenv("HOME")) == -1)
 	{
 		free(old_pwd);
@@ -45,15 +45,9 @@ int cd_back(void)
 	char cwd[PATH_MAX];
 	int status;
 
-	old_pwd = getcwd(cwd, PATH_MAX);
-	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
+	//old_pwd = getcwd(cwd, PATH_MAX);
+	old_pwd = ft_strjoin("OLDPWD=", getcwd(cwd, PATH_MAX));
 	status = 0;
-	// if (chdir(ft_getenv("OLDPWD")) == -1)
-	// {
-	// 	ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-	// 	free(old_pwd);
-	// 	return (1);
-	// }
 	if (chdir(ft_getenv("OLDPWD")) == -1)
 	{
 		ft_putstr_fd("shelly: cd: ", STDERR_FILENO);
@@ -62,9 +56,8 @@ int cd_back(void)
 		status = errno;
 		return (status);
 	}
-		
-	pwd = getcwd(cwd, PATH_MAX);
-	pwd = ft_strjoin("PWD=", pwd);
+	// pwd = getcwd(cwd, PATH_MAX);
+	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
 	ft_setenv(old_pwd);
 	ft_setenv(pwd);
 	free(pwd);
@@ -79,8 +72,8 @@ int cd_path(char *path, t_list *current)
 	char cwd[PATH_MAX];
 	int status;
 
-	old_pwd = getcwd(cwd, PATH_MAX);
-	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
+	//old_pwd = getcwd(cwd, PATH_MAX);
+	old_pwd = ft_strjoin("OLDPWD=", getcwd(cwd, PATH_MAX));
 	status = 0;
 	if (chdir(path) == -1)
     {
@@ -92,8 +85,8 @@ int cd_path(char *path, t_list *current)
         status = errno; // Set the error status to the value of errno
 		return (status);
     }
-	pwd = getcwd(cwd, PATH_MAX);
-	pwd = ft_strjoin("PWD=", pwd);
+	// pwd = getcwd(cwd, PATH_MAX);
+	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
 	ft_setenv(old_pwd);
 	ft_setenv(pwd);
 	free(pwd);
@@ -120,61 +113,3 @@ int ft_cd(t_list *current) //vitusti lisaa error management pitaako ottaa real p
 		free(path);
 	return (status);
 }
-
-	// {
-	// 	old_pwd = getcwd(cwd, PATH_MAX);
-	// 	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
-	// 	if (chdir(ft_getenv("HOME")) == -1)
-	// 	{
-	// 		free(old_pwd);
-	// 		if(current->argc > 0)
-	// 			free(path);
-	// 		ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
-	// 		return ;
-	// 	}
-	// 	pwd = getcwd(cwd, PATH_MAX);
-	// 	pwd = ft_strjoin("PWD=", pwd);
-	// 	ft_setenv(old_pwd);
-	// 	ft_setenv(pwd);
-	// 	free(pwd);
-	// 	free(old_pwd);
-	// 	if(current->argc > 0)
-	// 		free(path);
-	// }
-	// {
-	// 	// old_pwd = getcwd(cwd, PATH_MAX);
-	// 	// old_pwd = ft_strjoin("OLDPWD=", old_pwd);
-	// 	// if (chdir(ft_getenv("OLDPWD")) == -1)
-	// 	// {
-	// 	// 	ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
-	// 	// 	free(old_pwd);
-	// 	// 	free(path);
-	// 	// 	return ;
-	// 	// }
-	// 	// pwd = getcwd(cwd, PATH_MAX);
-	// 	// pwd = ft_strjoin("PWD=", pwd);
-	// 	// ft_setenv(old_pwd);
-	// 	// ft_setenv(pwd);
-	// 	// free(pwd);
-	// 	// free(old_pwd);
-	// }
-	// {
-	// 	old_pwd = getcwd(cwd, PATH_MAX);
-	// 	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
-	// 	if (chdir(path) == -1)
-	// 	{
-	// 		ft_putstr_fd("shelly: cd: ", STDERR_FILENO);
-	// 		ft_putstr_fd(current->args[0], STDERR_FILENO);
-	// 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-	// 		free(old_pwd);
-	// 		free(path);
-	// 		return ;
-	// 	}
-	// 	pwd = getcwd(cwd, PATH_MAX);
-	// 	pwd = ft_strjoin("PWD=", pwd);
-	// 	ft_setenv(old_pwd);
-	// 	ft_setenv(pwd);
-	// 	free(pwd);
-	// 	free(old_pwd);
-	// 	free(path);
-	// }
