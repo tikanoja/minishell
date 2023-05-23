@@ -51,7 +51,10 @@ int ft_echo(t_list *echo)
 	i = 0;
 	len = 0;
 	if (echo->argc == 0)
+	{
+		printf("\n");
 		return (0);
+	}
 	int original_fd = dup(STDOUT_FILENO);
 	dup2(echo->output, STDOUT_FILENO);
 	if (one_n_checker(echo) == 1)
