@@ -168,6 +168,7 @@ int		ft_pwd(void);
 //runcmd.c
 void	redirection_check(t_list *current);
 int		runcmd(t_list *head, char **envcpy);
+int     slash_check(char *str);
 
 //main.c
 // int ft_echo(char *prompt);
