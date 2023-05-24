@@ -62,6 +62,7 @@ void check_value_for_dollar(t_list *current, int status)
 	int i;
 	char *env;
 	char *new_value;
+	char *buffer;
 
 	flag = 0;
 	len = ft_strlen(current->value);
@@ -83,8 +84,9 @@ void check_value_for_dollar(t_list *current, int status)
 				handle_single_quotes(current->value[i], &flag);
 			if (current->value[i] == '$' && current->value[i+1] == '?' && flag == 0)
 				{
-					printf("it comes in here\n");
-					new_value = ft_strjoin(new_value, ft_itoa(status));
+					buffer = ft_itoa(status);
+					new_value = ft_strjoin(new_value, buffer);
+					free(buffer);
 					i+=2;
 				}
 			if (current->value[i] == '$' && (flag == 0 || flag == 2))
@@ -112,11 +114,6 @@ void check_value_for_dollar(t_list *current, int status)
 		if (env)
 			free(env);
 	}
-	// else
-	// {
-	// 	free(env);
-	// 	free(new_value);
-	// }
 }
 
 
@@ -128,6 +125,7 @@ void check_args_for_dollar(t_list *current, int status)
 	int j;
 	char *env;
 	char *new_value;
+	char *buffer;
 
 	j = 0;
 	while (j < current->argc)
@@ -152,8 +150,10 @@ void check_args_for_dollar(t_list *current, int status)
 					handle_single_quotes(current->args[j][i], &flag);
 				if (current->args[j][i] == '$' && current->args[j][i+1] == '?' && flag == 0)
 				{
-					new_value = ft_strjoin(new_value, ft_itoa(status));
+					buffer = ft_itoa(status);
+					new_value = ft_strjoin(new_value, buffer);
 					i+=2;
+					free(buffer);
 				}
 				if (current->args[j][i] == '$' && (flag == 0 || flag == 2))
 				{
@@ -173,11 +173,6 @@ void check_args_for_dollar(t_list *current, int status)
 			free(current->args[j]);
 			current->args[j] = new_value;
 		}
-		// else
-		// {
-		// 	free(new_value);
-		// 	free(env);
-		// }
 		j++;
 	}
 }
