@@ -87,11 +87,15 @@ void	move_arg_to_value(t_list *current)
 t_list	*gatekeeper(t_list *head, int status)
 {
 	t_list	*current;
+	int		heredoc_flag;
 
 	current = head;
 	while (current)
 	{
-		if (current->value)
+		heredoc_flag = 1;
+		if (current->prev)
+			heredoc_flag = ft_strncmp(current->prev->value, "<<\0", 4);
+		if (current->value && heredoc_flag != 0)
 			check_value_for_dollar(current, status);
 		if (current->args)
 			check_args_for_dollar(current, status);
