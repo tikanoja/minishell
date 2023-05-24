@@ -47,6 +47,13 @@ void handle_single_quotes(char c, int *flag)
 		*flag = 0;
 }
 
+int check_for_quote_dollar(char *str)
+{
+	if (ft_strncmp(str, "\"$\"", 4) == 0)
+		return (0);
+	return (1);
+}
+
 
 void check_value_for_dollar(t_list *current, int status)
 {
@@ -59,7 +66,7 @@ void check_value_for_dollar(t_list *current, int status)
 	flag = 0;
 	len = ft_strlen(current->value);
 	i = 0;
-	if (check_for_dollar(current->value) == 1)
+	if (check_for_dollar(current->value) == 1 && check_for_quote_dollar(current->value) == 1)
 	{
 		env = ft_calloc(1, sizeof(char));
 		new_value = ft_calloc(1, sizeof(char));
@@ -128,7 +135,7 @@ void check_args_for_dollar(t_list *current, int status)
 		flag = 0;
 		i = 0;
 		len = ft_strlen(current->args[j]);
-		if (check_for_dollar(current->args[j]) == 1)
+		if (check_for_dollar(current->args[j]) == 1 && check_for_quote_dollar(current->args[j]) == 1)
 		{
 			env = ft_calloc(1, sizeof(char));
 			new_value = ft_calloc(1, sizeof(char));
