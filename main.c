@@ -227,12 +227,25 @@ void run_minishell()
 		head = parsecmd(prompt, envcpy);
 		if (double_redir_check(head) == 1)
 			continue;
-		gatekeeper(head, status);
+		head = gatekeeper(head, status);
 		head = open_fds_and_pipes(head);
-		//printlist(head);
+		//			printf("its here hopefully");
 		if (!head || (head->value == NULL))
-			continue ;
+		{
+			if(head)
+			{
+				while(head && !head->value)
+				{
+					head = head->next;
+				}
+			}
+			if (!head)
+				continue ;
+		}
+		//parse_system_commands(head);
 		parse_system_commands(head);
+		head = get_head_node(head);
+		printlist(head);
 		add_index(head);
 		//status = error_handling(head);
 		status = runcmd(head, envcpy);

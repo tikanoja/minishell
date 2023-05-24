@@ -291,7 +291,7 @@ t_list    *handle_pipe(t_list *current)
     syntaxflag = 0;
     prev = current->prev;
     next = current->next;
-    if (!next || !next->value || ft_strlen(next->value) == 0)
+    if (!next)
         next = fill_node_from_stdin(current);
     if (pipe(pipefd) == -1)
         printf("error opening pipe\n"); //protect
@@ -415,10 +415,10 @@ t_list  *handle_heredoc(t_list *current)
         while(1)
         {
             init_heredoc_signals();
-            input = readline(">");
+            input = readline("> ");
             if (!input)
             {
-                printf("\033[1A> ");
+                ft_printf("\033[1A> ");
                 break;
             }
             if(check_for_dollar(input) == 1)
@@ -446,17 +446,17 @@ t_list    *open_fds_and_pipes(t_list *head)
     current = head;
     while (current)
     {
-        if (current->prev == NULL)     
+        if (current->prev == NULL)
             head = current;
-        if (ft_strncmp(current->value, "|\0", 2) == 0) 
+        if (current->value && ft_strncmp(current->value, "|\0", 2) == 0) 
 		    current = handle_pipe(current);
-	    else if (ft_strncmp(current->value, "<<\0", 3) == 0)
+	    else if (current->value && ft_strncmp(current->value, "<<\0", 3) == 0)
 		    current = handle_heredoc(current);
-	    else if (ft_strncmp(current->value, ">>\0", 3) == 0)
+	    else if (current->value && ft_strncmp(current->value, ">>\0", 3) == 0)
 		    current = handle_redirection_out_append(current);
-	    else if (ft_strncmp(current->value, "<\0", 2) == 0)
+	    else if (current->value && ft_strncmp(current->value, "<\0", 2) == 0)
 		    current = handle_redirection_in(current);
-	    else if (ft_strncmp(current->value, ">\0", 2) == 0)
+	    else if (current->value && ft_strncmp(current->value, ">\0", 2) == 0)
 		    current = handle_redirection_out(current);
         else
             current = current->next;

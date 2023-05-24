@@ -96,7 +96,11 @@ void check_value_for_dollar(t_list *current, int status)
 			}
 		}
 		free(current->value);
+		if(*new_value == '\0')
+			new_value = NULL;
 		current->value = new_value;
+		if(current->value == NULL)
+			current->execflag = 1;
 		if (env)
 			free(env);
 	}
@@ -106,6 +110,7 @@ void check_value_for_dollar(t_list *current, int status)
 	// 	free(new_value);
 	// }
 }
+
 
 void check_args_for_dollar(t_list *current, int status)
 {

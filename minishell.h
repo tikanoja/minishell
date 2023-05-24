@@ -92,7 +92,7 @@ int		variable_assign_check(char *str);
 void	parse_system_commands(t_list *head);
 
 //gatekeeper
-void	gatekeeper(t_list *head, int status);
+t_list	*gatekeeper(t_list *head, int status);
 void	open_quotes(t_list *current);
 int		check_if_quotes(char *str);
 char	*parse_quotes(char *str);

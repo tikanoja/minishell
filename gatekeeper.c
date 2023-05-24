@@ -84,7 +84,7 @@ void	move_arg_to_value(t_list *current)
 	current->args[0] = NULL;
 }
 
-void	gatekeeper(t_list *head, int status)
+t_list	*gatekeeper(t_list *head, int status)
 {
 	t_list	*current;
 
@@ -97,8 +97,9 @@ void	gatekeeper(t_list *head, int status)
 			check_args_for_dollar(current, status);
 		if(current->value)
 			open_quotes(current);
-		if (current->value[0] == '\0' && current->args[0])
+		if (current->value && current->value[0] == '\0' && current->args && current->args[0])
 			move_arg_to_value(current);
 		current = current->next;
 	}
+	return (head);
 }
