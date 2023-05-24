@@ -105,24 +105,24 @@ void	parse_system_commands(t_list *head)
 	current = head;
 	while (current)
 	{
-		if (current->value[0] == '\0')
+		if (current->value[0] == '\0' || current->value == NULL)
 		{
 			current = current->next;
 			continue;
 		}
 		if (is_it_builtin(current->value) == 0\
-		&& variable_assign_check(current->value) == 0)
+		&& variable_assign_check(current->value) == 0 && slash_check(current->value) == 0)
 		{
 			if (pathflag == 0)
 			{
-			convert_to_lowercase(current->value);
-			move_value_to_args(current);
-			if (access(current->value, F_OK) != 0)
-				current->value = get_path(patharr, current->args[0]);
-			if (current->value == NULL)
-				current->system_command = -1;
-			else
-				current->system_command = 1;
+				convert_to_lowercase(current->value);
+				move_value_to_args(current);
+				if (access(current->value, F_OK) != 0)
+					current->value = get_path(patharr, current->args[0]);
+				if (current->value == NULL)
+					current->system_command = -1;
+				else
+					current->system_command = 1;
 			}
 			else
 			{
@@ -130,7 +130,6 @@ void	parse_system_commands(t_list *head)
 				ft_putstr_fd(current->value, 2);
 				ft_putstr_fd(": No such file or directory\n", 2);
 			}
-
 		}
 		current = current->next;
 	}

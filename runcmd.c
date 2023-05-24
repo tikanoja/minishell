@@ -1,24 +1,24 @@
 #include "minishell.h"
 
-int     directory_check(t_list *current)
+int     directory_check(char *str)
 {
 	struct stat file_info;
 
-	if (stat(current->value, &file_info) == -1)
+	if (stat(str, &file_info) == -1)
 		printf("stat call failed"); //protect?
 	if (S_ISDIR(file_info.st_mode))
 		return (1);
 	return (0);
 }
 
-int     slash_check(t_list *current)
+int     slash_check(char *str)
 {
 	int i;
 
 	i = 0;
-	while (current->value[i])
+	while (str[i])
 	{
-		if (current->value[i] == '/')
+		if (str[i] == '/')
 			return (1);
 		i++;
 	}
@@ -151,7 +151,7 @@ int    runcmd(t_list *head, char **envcpy)
 			ft_putstr_fd(": command not found\n", 2);
 			status = 127;
 		}
-		else if (slash_check(current) && directory_check(current) == 1)
+		else if (slash_check(current->value) && directory_check(current->value) == 1)
 		{
 			ft_putstr_fd("shelly: ", 2);
 			ft_putstr_fd(current->value, 2);
