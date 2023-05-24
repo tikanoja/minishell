@@ -4,7 +4,7 @@ int check_for_non_numeric(char *str)
 	int i;
 
 	i = 0;
-	if(str[i] == '-')
+	if(str[i] == '-' || str[i] == '+')
 		i++;
 	while(str[i])
 	{
@@ -28,7 +28,7 @@ int		check_for_too_long(char *str)
 
 	i = 0;
 	j = 0;
-	if (str[i] == '-')
+	if (str[i] == '-' || str[i] == '+')
 		i++;
 	if (ft_strlen(str) > ft_strlen(long_max) + i)
 		return (1);
