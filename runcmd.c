@@ -86,7 +86,7 @@ int    execute_builtin(t_list *current)
 		else if (ft_strncmp_casein(current->value, "pwd", 4) == 0)
 				status = ft_pwd();
 		else if (ft_strncmp_casein(current->value, "exit", 5) == 0)
-				ft_exit(current, pid);
+				status = ft_exit(current, pid);
 		else if (ft_strncmp_casein(current->value, "env", 5) == 0)
 				status = ft_env(current);
 		else if (ft_strncmp_casein(current->value, "unset", 6) == 0 && current->argc == 1)

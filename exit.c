@@ -50,7 +50,7 @@ int		check_for_too_long(char *str)
 	return (0);
 }
 
-void ft_exit(t_list *exit_arg, int pid)
+int	ft_exit(t_list *exit_arg, int pid)
 {
 	int exit_status;
 
@@ -64,7 +64,7 @@ void ft_exit(t_list *exit_arg, int pid)
 	else if (exit_arg->argc > 1)
 	{
 		printf("minishell: exit: too many arguments\n");
-		return ;
+		return (1);
 	}
 	else if (pid != 0)
 		printf("exit\n");

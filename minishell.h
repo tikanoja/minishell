@@ -46,7 +46,7 @@ typedef struct  s_list
 char **envcpy; //chang this to be g_envcpy
 
 //exit.c
-void	ft_exit(t_list *exit_arg, int pid);
+int		ft_exit(t_list *exit_arg, int pid);
 int		check_for_non_numeric(char *str);
 
 //signals.c
