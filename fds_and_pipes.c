@@ -458,15 +458,15 @@ t_list    *open_fds_and_pipes(t_list *head)
     {
         if (current->prev == NULL)     
             head = current;
-        if (ft_strncmp(current->value, "|\0", 2) == 0) 
+        if (current->value && ft_strncmp(current->value, "|\0", 2) == 0) 
 		    current = handle_pipe(current);
-	    else if (ft_strncmp(current->value, "<<\0", 3) == 0)
+	    else if (current->value && ft_strncmp(current->value, "<<\0", 3) == 0)
 		    current = handle_heredoc(current);
-	    else if (ft_strncmp(current->value, ">>\0", 3) == 0)
+	    else if (current->value && ft_strncmp(current->value, ">>\0", 3) == 0)
 		    current = handle_redirection_out_append(current);
-	    else if (ft_strncmp(current->value, "<\0", 2) == 0)
+	    else if (current->value && ft_strncmp(current->value, "<\0", 2) == 0)
 		    current = handle_redirection_in(current);
-	    else if (ft_strncmp(current->value, ">\0", 2) == 0)
+	    else if (current->value && ft_strncmp(current->value, ">\0", 2) == 0)
 		    current = handle_redirection_out(current);
         else
             current = current->next;
