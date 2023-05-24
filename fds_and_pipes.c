@@ -175,22 +175,26 @@ t_list    *handle_redirection_out_append(t_list *current)
     return (free_redirection_out(current, prev, next));
 }
 
-t_list *fill_node_from_stdin(t_list *current)
+int fill_node_split_check(char *input)
 {
-    t_list *new;
-    char *input;
+    int i;
+
+    i = 0;
+    while (input[i])
+    {
+        if (input[i] == ' ')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+void fill_node_from_split(t_list *new, char *input)
+{
     char **arr;
     int i;
 
     i = 1;
-    new = malloc(sizeof(t_list)); //protect
-    new->argc = 0;
-    new->pipe = 1;
-    new->input = STDIN_FILENO;
-	new->output = STDOUT_FILENO;
-    new->prev = current;
-    new->next = NULL;
-    input = readline(">"); // ehk pitaa lisaa splitti!
     arr = ft_split(input, ' ');
     free(input);
     new->value = ft_strdup(arr[0]);
@@ -201,7 +205,60 @@ t_list *fill_node_from_stdin(t_list *current)
         free(arr[i]);
         i++;
     }
+    new->argc = i;
     free(arr);
+}
+
+char *parse_stdin_input(char *input)
+{
+    int start;
+    int end;
+    int i;
+    char *new;
+
+    start = 0;
+    end = ft_strlen(input) - 1;
+    i = 0;
+    while(is_it_whitespace(input[start]) == 1)
+        start++;
+    while(is_it_whitespace(input[end]) == 1)
+        end--;
+    if ((size_t)(end - start) == ft_strlen(input) - 1)
+        return(input);
+    new = ft_calloc(end - start + 1, sizeof(char));
+    new[end + 1] = '\0';
+    printf("start: %d, end %d\n", start, end);
+    while (start <= end)
+    {
+        new[i] = input[start];
+        i++;
+        start++;
+    }
+    free(input);
+    printf("new: %s$", new);
+    return(new);
+}
+
+t_list *fill_node_from_stdin(t_list *current)
+{
+    t_list *new;
+    char *input;
+    new = malloc(sizeof(t_list)); //protect
+    new->argc = 0;
+    new->pipe = 1;
+    new->input = STDIN_FILENO;
+	new->output = STDOUT_FILENO;
+    new->prev = current;
+    new->next = NULL;
+    input = readline(">"); // ehk pitaa lisaa splitti!
+    input = parse_stdin_input(input);
+    if (fill_node_split_check(input) == 1)
+        fill_node_from_split(new, input);
+    else
+    {
+        new->value = ft_strdup(input);
+        free(input);
+    }
     return (new);
 }
 
