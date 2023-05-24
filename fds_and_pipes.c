@@ -201,11 +201,11 @@ void fill_node_from_split(t_list *new, char *input)
     free(arr[0]);
     while(arr[i])
     {
+        write(1, "HERE\n", 5);
         new->args = realloc_array(new, arr[i], NULL, NULL);
         free(arr[i]);
         i++;
     }
-    new->argc = i;
     free(arr);
 }
 
@@ -243,15 +243,23 @@ t_list *fill_node_from_stdin(t_list *current)
 {
     t_list *new;
     char *input;
-    new = malloc(sizeof(t_list)); //protect
+    new = ft_calloc(1, sizeof(t_list)); //protect
     new->argc = 0;
     new->pipe = 1;
     new->input = STDIN_FILENO;
 	new->output = STDOUT_FILENO;
     new->prev = current;
     new->next = NULL;
+    new->args = NULL;
+    new->execflag = 0;
     input = readline(">"); // ehk pitaa lisaa splitti!
     input = parse_stdin_input(input);
+    if (ft_strlen(input) == 0)
+    {
+        free(new);
+        free(input);
+        return(NULL);
+    }
     if (fill_node_split_check(input) == 1)
         fill_node_from_split(new, input);
     else
@@ -291,8 +299,10 @@ t_list    *handle_pipe(t_list *current)
     syntaxflag = 0;
     prev = current->prev;
     next = current->next;
-    if (!next)
+    if (!next || !next->value || ft_strlen(next->value) == 0)
         next = fill_node_from_stdin(current);
+    if (!next)
+        return (free_pipe(current, prev, next));
     if (pipe(pipefd) == -1)
         printf("error opening pipe\n"); //protect
     if (prev)
@@ -415,10 +425,10 @@ t_list  *handle_heredoc(t_list *current)
         while(1)
         {
             init_heredoc_signals();
-            input = readline("> ");
+            input = readline(">");
             if (!input)
             {
-                ft_printf("\033[1A> ");
+                printf("\033[1A> ");
                 break;
             }
             if(check_for_dollar(input) == 1)
@@ -446,17 +456,17 @@ t_list    *open_fds_and_pipes(t_list *head)
     current = head;
     while (current)
     {
-        if (current->prev == NULL)
+        if (current->prev == NULL)     
             head = current;
-        if (current->value && ft_strncmp(current->value, "|\0", 2) == 0) 
+        if (ft_strncmp(current->value, "|\0", 2) == 0) 
 		    current = handle_pipe(current);
-	    else if (current->value && ft_strncmp(current->value, "<<\0", 3) == 0)
+	    else if (ft_strncmp(current->value, "<<\0", 3) == 0)
 		    current = handle_heredoc(current);
-	    else if (current->value && ft_strncmp(current->value, ">>\0", 3) == 0)
+	    else if (ft_strncmp(current->value, ">>\0", 3) == 0)
 		    current = handle_redirection_out_append(current);
-	    else if (current->value && ft_strncmp(current->value, "<\0", 2) == 0)
+	    else if (ft_strncmp(current->value, "<\0", 2) == 0)
 		    current = handle_redirection_in(current);
-	    else if (current->value && ft_strncmp(current->value, ">\0", 2) == 0)
+	    else if (ft_strncmp(current->value, ">\0", 2) == 0)
 		    current = handle_redirection_out(current);
         else
             current = current->next;
