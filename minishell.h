@@ -110,6 +110,7 @@ void	check_value_for_dollar(t_list *current, int status);
 int		get_env_len(char *str);
 int		is_valid_env_char(char c);
 int		check_dollar_end(char c);
+int		check_for_quote_dollar(char *str);
 
 
 //ft_split_utils.c
