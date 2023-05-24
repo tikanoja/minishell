@@ -83,7 +83,8 @@ void	move_value_to_args(t_list *current)
 	arr[0] = ft_strdup(current->value);
 	if (access(current->value, F_OK) != 0)
 		free(current->value);
-	free(current->args);
+	if (current->args)
+		free(current->args);
 	arr[i + 1] = NULL;
 	current->args = arr;
 }

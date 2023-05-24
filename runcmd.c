@@ -74,7 +74,10 @@ int    execute_builtin(t_list *current)
         if (pid == -1)
 		    exitmsg("fork fail\n");
         if (pid == 0)
+        {
+            fd_handling2(current, get_head_node(current));
             forkflag = 0;
+        }
     }
     if (forkflag == 0)
     {
