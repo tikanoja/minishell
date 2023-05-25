@@ -55,8 +55,11 @@ int	ft_exit(t_list *exit_arg, int pid)
 	int exit_status;
 
 	exit_status = 0;
+	if(exit_arg->args)
+		printf("exit you piece of dogshit on a stic pid is %d\n", pid);
 	if ((exit_arg->args && check_for_non_numeric(exit_arg->args[0]) == 1\
-	&& exit_arg->argc >= 1) || check_for_too_long(exit_arg->args[0]) == 1)
+	&& exit_arg->argc >= 1) ||\
+	(exit_arg->args && check_for_too_long(exit_arg->args[0]) == 1))
 	{
 		printf("minishell: exit: %s: numeric argument required\n", exit_arg->args[0]);
 		exit_status = 255;
