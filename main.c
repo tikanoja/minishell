@@ -95,6 +95,16 @@ int check_log_operators(char *prompt)
             write(2, "\\ not supported\n", 16);
             return (1);
         }
+		else if (prompt[i] == ':')
+        {
+            write(2, ": not supported\n", 16);
+            return (1);
+        }
+		else if (prompt[i] == '#')
+        {
+            write(2, "# not supported\n", 16);
+            return (1);
+        }
         i++;
     }
     return (0);
