@@ -131,7 +131,12 @@ void  execute_system_command(t_list *current, char **envcpy, t_list *head)
 	else if (pid == 0)
 	{
 		fd_handling2(current, head);
-		execve(current->value, current->args, envcpy);
+		if (execve(current->value, current->args, envcpy) == -1)
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(current->value, 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
 		exit(1);
 	}
 }
