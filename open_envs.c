@@ -94,7 +94,7 @@ void check_value_for_dollar(t_list *current, int status)
 				i++;
 				env = ft_strndup(current->value + i, get_env_len(current->value + i));
 				if (ft_getenv(env))
-					new_value = ft_strdup(ft_getenv(env));
+					new_value = ft_strjoin(new_value, ft_getenv(env));
 				i += ft_strlen(env);
 				free(env);
 				env = NULL;

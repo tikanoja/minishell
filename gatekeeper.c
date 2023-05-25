@@ -49,13 +49,13 @@ int	check_if_quotes(char *str)
 	if (single_quote == 0 && double_quote > 0)
 	{
 		if (double_quote % 2 != 0)
-			exit(printf("wrong amount of quotes")); //handle error
+			return(0); //handle error
 		return (1);
 	}
 	else if (double_quote == 0 && single_quote > 0)
 	{
 		if (single_quote % 2 != 0)
-			exit(printf("wrong amount of quotes")); //handle error
+			return(0); //handle error
 		return (1);
 	}
 	return (0);
