@@ -69,6 +69,8 @@ void	free_setenv(char **env);
 char	**allocate_new_env(size_t size);
 int		check_key_chars(char c, int flag);
 int		is_valid_key(char *key);
+int do_special_env_set(const char *value);
+int check_if_equal_last(const char *value);
 
 //cd.c
 int 	ft_cd(t_list *current);

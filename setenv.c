@@ -110,6 +110,59 @@ void free_valuepair(char **valuepair)
 	free(valuepair);
 }
 
+int check_if_equal_last(const char *value)
+{
+	int	i;
+
+	i = 0;
+	while(value[i])
+	{
+		if(value[i] == '=' && value[i + 1] == '\0')
+			return(1);
+		i++;
+	}
+	return(0);
+}
+
+int do_special_env_set(const char *value)
+{
+	char *key;
+	char **new_env;
+	size_t env_index;
+	size_t key_len;
+	int found;
+	int row_count;
+
+	env_index = 0;
+	found = 0;
+	key = ft_strdup(value);
+	key[ft_strlen(key) - 1] = '\0';
+	key_len = ft_strlen(key);
+	row_count = 0;
+	while(envcpy[env_index])
+	{
+		if(ft_strncmp(envcpy[env_index], key, key_len) == 0 && envcpy[env_index][key_len] == '=')
+		{
+			free(envcpy[env_index]);
+			envcpy[env_index] = ft_strjoin((const char *)key, "=\0");
+			found = 1;
+			break ;
+		}
+		env_index++;
+	}
+	if(found == 0)
+	{
+		new_env = copy_env(envcpy);
+		while (envcpy[row_count] != NULL)
+			row_count++;
+		free_setenv(envcpy);
+		new_env[row_count - 1] = ft_strjoin((const char *)key, "=\0");
+		envcpy = new_env;
+	}
+	free(key);
+	return (0);
+}
+
 int ft_setenv(const char *value)
 {
 	char **valuepair;
@@ -118,10 +171,17 @@ int ft_setenv(const char *value)
 
 	valuepair = NULL;
 	valuepair = (char **)malloc(2 * sizeof(char *));
+	if(check_if_equal_last(value) == 1)
+		return (do_special_env_set(value));
 	valuepair = ft_split(value, '=');
 	row_count = 0;
 	if (value == NULL)
 		return (1);
+	if(!ft_strchr(value, '=') && ft_getenv(valuepair[0]))
+	{
+		free_valuepair(valuepair);
+		return (0);
+	}
 	if (!valuepair[0] || !is_valid_key(valuepair[0]))
 	{
 		ft_putstr_fd("shelly: '", STDERR_FILENO);
@@ -135,6 +195,7 @@ int ft_setenv(const char *value)
 	if (ft_strncmp(valuepair[0], "_\0", 2) == 0)
 	{
 		envcpy[row_count - 1] = ft_strdup(value);
+		envcpy[row_count] = NULL;
 		free_valuepair(valuepair);
 		return (0);
 	}
