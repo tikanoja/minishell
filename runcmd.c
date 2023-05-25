@@ -4,10 +4,29 @@ int     directory_check(char *str)
 {
 	struct stat file_info;
 
-	if (stat(str, &file_info) == -1)
-		printf("stat call failed"); //protect?
-	if (S_ISDIR(file_info.st_mode))
-		return (1);
+	if (stat(str, &file_info) == 0)//protect?
+	{
+		if (S_ISDIR(file_info.st_mode))
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": is a directory\n", 2);
+			return (1);
+		}
+		else if(S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+			return (1);
+		}
+	}
+	else
+	{
+		ft_putstr_fd("shelly: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+	}
 	return (0);
 }
 
@@ -151,12 +170,15 @@ int    runcmd(t_list *head, char **envcpy)
 			ft_putstr_fd(": command not found\n", 2);
 			status = 127;
 		}
-		else if (slash_check(current->value) && directory_check(current->value) == 1)
+		else if (slash_check(current->value) == 1 && current->system_command != 1)
 		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(current->value, 2);
-			ft_putstr_fd(": is a directory\n", 2);
-			status = 126;
+			if (directory_check(current->value) != 0)
+				status = 126;
+			else
+			{
+				current->system_command = 1;
+				continue;
+			}
 		}
 		else if (is_it_builtin(current->value) > 0)
 			status = execute_builtin(current);
