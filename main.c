@@ -229,23 +229,21 @@ void run_minishell()
 			continue;
 		head = gatekeeper(head, status);
 		head = open_fds_and_pipes(head);
-		//			printf("its here hopefully");
+		// if (*head->value == '\0' && !head->args)
+		// 	printf("WHAT!!?\n");
 		if (!head || (head->value == NULL))
 		{
 			if(head)
 			{
 				while(head && !head->value)
-				{
 					head = head->next;
-				}
 			}
-			if (!head)
+			if (!head || *head->value == '\0')
 				continue ;
 		}
 		//parse_system_commands(head);
 		parse_system_commands(head);
 		head = get_head_node(head);
-		printlist(head);
 		add_index(head);
 		//status = error_handling(head);
 		status = runcmd(head, envcpy);

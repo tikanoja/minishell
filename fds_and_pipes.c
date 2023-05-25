@@ -401,7 +401,9 @@ t_list	*end_heredoc(t_list *current, int pipefd[2])
 	if (current->next)
 		free(current->next);
 	free(current->value);
+	current->value = NULL;
 	free(current);
+	current = NULL;
 	return (ret);
 }
 
@@ -498,5 +500,11 @@ t_list    *open_fds_and_pipes(t_list *head)
 		else
 			current = current->next;
 	}
+	if(!head->value && !head->args)
+	{
+		printf("jee\n");
+		return (NULL);
+	}
+	printlist(head);
 	return (head);
 }
