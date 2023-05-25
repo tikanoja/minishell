@@ -134,12 +134,12 @@ void	parse_system_commands(t_list *head)
 		current = current->next;
 	}
 	i = 0;
-	while(patharr[i] && pathflag != 1)
+	while(pathflag != 1 && patharr[i])
 	{
 		free(patharr[i]);
 		i++;
 	}
 	if(pathflag != 1)
-	free(patharr);
+		free(patharr);
 	return ;
 }
