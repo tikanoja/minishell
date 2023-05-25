@@ -99,15 +99,12 @@ int ft_unsetenv(char *key)
 	}
 	if (index == -1)
 		return (0);
-	//new_env = (char **)malloc(sizeof(char *) * row_count);
-	printf("row count is 28 = %d\n", row_count);
 	new_env = ft_calloc(row_count, sizeof(char *));
 	while (envcpy[i])
 	{
 		if (i != index)
 		{
 			new_env[j] = ft_strdup(envcpy[i]);
-			printf("new_env %s\n", new_env[j]);
 			j++;
 		}
 		free(envcpy[i]);
