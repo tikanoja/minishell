@@ -13,37 +13,62 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 		next->next->prev = prev;
 		ret = next->next;
 	}
-	else if ((prev && next && !next->next) || (prev && !next))
-	{
-		prev->next = NULL;
-		ret = NULL;
-	}
 	else if (!prev && next && next->next)
 	{
 		next->next->prev = NULL;
 		ret = next->next;
 	}
-	while(current->next->args && current->next->args[i])
+	else if ((prev && next && !next->next) || (prev && !next))
 	{
-		if (prev)
-		{
-			current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
-			free(current->next->args[i]);
-		}
+		prev->next = NULL;
+		ret = NULL;
+	}
+	while(prev && current->next && current->next->args &&\
+	current->next->args[i])
+	{
+		current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
+		free(current->next->args[i]);
 		i++;
 	}
-	free(current->value);
-	current->value = NULL;
-	free(current);
 	if (next)
 	{
 		free(next->value);
 		next->value = NULL;
 		if (next->args)
+		{
 			free(next->args);
+			next->args = NULL;
+		}
 		free(next);
+		next = NULL;
 	}
+	free(current->value);
+	current->value = NULL;
+	free(current);
+	current = NULL;
 	return (ret);
+}
+
+int redirection_directory_check(char *str)
+{
+	struct stat file_info;
+
+	if (stat(str, &file_info) == 0)//protect?
+	{
+		if (S_ISDIR(file_info.st_mode))
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": is a directory\n", 2);
+		}
+		else if(S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+		}
+	}
+	return (0);
 }
 
 t_list    *handle_redirection_out(t_list *current)
@@ -54,7 +79,7 @@ t_list    *handle_redirection_out(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next || !next->value || ft_strlen(next->value) == 0)
+	if (!next)
 	{
 		write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
 		if (prev)
@@ -73,9 +98,7 @@ t_list    *handle_redirection_out(t_list *current)
 		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1 && prev->execflag != 1)
 		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(next->value, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			redirection_directory_check(next->value);
 			if (prev)
 				prev->execflag = 1;
 		}
@@ -95,7 +118,7 @@ t_list    *handle_redirection_in(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next || !next->value || ft_strlen(next->value) == 0)
+	if (!next)
 	{
 		write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
 		if (prev)
@@ -148,7 +171,7 @@ t_list    *handle_redirection_out_append(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next || !next->value || ft_strlen(next->value) == 0)
+	if (!next)
 	{
 		write(2, "shelly: syntax error near unexpected token 'newline'\n", 53);
 		if (prev)
@@ -164,10 +187,14 @@ t_list    *handle_redirection_out_append(t_list *current)
 	}
 	else
 	{
-		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1)
-			printf("error opening file %s\n", next->value);
-		if (prev)
+		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd == -1 && prev->execflag != 1)
+		{
+			redirection_directory_check(next->value);
+			if (prev)
+				prev->execflag = 1;
+		}
+		if (prev && prev->execflag != 1)
 			prev->output = fd;
 		else
 			close(fd);
@@ -201,8 +228,7 @@ void fill_node_from_split(t_list *new, char *input)
 	free(arr[0]);
 	while(arr[i])
 	{
-		write(1, "HERE\n", 5);
-		new->args = realloc_array(new, arr[i], NULL, NULL);
+		new->args = realloc_array(new, arr[i], NULL, NULL); // mita jos pitaa fill useempi node?
 		free(arr[i]);
 		i++;
 	}
@@ -227,7 +253,6 @@ char *parse_stdin_input(char *input)
 		return(input);
 	new = ft_calloc(end - start + 1, sizeof(char));
 	new[end + 1] = '\0';
-	printf("start: %d, end %d\n", start, end);
 	while (start <= end)
 	{
 		new[i] = input[start];
@@ -235,7 +260,6 @@ char *parse_stdin_input(char *input)
 		start++;
 	}
 	free(input);
-	printf("new: %s$", new);
 	return(new);
 }
 
