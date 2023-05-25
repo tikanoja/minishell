@@ -501,10 +501,6 @@ t_list    *open_fds_and_pipes(t_list *head)
 			current = current->next;
 	}
 	if(!head->value && !head->args)
-	{
-		printf("jee\n");
 		return (NULL);
-	}
-	printlist(head);
 	return (head);
 }
