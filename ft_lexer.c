@@ -43,12 +43,17 @@ void move_pointer(int *len, char **str)
     *len = *len + 1;
 }
 
-int handle_quotes(char *str, char quote)
+int handle_quotes(char *str, char quote, int start)
 {
     int len;
     int quotes;
 
     init_handle_quotes(&len, &quotes);
+    while (start > 0)
+    {
+        str++;
+        start--;
+    }
     str++;
     while(1)
     {
@@ -88,14 +93,22 @@ int get_token_len(char *str)
     len = 0;
 
     if (*str == '\'' || *str == '\"')
-        return (handle_quotes(str, *str));
+        return (handle_quotes(str, *str, 0));
     else if (is_it_operator(str) > 0)
         return (is_it_operator(str));
     else if (is_it_redirection_parsing(str) > 0)
         return (is_it_redirection_parsing(str));
     while(str[len] && is_it_whitespace(str[len]) == 0 &&\
-    is_it_log_operator(&str[len]) == 0 && is_it_redirection_parsing(&str[len]) == 0)
+    is_it_log_operator(&str[len]) == 0 &&\
+    is_it_redirection_parsing(&str[len]) == 0)
+    {
+        if (str[len] == '\'' || str[len] == '\"')
+        {
+            len = len + handle_quotes(str, str[len], len);
+            continue ;
+        }
         len++;
+    }
     return (len);
 }
 

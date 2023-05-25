@@ -143,7 +143,7 @@ t_list	*parsecmd(char *prompt, char **envcpy);
 //ft_lexer.c
 int		is_it_whitespace(char c);
 int		check_token_end(char *str);
-int		handle_quotes(char *last_str, char quote);
+int		handle_quotes(char *last_str, char quote, int start);
 char	*ft_lexer(char *str, char **envcpy, t_list *head);
 
 //errors.c
