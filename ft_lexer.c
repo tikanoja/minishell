@@ -11,7 +11,6 @@ int is_it_whitespace(char c)
 
 int check_token_end(char *str)
 {
-    str++;
     if (*str == '\0')
         return (1);
     else if (is_it_whitespace(*str) > 0)
@@ -43,38 +42,78 @@ void move_pointer(int *len, char **str)
     *len = *len + 1;
 }
 
-int handle_quotes(char *str, char quote, int start)
+// int handle_quotes(char *str, char quote, int start)
+// {
+//     int len;
+//     int quotes;
+
+//     init_handle_quotes(&len, &quotes);
+//     while (start > 0)
+//     {
+//         str++;
+//         start--;
+//     }
+//     str++;
+//     while(1)
+//     {
+//         if (*str == '\0')
+//             break ;
+//         else if (*str == quote)
+//         {
+//             quotes++;
+//             if (check_token_end(str) > 0 && quotes % 2 == 0)
+//                 break ;
+//             else if (str[1] == '\'' || str[1] == '\"')
+//             {
+//                 quote = get_next_quote(str[1]);
+//                 quotes++;
+//                 str = str + 2;
+//                 len = len + 2;
+//                 continue ;
+//             }
+//         }
+//         move_pointer(&len, &str);
+//     }
+//     return (len);
+// }
+
+int handle_quotes(char *str, char quote, int start) //jos taa ei skulaa ni tos ylhaal on bakup
 {
     int len;
     int quotes;
 
-    init_handle_quotes(&len, &quotes);
+    len = 0;
+    quotes = 1;
     while (start > 0)
     {
-        str++;
+        len++;
         start--;
     }
-    str++;
+    len++;
     while(1)
     {
-        if (*str == '\0')
+        if (str[len] == '\0')
+        {
+            len--;
             break ;
-        else if (*str == quote)
+        }
+        else if (str[len] == quote)
         {
             quotes++;
-            if (check_token_end(str) > 0 && quotes % 2 == 0)
+            if (check_token_end(&str[len + 1]) > 0 && quotes % 2 == 0)
                 break ;
-            else if (str[1] == '\'' || str[1] == '\"')
+            else if (str[len + 1] == '\'' || str[len + 1] == '\"')
             {
-                quote = get_next_quote(str[1]);
+                quote = get_next_quote(str[len + 1]);
                 quotes++;
-                str = str + 2;
                 len = len + 2;
                 continue ;
             }
         }
-        move_pointer(&len, &str);
+        len++;
     }
+    len++;
+    printf("len: %d\n", len);
     return (len);
 }
 
