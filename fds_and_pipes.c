@@ -335,7 +335,7 @@ t_list	*handle_pipe(t_list *current)
 		return (free_pipe(current, prev, next));
 	if (pipe(pipefd) == -1)
 		printf("error opening pipe\n"); //protect
-	if (prev)
+	if (prev && prev->output == STDOUT_FILENO) // toi jalkimmainen arg fiksas echo moi > testfile | cat -e
 	{
 		prev->output = pipefd[1];
 		prev->pipe = 1;
