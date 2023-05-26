@@ -81,12 +81,13 @@ int check_for_quote_dollar(char *str)
 
 void check_value_for_dollar(t_list *current, int status)
 {
-	int flag;
-	int len;
-	int i;
-	char *env;
-	char *new_value;
-	char *buffer;
+	int		flag;
+	int		len;
+	int		i;
+	char	*env;
+	char	*new_value;
+	char	*buffer;
+	char	quote_type;
 
 	flag = 0;
 	len = ft_strlen(current->value);
@@ -112,7 +113,7 @@ void check_value_for_dollar(t_list *current, int status)
 					free(buffer);
 					i+=2;
 				}
-			if (current->value[i] == '$' && (flag == 0 || flag == 2))
+			if (current->value[i] == '$' && current->value[i+1] != '\"' && current->value[i+1] != '\'' &&  (flag == 0 || flag == 2))
 			{
 				i++;
 				env = ft_strndup(current->value + i, get_env_len(current->value + i));
@@ -121,6 +122,17 @@ void check_value_for_dollar(t_list *current, int status)
 				i += ft_strlen(env);
 				free(env);
 				env = NULL;
+			}
+			else if (current->value[i] == '$' && (current->value[i+1] == '\"' || current->value[i+1] == '\'') && (flag == 0 || flag == 2))
+			{
+				quote_type = current->value[i+1];
+				i += 2;
+				while(current->value[i] != quote_type)
+				{
+					new_value = char_join(new_value, current->value[i], current);
+					i++;
+				}
+				i++;
 			}
 			else
 			{
@@ -142,13 +154,14 @@ void check_value_for_dollar(t_list *current, int status)
 
 void check_args_for_dollar(t_list *current, int status)
 {
-	int flag;
-	int len;
-	int i;
-	int j;
-	char *env;
-	char *new_value;
-	char *buffer;
+	int		flag;
+	int		len;
+	int		i;
+	int		j;
+	char	*env;
+	char	*new_value;
+	char	*buffer;
+	char	quote_type;
 
 	j = 0;
 	while (j < current->argc)
@@ -177,7 +190,7 @@ void check_args_for_dollar(t_list *current, int status)
 					i+=2;
 					free(buffer);
 				}
-				if (current->args[j][i] == '$' && (flag == 0 || flag == 2))
+				if (current->args[j][i] == '$' && current->args[j][i+1] != '\"' && current->args[j][i+1] != '\'' && (flag == 0 || flag == 2))
 				{
 					i++;
 					env = ft_strndup(current->args[j] + i, get_env_len(current->args[j] + i));
@@ -185,6 +198,17 @@ void check_args_for_dollar(t_list *current, int status)
 						new_value = ft_strjoin_oe(new_value, ft_getenv(env));
 					i += ft_strlen(env);
 					free(env);
+				}
+				else if (current->args[j][i] == '$' && (current->args[j][i+1] == '\"' || current->args[j][i+1] == '\'') && (flag == 0 || flag == 2))
+				{
+					quote_type = current->args[j][i+1];
+					i += 2;
+					while(current->args[j][i] != quote_type)
+					{
+						new_value = char_join(new_value, current->args[j][i], current);
+						i++;
+					}
+					i++;
 				}
 				else
 				{
