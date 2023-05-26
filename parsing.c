@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/26 15:24:33 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/26 15:32:14 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_strncmp_casein(const char *s1, const char *s2, size_t n)
@@ -22,35 +34,35 @@ int	ft_strncmp_casein(const char *s1, const char *s2, size_t n)
 		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-int is_it_builtin(char *prompt)
+int	is_it_builtin(char *prompt)
 {
-	if (ft_strncmp_casein(prompt, "echo\0", 4) == 0 &&\
-	(is_it_whitespace(prompt[4]) || prompt[4] == '\0')) 
+	if (ft_strncmp_casein(prompt, "echo\0", 4) == 0 && \
+	(is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "cd\0", 2) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "cd\0", 2) == 0 && \
 	(is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "pwd\0", 3) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "pwd\0", 3) == 0 && \
 	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "export\0", 6) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "export\0", 6) == 0 && \
 	(is_it_whitespace(prompt[6]) || prompt[6] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "unset\0", 5) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "unset\0", 5) == 0 && \
 	(is_it_whitespace(prompt[5]) || prompt[5] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "env\0", 3) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "env\0", 3) == 0 && \
 	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "exit\0", 4) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "exit\0", 4) == 0 && \
 	(is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
 		return (1);
 	return (0);
 }
 
-int is_it_redirection(char *prompt)
+int	is_it_redirection(char *prompt)
 {
-	if (ft_strncmp(prompt, "|\0", 2) == 0) 
+	if (ft_strncmp(prompt, "|\0", 2) == 0)
 		return (1);
 	else if (ft_strncmp(prompt, "<<\0", 3) == 0)
 		return (2);
@@ -63,9 +75,9 @@ int is_it_redirection(char *prompt)
 	return (0);
 }
 
-int is_it_redirection_parsing(char *prompt)
+int	is_it_redirection_parsing(char *prompt)
 {
-	if (ft_strncmp(prompt, "|", 1) == 0) 
+	if (ft_strncmp(prompt, "|", 1) == 0)
 		return (1);
 	else if (ft_strncmp(prompt, "<<", 2) == 0)
 		return (2);
@@ -78,19 +90,18 @@ int is_it_redirection_parsing(char *prompt)
 	return (0);
 }
 
-int is_it_log_operator(char *prompt)
+int	is_it_log_operator(char *prompt)
 {
-	if (ft_strncmp(prompt, "||\0", 2) == 0) 
+	if (ft_strncmp(prompt, "||\0", 2) == 0)
 		return (2);
 	else if (ft_strncmp(prompt, "&&\0", 2) == 0)
 		return (2);
 	return (0);
 }
 
-
-t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
+t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head)
 {
-	t_list  *prev;
+	t_list	*prev;
 
 	if (node == NULL)
 		prev = NULL;
@@ -115,10 +126,10 @@ t_list *add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	return (node);
 }
 
-char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
+char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 {
-	char **array;
-	int i;
+	char	**array;
+	int		i;
 
 	array = NULL;
 	i = 0;
@@ -140,7 +151,7 @@ char **realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 	return (array);
 }
 
-void init_parsecmd(t_list **node, t_list **head, int *argflag)
+void	init_parsecmd(t_list **node, t_list **head, int *argflag)
 {
 	*node = NULL;
 	*head = NULL;
@@ -149,7 +160,7 @@ void init_parsecmd(t_list **node, t_list **head, int *argflag)
 
 void	remove_extra_node(t_list *head)
 {
-	t_list *current;
+	t_list	*current;
 
 	current = head;
 	while (current)
@@ -165,7 +176,7 @@ void	remove_extra_node(t_list *head)
 	}
 }
 
-t_list *get_head_node(t_list *node)
+t_list	*get_head_node(t_list *node)
 {
 	if (node == NULL)
 		return (NULL);
@@ -174,17 +185,17 @@ t_list *get_head_node(t_list *node)
 	return (node);
 }
 
-t_list *parsecmd(char *prompt, char **envcpy)
+t_list	*parsecmd(char *prompt, char **envcpy)
 {
-	t_list  *node;
-	t_list  *head;
-	char    *token;
-	int     argflag;
+	t_list	*node;
+	t_list	*head;
+	char	*token;
+	int		argflag;
 
 	init_parsecmd(&node, &head, &argflag);
 	token = ft_lexer(prompt, envcpy, head);
 	node = NULL;
-	while(1)
+	while (1)
 	{
 		if (token == NULL)
 			break ;
