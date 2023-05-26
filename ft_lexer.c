@@ -82,14 +82,14 @@ int handle_quotes(char *str, char quote, int start) //jos taa ei skulaa ni tos y
     int len;
     int quotes;
 
-    len = 0;
+    len = 1;
     quotes = 1;
     while (start > 0)
     {
         len++;
         start--;
     }
-    len++;
+    printf("coming here index: %d and the char: %c and the quote: %c\n", len, str[len], quote);
     while(1)
     {
         if (str[len] == '\0')
@@ -97,6 +97,8 @@ int handle_quotes(char *str, char quote, int start) //jos taa ei skulaa ni tos y
             len--;
             break ;
         }
+        else if (quotes % 2 == 0 && check_token_end(&str[len]) > 0)
+            return (len);
         else if (str[len] == quote)
         {
             quotes++;
@@ -136,7 +138,7 @@ int get_token_len(char *str)
         return (is_it_operator(str));
     else if (is_it_redirection_parsing(str) > 0)
         return (is_it_redirection_parsing(str));
-    while(str[len] && is_it_whitespace(str[len]) == 0 &&\
+    while(str[len] && str[len] != '\0' && is_it_whitespace(str[len]) == 0 &&\
     is_it_log_operator(&str[len]) == 0 &&\
     is_it_redirection_parsing(&str[len]) == 0)
     {
@@ -178,6 +180,7 @@ char *ft_lexer(char *str, char **envcpy, t_list *head)
     if (*last_str == '\0')
         return (NULL);
     tokenlen = get_token_len(last_str);
+    printf("token len: %d\n", tokenlen);
     token = ft_calloc((tokenlen + 1), sizeof(char));
     if (!token)
         free_env_and_list(envcpy, head);
