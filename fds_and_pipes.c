@@ -68,6 +68,12 @@ int redirection_directory_check(char *str)
 			ft_putstr_fd(": Permission denied\n", 2);
 		}
 	}
+	else
+	{
+		ft_putstr_fd("shelly: ", 2);
+		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+	}
 	return (0);
 }
 
@@ -187,7 +193,7 @@ t_list    *handle_redirection_out_append(t_list *current)
 	}
 	else
 	{
-		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd == -1 && prev->execflag != 1)
 		{
 			redirection_directory_check(next->value);
