@@ -120,20 +120,6 @@ int		check_dollar_end(char c);
 int		check_for_quote_dollar(char *str);
 char	*ft_strjoin_oe(char *s1, char *s2);
 
-
-//ft_split_utils.c
-int		wordcount_p(const char *s, char c);
-int		wordlen_p(char *dup, char c, int len);
-char	**createempty_p(char **arr);
-int		findstring(char *str);
-
-//ft_split_pipex.c
-char	**getarray_p(char *dup, char c, int wcount);
-int		fillhelper2(const char *s, size_t *i, char *c);
-void	fillhelper(char *arr, int *b, size_t *i, char *c);
-char	**fillarr_p(char **arr, const char *s, char c, int wcount);
-char	**ft_split_p(char const *s, char c);
-
 //parsing.c
 int		ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int		is_it_builtin(char *prompt);
