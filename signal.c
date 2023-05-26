@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:14:17 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 15:18:17 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/26 15:19:13 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	handle_ctrl_c(int signum __attribute__((unused)))
 {
-	//printf("here!\n");
 	write(STDERR_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -38,8 +37,6 @@ void	handle_ctrl_c_heredoc(int signum __attribute__((unused)))
 	close(4);
 	write(STDERR_FILENO, "\n", 1);
 	run_minishell();
-	// //exit (1);
-	//write(STDERR_FILENO, "vittu\n", 6);
 }
 
 void	handle_ctrl_d_heredoc(int signum __attribute__((unused)))

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:52:18 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 12:57:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:54:35 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,33 +24,27 @@ void	pathflag_is_zero(t_list *current, char **patharr)
 		current->system_command = 1;
 }
 
-void	print_error_sys_cmd(t_list *current)
+int	is_it_builtin_sys(char *prompt)
 {
-	ft_putstr_fd("shelly: ", 2);
-	ft_putstr_fd(current->value, 2);
-	ft_putstr_fd(": No such file or directory\n", 2);
-}
-int is_it_builtin_sys(char *prompt)
-{
-	if (ft_strncmp_casein(prompt, "echo\0", 5) == 0 &&\
-	(is_it_whitespace(prompt[4]) || prompt[4] == '\0')) 
+	if (ft_strncmp_casein(prompt, "echo\0", 5) == 0 && \
+	(is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "cd\0", 3) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "cd\0", 3) == 0 && \
 	(is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "pwd\0", 4) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "pwd\0", 4) == 0 && \
 	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "export\0", 7) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "export\0", 7) == 0 && \
 	(is_it_whitespace(prompt[6]) || prompt[6] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "unset\0", 6) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "unset\0", 6) == 0 && \
 	(is_it_whitespace(prompt[5]) || prompt[5] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "env\0", 4) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "env\0", 4) == 0 && \
 	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
 		return (1);
-	else if (ft_strncmp_casein(prompt, "exit\0", 5) == 0 &&\
+	else if (ft_strncmp_casein(prompt, "exit\0", 5) == 0 && \
 	(is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
 		return (1);
 	return (0);
@@ -75,7 +69,6 @@ char	**patharr_split(int *pathflag, t_list *current)
 	*pathflag = 0;
 	return (patharr);
 }
-
 
 void	parse_system_commands(t_list *head, int pathflag)
 {

@@ -17,6 +17,7 @@
 # include <curses.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include <term.h>  //tgetent, tgetflag, tgetnum,  tgetstr, tgoto, tputs
 # include <limits.h> //macros
+# include <errno.h>
 
 # define MAX_INT 2147483647
 # define MAXLINE 1024 //maximum lenght of stdin command the user can input!
@@ -89,6 +90,11 @@ t_list	*open_fds_and_pipes(t_list *head);
 
 //system_commands.c
 void	parse_system_commands(t_list *head, int pathflag);
+char	**patharr_split(int *pathflag, t_list *current);
+int		if_check_for_sys_cmd(t_list *current);
+int		is_it_builtin_sys(char *prompt);
+void	print_error_sys_cmd(t_list *current);
+void	pathflag_is_zero(t_list *current, char **patharr);
 
 //system_command_utils.c
 int		findpath(char **env);
@@ -180,7 +186,7 @@ int		runcmd(t_list *head, char **envcpy);
 int     slash_check(char *str);
 //utils.c
 void	free_split(char **split);
-
+void	print_error_sys_cmd(t_list *current);
 
 //main.c
 // int ft_echo(char *prompt);
