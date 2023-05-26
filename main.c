@@ -184,6 +184,7 @@ void printlist(t_list *head)
 		printf("in: %d, out: %d\n", current->input, current->output);
 		printf("pipeflag: %d\n", current->pipe);
 		printf("index: %d\n", current->index);
+		printf("system_command: %d\n", current->system_command);
 		current = current->next;
 		i++;
 	}
@@ -239,9 +240,8 @@ void run_minishell()
 			continue;
 		head = gatekeeper(head, status);
 		head = open_fds_and_pipes(head);
-		// if (*head->value == '\0' && !head->args)
-		// 	printf("WHAT!!?\n");
-		if (!head || (head->value == NULL))
+		printlist(head);
+		if (head == NULL || !head || !head->value || *head->value == '\0')
 		{
 			if(head)
 			{
@@ -251,7 +251,6 @@ void run_minishell()
 			if (!head || *head->value == '\0')
 				continue ;
 		}
-		//parse_system_commands(head);
 		parse_system_commands(head);
 		head = get_head_node(head);
 		add_index(head);
