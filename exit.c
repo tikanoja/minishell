@@ -53,14 +53,17 @@ int		check_for_too_long(char *str)
 int	ft_exit(t_list *exit_arg, int pid)
 {
 	int exit_status;
+	int flag;
 
 	exit_status = 0;
+	flag = 0;
 	if ((exit_arg->args && check_for_non_numeric(exit_arg->args[0]) == 1\
 	&& exit_arg->argc >= 1) ||\
 	(exit_arg->args && check_for_too_long(exit_arg->args[0]) == 1))
 	{
 		printf("minishell: exit: %s: numeric argument required\n", exit_arg->args[0]);
 		exit_status = 255;
+		flag = 1;
 	}
 	else if (exit_arg->argc > 1)
 	{
@@ -71,7 +74,7 @@ int	ft_exit(t_list *exit_arg, int pid)
 		printf("exit\n");
 	if (exit_arg->argc < 1)
 		exit (0);
-	else
+	else if (flag == 0)
 		exit_status = ft_atoi(exit_arg->args[0]) % 256;
 	exit (exit_status);
 }
