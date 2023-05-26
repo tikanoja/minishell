@@ -30,10 +30,35 @@ void	print_error_sys_cmd(t_list *current)
 	ft_putstr_fd(current->value, 2);
 	ft_putstr_fd(": No such file or directory\n", 2);
 }
+int is_it_builtin_sys(char *prompt)
+{
+	if (ft_strncmp_casein(prompt, "echo\0", 5) == 0 &&\
+	(is_it_whitespace(prompt[4]) || prompt[4] == '\0')) 
+		return (1);
+	else if (ft_strncmp_casein(prompt, "cd\0", 3) == 0 &&\
+	(is_it_whitespace(prompt[2]) || prompt[2] == '\0'))
+		return (1);
+	else if (ft_strncmp_casein(prompt, "pwd\0", 4) == 0 &&\
+	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
+		return (1);
+	else if (ft_strncmp_casein(prompt, "export\0", 7) == 0 &&\
+	(is_it_whitespace(prompt[6]) || prompt[6] == '\0'))
+		return (1);
+	else if (ft_strncmp_casein(prompt, "unset\0", 6) == 0 &&\
+	(is_it_whitespace(prompt[5]) || prompt[5] == '\0'))
+		return (1);
+	else if (ft_strncmp_casein(prompt, "env\0", 4) == 0 &&\
+	(is_it_whitespace(prompt[3]) || prompt[3] == '\0'))
+		return (1);
+	else if (ft_strncmp_casein(prompt, "exit\0", 5) == 0 &&\
+	(is_it_whitespace(prompt[4]) || prompt[4] == '\0'))
+		return (1);
+	return (0);
+}
 
 int	if_check_for_sys_cmd(t_list *current)
 {
-	if (is_it_builtin(current->value) == 0 && \
+	if (is_it_builtin_sys(current->value) == 0 && \
 	variable_assign_check(current->value) == 0 && \
 	slash_check(current->value) == 0)
 		return (1);
@@ -50,6 +75,7 @@ char	**patharr_split(int *pathflag, t_list *current)
 	*pathflag = 0;
 	return (patharr);
 }
+
 
 void	parse_system_commands(t_list *head, int pathflag)
 {
