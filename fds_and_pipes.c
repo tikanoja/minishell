@@ -353,7 +353,7 @@ int	is_it_quote(char c)
 	else
 		return (0);
 }
-char	*heredoc_env_open(char *input)
+char	*heredoc_env_open(char *input, t_list *current)
 {
 	char    input_env[1024];
 	char    *input_opened;
@@ -376,11 +376,11 @@ char	*heredoc_env_open(char *input)
 				i++;
 				j++;
 			}
-			input_opened = ft_strjoin(input_opened, ft_getenv(input_env));
+			input_opened = ft_strjoin_oe(input_opened, ft_getenv(input_env));
 			ft_bzero(input_env, (size_t)j);
 			j = 0;
 		}
-		input_opened = char_join(input_opened, input[i]);
+		input_opened = char_join(input_opened, input[i], current);
 		i++;
 	}
 	free(input);
@@ -506,7 +506,7 @@ t_list	*handle_heredoc(t_list *current)
 				break ;
 			}
 			if(check_for_dollar(input) == 1)
-				input = heredoc_env_open(input);
+				input = heredoc_env_open(input, current);
 			ft_putstr_fd(input, pipefd[1]);
 			ft_putchar_fd('\n', pipefd[1]);
 			free(input);
