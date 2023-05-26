@@ -112,13 +112,26 @@ char	*ft_strndup(const char *string, size_t n);
 int		check_for_dollar(char *string);
 
 //open_envs
-void	check_args_for_dollar(t_list *current, int status);
 void	check_value_for_dollar(t_list *current, int status);
 int		get_env_len(char *str);
 int		is_valid_env_char(char c);
 int		check_dollar_end(char c);
 int		check_for_quote_dollar(char *str);
 char	*ft_strjoin_oe(char *s1, char *s2);
+void	handle_single_quotes(char c, int *flag);
+
+//check_for_arg_dollar and check_for_arg_dollar_utils
+void	check_args_for_dollar(t_list *current, int status);
+char	*process_status_value(char *new_value, int status, int *index);
+char	*process_environment_variable(char *new_value, char *arg, int *index);
+char	*process_quoted_string(char *new_value, char *arg, int *index, t_list *current);
+int		flag_status(int flag);
+int		handle_single_quotes_args(char c, int flag);
+int		handle_flag(char arg, int flag);
+int		should_proccess_var(char *arg, int i, int flag);
+int		should_proccess_quote_var(char *arg, int i, int flag);
+char	*process_arg(char *arg, int status, t_list *current, int len);
+
 
 //parsing.c
 int		ft_strncmp_casein(const char *s1, const char *s2, size_t n);
