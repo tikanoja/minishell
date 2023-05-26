@@ -38,7 +38,31 @@ int get_env_len(char *str)
 	}
 	return (len);
 }
-
+char	*ft_strjoin_oe(char *s1, char *s2)
+{
+	char	*ns;
+	size_t	i;
+	size_t	j;
+	size_t	s1_len;
+	size_t	s2_len;
+	if (s2 == NULL)
+		return (NULL);
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	ns = ft_calloc(s1_len + s2_len + 1, sizeof(char));
+	i = 0;
+	j = 0;
+	if (!ns)
+		return (NULL);
+	while (i < s1_len)
+		ns[j++] = s1[i++];
+	i = 0;
+	while (i < s2_len)
+		ns[j++] = s2[i++];
+	free(s1);
+	ns[j] = '\0';
+	return (ns);
+}
 void handle_single_quotes(char c, int *flag)
 {
 	if (c == '\'' && *flag == 0)
@@ -69,7 +93,6 @@ void check_value_for_dollar(t_list *current, int status)
 	i = 0;
 	if (check_for_dollar(current->value) == 1 && check_for_quote_dollar(current->value) == 1)
 	{
-		env = ft_calloc(1, sizeof(char));
 		new_value = ft_calloc(1, sizeof(char));
 		while (i < len)
 		{
@@ -94,14 +117,14 @@ void check_value_for_dollar(t_list *current, int status)
 				i++;
 				env = ft_strndup(current->value + i, get_env_len(current->value + i));
 				if (ft_getenv(env))
-					new_value = ft_strjoin(new_value, ft_getenv(env));
+					new_value = ft_strjoin_oe(new_value, ft_getenv(env));
 				i += ft_strlen(env);
 				free(env);
 				env = NULL;
 			}
 			else
 			{
-				new_value = char_join(new_value, current->value[i]);
+				new_value = char_join(new_value, current->value[i], current);
 				i++;
 			}
 		}
@@ -135,7 +158,6 @@ void check_args_for_dollar(t_list *current, int status)
 		len = ft_strlen(current->args[j]);
 		if (check_for_dollar(current->args[j]) == 1 && check_for_quote_dollar(current->args[j]) == 1)
 		{
-			env = ft_calloc(1, sizeof(char));
 			new_value = ft_calloc(1, sizeof(char));
 			while (i < len)
 			{
@@ -160,13 +182,13 @@ void check_args_for_dollar(t_list *current, int status)
 					i++;
 					env = ft_strndup(current->args[j] + i, get_env_len(current->args[j] + i));
 					if(ft_getenv(env))
-						new_value = ft_strjoin(new_value, ft_getenv(env));
+						new_value = ft_strjoin_oe(new_value, ft_getenv(env));
 					i += ft_strlen(env);
 					free(env);
 				}
 				else
 				{
-					new_value = char_join(new_value, current->args[j][i]);
+					new_value = char_join(new_value, current->args[j][i], current);
 					i++;
 				}
 			}

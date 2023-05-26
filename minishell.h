@@ -105,7 +105,7 @@ int		check_if_quotes(char *str);
 char	*parse_quotes(char *str);
 
 //gatekeeper utils
-char	*char_join(char *string, char c);
+char	*char_join(char *string, char c, t_list *current);
 char	*ft_strcpy(char *dest, char *src);
 size_t	ft_strnlen(const char *s, size_t n);
 char	*ft_strndup(const char *string, size_t n);

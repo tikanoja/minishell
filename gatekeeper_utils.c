@@ -14,23 +14,20 @@ char *ft_strcpy(char *dest, char *src)
 	return (dest);
 }
 
-char *char_join(char *string, char c)
+char *char_join(char *string, char c, t_list *current)
 {
-    size_t len;
-    char *new_str;
+	size_t len;
+	char *new_str;
 
 	len = ft_strlen(string);
 	new_str = ft_calloc(len + 2, sizeof(char));
-    if (!new_str)
-	{
-        // handle allocation error
-        exit(1);
-    }
-    ft_strcpy(new_str, string);
-    new_str[len] = c;
-    new_str[len + 1] = '\0';
+	if (!new_str)
+		exit_gracefully(current);
+	ft_strcpy(new_str, string);
+	new_str[len] = c;
+	new_str[len + 1] = '\0';
 	free(string);
-    return (new_str);
+	return (new_str);
 }
 
 size_t	ft_strnlen(const char *s, size_t n)
