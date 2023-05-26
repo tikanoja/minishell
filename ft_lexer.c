@@ -113,7 +113,6 @@ int handle_quotes(char *str, char quote, int start) //jos taa ei skulaa ni tos y
         len++;
     }
     len++;
-    printf("len: %d\n", len);
     return (len);
 }
 
