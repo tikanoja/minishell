@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:52:39 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 11:53:18 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:50:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	move_value_to_args(t_list *current)
 	int		i;
 
 	i = 0;
-	arr = malloc((current->argc + 2) * sizeof(char *)); //how to protect
+	arr = malloc((current->argc + 2) * sizeof(char *));
 	if (arr == NULL)
 		exit_gracefully(current);
 	while (current->argc > 0 && current->args[i])
