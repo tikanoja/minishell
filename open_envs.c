@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 16:23:02 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:19:51 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,76 +91,4 @@ int	check_for_quote_dollar(char *str)
 	if (ft_strncmp(str, "\"$\"", 4) == 0)
 		return (0);
 	return (1);
-}
-
-void	check_value_for_dollar(t_list *current, int status)
-{
-	int		flag;
-	int		len;
-	int		i;
-	char	*env;
-	char	*new_value;
-	char	*buffer;
-	char	quote_type;
-
-	flag = 0;
-	len = ft_strlen(current->value);
-	i = 0;
-	if (check_for_dollar(current->value) == 1 && check_for_quote_dollar(current->value) == 1)
-	{
-		new_value = ft_calloc(1, sizeof(char));
-		while (i < len)
-		{
-			if (current->value[i] == '\"' && flag != 1)
-			{
-				if (flag == 0)
-					flag = 2;
-				else
-					flag = 0;
-			}
-			if (flag == 0)
-				handle_single_quotes(current->value[i], &flag);
-			if (current->value[i] == '$' && current->value[i + 1] == '?' && flag == 0)
-			{
-				buffer = ft_itoa(status);
-				new_value = ft_strjoin(new_value, buffer);
-				free(buffer);
-				i += 2;
-			}
-			if (current->value[i] == '$' && current->value[i + 1] != '\"' && current->value[i + 1] != '\'' && (flag == 0 || flag == 2))
-			{
-				i++;
-				env = ft_strndup(current->value + i, get_env_len(current->value + i));
-				if (ft_getenv(env))
-					new_value = ft_strjoin_oe(new_value, ft_getenv(env));
-				i += ft_strlen(env);
-				free(env);
-				env = NULL;
-			}
-			else if (current->value[i] == '$' && (current->value[i + 1] == '\"' || current->value[i + 1] == '\'') && (flag == 0 || flag == 2))
-			{
-				quote_type = current->value[i + 1];
-				i += 2;
-				while (current->value[i] != quote_type)
-				{
-					new_value = char_join(new_value, current->value[i], current);
-					i++;
-				}
-				i++;
-			}
-			else
-			{
-				new_value = char_join(new_value, current->value[i], current);
-				i++;
-			}
-		}
-		free(current->value);
-		if (*new_value == '\0')
-			new_value = NULL;
-		current->value = new_value;
-		if (current->value == NULL)
-			current->execflag = 1;
-		if (env)
-			free(env);
-	}
 }
