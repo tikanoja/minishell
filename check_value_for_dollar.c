@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:08:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:14:32 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:21:22 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	check_value_for_dollar(t_list *current, int status)
 {
 	char	*new_value;
 
-    printf("here\n");
 	if (check_for_dollar(current->value) && \
 	check_for_quote_dollar(current->value))
 	{
