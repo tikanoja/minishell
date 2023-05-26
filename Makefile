@@ -4,12 +4,12 @@ NAME = minishell
 SRC = main.c ft_split_pipex.c ft_split_utils.c parsing.c ft_lexer.c errors.c\
 		echo.c cd.c runcmd.c gatekeeper.c fds_and_pipes.c gatekeeper_utils.c\
 		open_envs.c system_commands.c env.c export.c signal.c pwd.c exit.c\
-		setenv.c
+		setenv.c system_commands_utils.c utils.c
 
 OBJ = main.o ft_split_pipex.o ft_split_utils.o parsing.o ft_lexer.o errors.o\
 		echo.o cd.o runcmd.o gatekeeper.o fds_and_pipes.o gatekeeper_utils.o\
 		open_envs.o system_commands.o env.o export.o signal.o pwd.o exit.o\
-		setenv.o
+		setenv.o system_commands_utils.o utils.o
 
 FLAGS = -Wall -Werror -Wextra
 

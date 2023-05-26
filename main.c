@@ -251,7 +251,7 @@ void run_minishell()
 			if (!head || *head->value == '\0')
 				continue ;
 		}
-		parse_system_commands(head);
+		parse_system_commands(head, 0);
 		head = get_head_node(head);
 		add_index(head);
 		//status = error_handling(head);

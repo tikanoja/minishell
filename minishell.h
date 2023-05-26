@@ -88,10 +88,15 @@ t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
 
 //system_commands.c
+void	parse_system_commands(t_list *head, int pathflag);
+
+//system_command_utils.c
 int		findpath(char **env);
 void	convert_to_lowercase(char *str);
 int		variable_assign_check(char *str);
-void	parse_system_commands(t_list *head);
+char	*get_path(char **patharr, char *cmd);
+void	move_value_to_args(t_list *current);
+
 
 //gatekeeper
 t_list	*gatekeeper(t_list *head, int status);
@@ -157,6 +162,7 @@ void	free_array(char **arr);
 void	free_array_and_env(char **array, char **envcpy, t_list *head);
 int		error_handling(t_list *head);
 int		double_redir_check(t_list *head);
+void	exit_gracefully(t_list *current);
 
 //builtin utils
 char	*ft_strcat(char *dest, const char *src);
@@ -172,6 +178,9 @@ int		ft_pwd(void);
 void	redirection_check(t_list *current);
 int		runcmd(t_list *head, char **envcpy);
 int     slash_check(char *str);
+//utils.c
+void	free_split(char **split);
+
 
 //main.c
 // int ft_echo(char *prompt);

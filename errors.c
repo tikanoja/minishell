@@ -55,7 +55,7 @@ void free_env_and_list(char **env, t_list *head)
 {
 	free_env(env);
 	free_list(head);
-	exitmsg("malloc failed in parsing");
+	exitmsg("malloc failed\n");
 }
 
 void free_array(char **arr)
@@ -170,4 +170,9 @@ int double_redir_check(t_list *head)
 		current = current->next;
 	}
 	return (0);
+}
+
+void exit_gracefully(t_list *current)
+{
+	free_env_and_list(envcpy, get_head_node(current));
 }
