@@ -393,6 +393,7 @@ t_list	*end_heredoc(t_list *current, int pipefd[2])
 {
 	t_list  *prev;
 	t_list  *ret;
+	//t_list	*new;
 	int i;
 
 	i = 0;
@@ -419,7 +420,16 @@ t_list	*end_heredoc(t_list *current, int pipefd[2])
 		prev->next = NULL;
 	while(current->next && current->next->args && current->next->args[i])
 	{
-		if (prev)
+		if (prev == NULL)
+		{
+			prev = add_node(NULL, current->next->args[i], NULL, NULL);
+			prev->next = ret;
+			if (ret != NULL)
+				ret->prev = prev;
+			current->prev = prev;
+			ret = current->prev;
+		}
+		else if (prev)
 		{
 			current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
 			free(current->next->args[i]);
