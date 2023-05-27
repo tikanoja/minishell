@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/27 14:50:27 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/27 15:40:46 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_getenv(const char *name)
@@ -62,67 +74,3 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	return (s1[i] - s2[i]);
 }
-
-int ft_unsetenv(t_list *current)
-{
-	int index;
-	int row_count;
-	int len;
-	char **new_env;
-	int i;
-	int j;
-	int k;
-	char *key;
-
-	k = 0;
-	while(current->args[k])
-	{
-		key = ft_strdup(current->args[k]);
-		index = 0;
-		row_count = 0;
-		len = ft_strlen(key);
-		i = 0;
-		j = 0;
-		while(index < len)
-		{
-			if(check_key_chars(key[index], index) == 0)
-			{
-				ft_putstr_fd("'", STDERR_FILENO);
-				ft_putstr_fd(key, STDERR_FILENO);
-				ft_putstr_fd("' : not a valid identifier\n", STDERR_FILENO);
-				return (1);
-			}
-			index++;
-		}
-		index = -1;
-		while (envcpy[row_count])
-		{
-			if (ft_strncmp(envcpy[row_count], key, len - 1) == 0 && (envcpy[row_count][len] == '=' || envcpy[row_count][len] == '\0'))
-			{
-				index = row_count;
-			}
-			row_count++;
-		}
-		if (index == -1)
-			return (0);
-		new_env = ft_calloc(row_count, sizeof(char *));
-		while (envcpy[i])
-		{
-			if (i != index)
-			{
-				new_env[j] = ft_strdup(envcpy[i]);
-				j++;
-			}
-			free(envcpy[i]);
-			i++;
-		}
-		new_env[j] = NULL;
-		free(envcpy);
-		envcpy = NULL;
-		envcpy = new_env;
-		free(key);
-		k++;
-	}
-	return (0);
-}
-

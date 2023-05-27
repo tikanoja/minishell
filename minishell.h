@@ -82,7 +82,9 @@ int		ft_export(t_list *current);
 //env.c
 char	*ft_getenv(const char *name);
 int		ft_env(t_list *current);
-int		ft_unsetenv(t_list *current);
+
+//unset_env.c
+int ft_unsetenv(t_list *current, int k, int len, int status);
 
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);

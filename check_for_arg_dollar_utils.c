@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:02:25 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:04:48 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/27 14:49:27 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*process_status_value(char *new_value, int status, int *index)
 	buffer = ft_itoa(status);
 	new_value = ft_strjoin_oe(new_value, buffer);
 	free(buffer);
-	printf("newval is %s\n", new_value);
 	(*index) += 2;
 	return (new_value);
 }

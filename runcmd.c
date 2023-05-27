@@ -110,7 +110,7 @@ int    execute_builtin(t_list *current)
 		else if (ft_strncmp_casein(current->value, "env", 5) == 0)
 				status = ft_env(current);
 		else if (ft_strncmp_casein(current->value, "unset", 6) == 0)
-				status = ft_unsetenv(current);
+				status = ft_unsetenv(current, 0, 0, 0);
 		else if (ft_strncmp_casein(current->value, "export", 7) == 0)
 				status = ft_export(current);
 		else if (ft_strncmp_casein(current->value, "cd", 3) == 0)
