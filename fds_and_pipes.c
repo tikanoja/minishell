@@ -377,7 +377,7 @@ char	*heredoc_env_open(char *input, t_list *current)
 	while(input[i])
 	{
 		//flag = 1;
-		if(input[i] == '$')
+		if(input[i] == '$' && is_it_quote(input[i + 1] != 0))
 		{
 			i++;
 			while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i])
