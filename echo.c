@@ -1,15 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/27 12:20:27 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/27 13:38:02 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int n_definer(char *arg)
+int	n_definer(char *arg)
 {
-	int j = 1;
-	int seen_n = 0;
+	int	j;
+	int	seen_n;
 
+	j = 1;
+	seen_n = 0;
 	if (!arg)
 		return (0);
 	if (ft_strncmp(arg, "-n", 2) == 0)
 	{
-		if (arg[2] != 'n' &&  arg[2] == '\0')
+		if (arg[2] != 'n' && arg[2] == '\0')
 			return (1);
 		while (arg[j] == 'n')
 		{
@@ -25,10 +39,10 @@ int n_definer(char *arg)
 	return (0);
 }
 
-int one_n_checker(t_list *echo)
+int	one_n_checker(t_list *echo)
 {
 	if (echo->argc < 1)
-		return(printf("\n"));
+		return (printf("\n"));
 	if (echo->argc == 1)
 	{
 		if (n_definer(echo->args[0]) == 1)
@@ -39,49 +53,57 @@ int one_n_checker(t_list *echo)
 	return (0);
 }
 
-int ft_echo(t_list *echo)
+char	*create_echo_str(t_list *echo, int j, int i, int n_flag)
 {
-	int i;
-	int j;
-	int n_flag;
-	char *string;
-	int len;
-	
+	int		len;
+	char	*str;
+
+	len = 0;
+	while (echo->args[j])
+	{
+		len += ft_strlen(echo->args[j]);
+		j++;
+	}
+	str = ft_calloc(len + echo->argc, sizeof(char));
+	if (str == NULL)
+		exit_gracefully(echo);
+	ft_strcat(str, echo->args[i]);
+	i++;
+	while (i < echo->argc)
+	{
+		ft_strcat(str, " ");
+		ft_strcat(str, echo->args[i]);
+		i++;
+	}
+	printf("%s", str);
+	if (n_flag == 0)
+		printf("\n");
+	return (str);
+}
+
+int	ft_echo(t_list *echo)
+{
+	int		n_flag;
+	char	*string;
+	int		len;
+	int		original_fd;
+
 	n_flag = 0;
-	i = 0;
 	len = 0;
 	if (echo->argc == 0)
 	{
 		printf("\n");
 		return (0);
 	}
-	int original_fd = dup(STDOUT_FILENO);
+	original_fd = dup(STDOUT_FILENO);
 	dup2(echo->output, STDOUT_FILENO);
 	if (one_n_checker(echo) == 1)
 		return (0);
-	while(n_definer(echo->args[n_flag]) == 1)
+	while (n_definer(echo->args[n_flag]) == 1)
 		n_flag++;
 	if (echo->argc <= n_flag)
-		return (0);	
-	i = n_flag;
-	j = n_flag;
-	while(echo->args[j])
-	{
-		len += ft_strlen(echo->args[j]);
-		j++;
-	}
-	string = ft_calloc(len + echo->argc, sizeof(char));
-	ft_strcat(string, echo->args[i]);
-	i++;
-	while(i < echo->argc)
-	{
-		ft_strcat(string, " ");
-		ft_strcat(string, echo->args[i]);
-		i++;
-	}
-	printf("%s", string);
-	if(n_flag == 0)
-		printf("\n");
+		return (0);
+	string = create_echo_str(echo, n_flag, n_flag, n_flag);
 	dup2(original_fd, STDOUT_FILENO);
 	close(original_fd);
 	free (string);
