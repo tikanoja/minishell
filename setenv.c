@@ -163,6 +163,50 @@ int do_special_env_set(const char *value)
 	return (0);
 }
 
+int do_append_env(char **valuepair)
+{
+	char *key;
+	char *appended;
+	char **new_env;
+	size_t env_index;
+	size_t key_len;
+	int found;
+	int row_count;
+
+	env_index = 0;
+	found = 0;
+	key = ft_strdup(valuepair[0]);
+	key[ft_strlen(key) - 1] = '\0';
+	key_len = ft_strlen(key);
+	row_count = 0;
+	while(envcpy[env_index])
+	{
+		if(ft_strncmp(envcpy[env_index], key, key_len) == 0 && envcpy[env_index][key_len] == '=')
+		{
+			appended = ft_strdup(envcpy[env_index]);
+			free(envcpy[env_index]);
+			envcpy[env_index] = ft_strjoin(appended, valuepair[1]);
+			found = 1;
+			break ;
+		}
+		env_index++;
+	}
+	if(found == 0)
+	{
+		new_env = copy_env(envcpy);
+		while (envcpy[row_count] != NULL)
+			row_count++;
+		free_setenv(envcpy);
+		appended = ft_strjoin((const char *)key, "=");
+		appended = ft_strjoin(appended, valuepair[1]);
+		new_env[row_count - 1] = ft_strdup(appended);
+		envcpy = new_env;
+	}
+	free(key);
+	free(appended);
+	return (0);
+}
+
 int ft_setenv(const char *value)
 {
 	char **valuepair;
@@ -173,10 +217,12 @@ int ft_setenv(const char *value)
 	valuepair = (char **)malloc(2 * sizeof(char *));
 	if(check_if_equal_last(value) == 1)
 		return (do_special_env_set(value));
-	valuepair = ft_split(value, '=');
+	valuepair = ft_split(value, '='); //protect
 	row_count = 0;
 	if (value == NULL)
 		return (1);
+	if (valuepair[0] && valuepair[0][ft_strlen(valuepair[0]) - 1] ==  '+')
+		return(do_append_env(valuepair));
 	if(!ft_strchr(value, '=') && ft_getenv(valuepair[0]))
 	{
 		free_valuepair(valuepair);
