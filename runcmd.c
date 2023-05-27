@@ -154,6 +154,14 @@ void close_all_fds(t_list *current)
 	}
 }
 
+void	cmd_not_found_update_status(t_list *current, int *status)
+{
+	ft_putstr_fd("shelly: ", 2);
+	ft_putstr_fd(current->args[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	(*status) = 127;
+}
+
 int    runcmd(t_list *head, char **envcpy)
 {
 	t_list	*current;
@@ -170,12 +178,7 @@ int    runcmd(t_list *head, char **envcpy)
 			continue ;
 		}
 		if (current->value == NULL)
-		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(current->args[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-			status = 127;
-		}
+			cmd_not_found_update_status(current, &status);
 		else if (slash_check(current->value) == 1 && current->system_command != 1)
 		{
 			if (directory_check(current->value) != 0)
