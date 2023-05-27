@@ -457,7 +457,7 @@ t_list	*end_heredoc(t_list *current, int pipefd[2])
 	prev = current->prev;
 	if (prev)
 		prev->input = pipefd[0];
-	else
+	else if (pipefd[0] != -1)
 		close(pipefd[0]);
 	if (current->next && current->next->next && prev)
 	{
@@ -465,14 +465,14 @@ t_list	*end_heredoc(t_list *current, int pipefd[2])
 		current->next->next->prev = prev;
 		ret = current->next->next;
 	}
-	else if (!current->next && !current->next->next && prev)
+	else if (prev && !current->next)
 		prev->next = NULL;
 	else if (current->next && current->next->next && !prev)
 	{
 		current->next->next->prev = NULL;
 		ret = current->next->next;
 	}
-	else if (current->next && !current->next->next && prev)
+	else if (prev && current->next && !current->next->next)
 		prev->next = NULL;
 	fill_args_to_prev(current, prev, &ret);
 	free_current_and_next(current);
@@ -535,9 +535,10 @@ t_list	*handle_heredoc(t_list *current)
 	input = NULL;
 	last_try_static_c(-1);
 	signal(SIGINT, SIG_IGN);
+	pipefd[0] = -1;
 	if (!current->next)
 	{
-		ft_putstr_fd("shelly: syntax error near unexpected token `newline'", 2);
+		ft_putstr_fd("shelly: syntax error near unexpected token `newline'\n", 2);
 		if (current->prev)
 			current->prev->execflag = 1;
 	}
