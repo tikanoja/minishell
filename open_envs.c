@@ -59,6 +59,8 @@ char	*ft_strjoin_oe(char *s1, char *s2)
 	size_t	s1_len;
 	size_t	s2_len;
 
+	i = 0;
+	j = 0;
 	if (s2 == NULL)
 		return (s1);
 	if (s1 == NULL)
@@ -66,8 +68,6 @@ char	*ft_strjoin_oe(char *s1, char *s2)
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	ns = ft_calloc(s1_len + s2_len + 1, sizeof(char));
-	i = 0;
-	j = 0;
 	if (!ns)
 		return (NULL);
 	while (i < s1_len)

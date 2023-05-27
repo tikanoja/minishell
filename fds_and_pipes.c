@@ -364,24 +364,39 @@ int	is_it_quote(char c)
 		return (0);
 }
 
-void	copy_to_env_and_move_pointers(char *input_env, char *input, int *i, int *j)
+void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j)
 {
 	input_env[*j] = input[*i];
 	(*i)++;
 	(*j)++;
 }
 
+void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1024])
+{
+	(*i) = 0;
+	(*j) = 0;
+	input_opened = NULL;
+	ft_bzero(input_env, 1024);
+}
+
+void	free_heredoc_env_open(char **input, char *input_opened)
+{
+	free((*input));
+	if(input_opened != NULL)
+		(*input) = ft_strdup(input_opened);
+	else
+		(*input) = NULL;
+	free(input_opened);
+}
+
 char	*heredoc_env_open(char *input, t_list *current)
 {
 	char    input_env[1024];
-	char    *input_opened;
+	char    *in_opened;
 	int     i;
 	int     j;
 
-	i = 0;
-	j = 0;
-	input_opened = ft_calloc(1, 1);
-	ft_bzero(input_env, 1024);
+	init_heredoc_env_open(&i, &j, &in_opened, input_env);
 	while(input[i])
 	{
 		if(input[i] == '$' && input[i + 1] != '\'' && input[i + 1] != '\"')
@@ -389,25 +404,22 @@ char	*heredoc_env_open(char *input, t_list *current)
 			i++;
 			if(input[i] != '\'' && input[i] != '\"')
 			{
-				while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i] && input[i] != '$')
-					copy_to_env_and_move_pointers(input_env, input, &i, &j);		
-				input_opened = ft_strjoin_oe(input_opened, ft_getenv(input_env));
+				while(is_it_whitespace(input[i]) == 0 &&\
+				is_it_quote(input[i]) == 0 && input[i] && input[i] != '$')
+					copy_and_move_ptrs(input_env, input, &i, &j);		
+				in_opened = ft_strjoin_oe(in_opened, ft_getenv(input_env));
 				ft_bzero(input_env, (size_t)j);
-				if (input[i] == '$' || is_it_quote(input[i]) == 0 || is_it_whitespace(input[i]) == 0)
+				if (input[i] == '$' || is_it_quote(input[i]) == 0 ||\
+				is_it_whitespace(input[i]) == 0)
 					i--;
 				j = 0;
 			}
 		}
 		else
-			input_opened = char_join(input_opened, input[i], current);
+			in_opened = char_join(in_opened, input[i], current);
 		i++;
 	}
-	free(input);
-	if(input_opened != NULL)
-		input = ft_strdup(input_opened);
-	else
-		input = NULL;
-	free(input_opened);
+	free_heredoc_env_open(&input, in_opened);
 	return(input);
 }
 
@@ -448,17 +460,24 @@ void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
 	}
 }
 
-t_list	*end_heredoc(t_list *current, int pipefd[2])
+void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
 {
-	t_list  *prev;
+	if (prev)
+	{
+		if (prev->input != STDIN_FILENO)
+			close(prev->input);
+		prev->input = pipefd[0];
+	}
+	else if (pipefd[0] != -1)
+		close(pipefd[0]);
+}
+
+t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
+{
 	t_list  *ret;
 
 	ret = NULL;
-	prev = current->prev;
-	if (prev)
-		prev->input = pipefd[0];
-	else if (pipefd[0] != -1)
-		close(pipefd[0]);
+	heredoc_assign_pipe(prev, pipefd);
 	if (current->next && current->next->next && prev)
 	{
 		prev->next = current->next->next;
@@ -496,6 +515,13 @@ void	heredoc_signal_c(int signum __attribute__((unused)))
 	rl_redisplay();
 }
 
+void	write_input_to_pipe(char *input, int pipefd)
+{
+	ft_putstr_fd(input, pipefd);
+	ft_putchar_fd('\n', pipefd);
+	free(input);
+}
+
 void heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim)
 {
 	while(1)
@@ -513,17 +539,28 @@ void heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim)
 			printf("\033[1A> ");
 			break;
 		}
-		if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
+		if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 &&\
+		input[ft_strlen(delim)] == '\0'))
 		{
 			free(input);
 			break ;
 		}
 		if(check_for_dollar(input) == 1)
 			input = heredoc_env_open(input, current);
-		ft_putstr_fd(input, pipefd[1]);
-		ft_putchar_fd('\n', pipefd[1]);
-		free(input);
+		write_input_to_pipe(input, pipefd[1]);
 	}
+}
+
+int check_heredoc_delim(t_list *current)
+{
+	if (!current->next)
+	{
+		ft_putstr_fd("shelly: syntax error near unexpected token `newline'\n", 2);
+		if (current->prev)
+			current->prev->execflag = 1;
+		return (1);
+	}
+	return (0);
 }
 
 t_list	*handle_heredoc(t_list *current)
@@ -531,18 +568,14 @@ t_list	*handle_heredoc(t_list *current)
 	char	*delim;
 	char	*input;
 	int		pipefd[2];
+	t_list	*prev;
 	
+	prev = current->prev;
 	input = NULL;
 	last_try_static_c(-1);
 	signal(SIGINT, SIG_IGN);
 	pipefd[0] = -1;
-	if (!current->next)
-	{
-		ft_putstr_fd("shelly: syntax error near unexpected token `newline'\n", 2);
-		if (current->prev)
-			current->prev->execflag = 1;
-	}
-	else
+	if (check_heredoc_delim(current) != 1)
 	{
 		termios_handler(1);
 		signal(SIGINT, heredoc_signal_c);
@@ -554,7 +587,7 @@ t_list	*handle_heredoc(t_list *current)
 		init_signals();
 		free(delim);
 	}
-	return (end_heredoc(current, pipefd));
+	return (end_heredoc(current, prev, pipefd));
 }
 
 t_list    *open_fds_and_pipes(t_list *head)
