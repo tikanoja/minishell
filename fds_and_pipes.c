@@ -23,11 +23,23 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 		prev->next = NULL;
 		ret = NULL;
 	}
-	while(prev && current->next && current->next->args &&\
-	current->next->args[i])
+	
+	while(current->next && current->next->args && current->next->args[i])
 	{
-		current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
-		free(current->next->args[i]);
+		if (prev == NULL)
+		{
+			prev = add_node(NULL, current->next->args[i], NULL, NULL);
+			prev->next = ret;
+			if (ret != NULL)
+				ret->prev = prev;
+			current->prev = prev;
+			ret = current->prev;
+		}
+		else if (prev)
+		{
+			current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
+			free(current->next->args[i]);
+		}
 		i++;
 	}
 	if (next)
