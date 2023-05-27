@@ -26,6 +26,7 @@ int     directory_check(char *str)
 		ft_putstr_fd("shelly: ", 2);
 		ft_putstr_fd(str, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
+		return (1);
 	}
 	return (0);
 }
@@ -178,7 +179,10 @@ int    runcmd(t_list *head, char **envcpy)
 		else if (slash_check(current->value) == 1 && current->system_command != 1)
 		{
 			if (directory_check(current->value) != 0)
+			{
+				current->execflag = 1;
 				status = 126;
+			}
 			else
 			{
 				current->system_command = 1;

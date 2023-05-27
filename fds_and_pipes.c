@@ -49,7 +49,7 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 	return (ret);
 }
 
-int redirection_directory_check(char *str)
+int redirection_directory_check(char *str, t_list *prev)
 {
 	struct stat file_info;
 
@@ -57,22 +57,34 @@ int redirection_directory_check(char *str)
 	{
 		if (S_ISDIR(file_info.st_mode))
 		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(str, 2);
-			ft_putstr_fd(": is a directory\n", 2);
+			if (prev == NULL || (prev && prev->execflag != 1))
+			{
+				ft_putstr_fd("shelly: ", 2);
+				ft_putstr_fd(str, 2);
+				ft_putstr_fd(": is a directory\n", 2);
+			}
+			return (1);
 		}
 		else if(S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
 		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(str, 2);
-			ft_putstr_fd(": Permission denied\n", 2);
+			if (prev == NULL || (prev && prev->execflag != 1))
+			{
+				ft_putstr_fd("shelly: ", 2);
+				ft_putstr_fd(str, 2);
+				ft_putstr_fd(": Permission denied\n", 2);
+			}
+			return (1);
 		}
 	}
 	else
 	{
-		ft_putstr_fd("shelly: ", 2);
-		ft_putstr_fd(str, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
+		if (prev == NULL || (prev && prev->execflag != 1))
+		{
+			ft_putstr_fd("shelly: ", 2);
+			ft_putstr_fd(str, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+		}
+		return (1);
 	}
 	return (0);
 }
@@ -102,13 +114,9 @@ t_list    *handle_redirection_out(t_list *current)
 	else
 	{
 		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1 && prev->execflag != 1)
-		{
-			redirection_directory_check(next->value);
-			if (prev)
+		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
-		}
-		if (prev && prev->execflag != 1)
+		if (fd != -1 && prev && prev->execflag != 1)
 			prev->output = fd;
 		else
 			close(fd);
@@ -140,31 +148,13 @@ t_list    *handle_redirection_in(t_list *current)
 	}
 	else
 	{
-		if (access(next->value, F_OK) == -1 && prev->execflag != 1)
-		{
-			ft_putstr_fd("shelly: ", 2);
-			ft_putstr_fd(next->value, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			if (prev)
+		fd = open(next->value, O_RDONLY, 0644);
+		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
-		}
+		if (fd != -1 && prev && prev->execflag != 1)
+				prev->input = fd;
 		else
-		{
-			fd = open(next->value, O_RDONLY, 0644);
-			if (fd == -1 && prev->execflag != 1)
-			{
-				printf("error opening file %s\n", next->value);
-				if (prev)
-					prev->execflag = 1;
-			}
-			else
-			{
-				if (prev && prev->execflag != 1)
-					prev->input = fd;
-				else
-					close(fd);
-			}
-		}
+			close(fd);
 	}
 	return (free_redirection_out(current, prev, next)); //pitäis toimii täs mut jos ei ni pitää tehä oma hehheh
 }
@@ -194,13 +184,9 @@ t_list    *handle_redirection_out_append(t_list *current)
 	else
 	{
 		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1 && prev->execflag != 1)
-		{
-			redirection_directory_check(next->value);
-			if (prev)
+		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
-		}
-		if (prev && prev->execflag != 1)
+		if (fd != -1 && prev && prev->execflag != 1)
 			prev->output = fd;
 		else
 			close(fd);
