@@ -129,7 +129,11 @@ t_list    *handle_redirection_out(t_list *current)
 		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
 		if (fd != -1 && prev && prev->execflag != 1)
+		{
+			if (prev->output != STDOUT_FILENO)
+				close(prev->output);
 			prev->output = fd;
+		}
 		else
 			close(fd);
 	}
@@ -164,7 +168,11 @@ t_list    *handle_redirection_in(t_list *current)
 		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
 		if (fd != -1 && prev && prev->execflag != 1)
-				prev->input = fd;
+		{
+			if (prev->input != STDIN_FILENO)
+				close(prev->input);
+			prev->input = fd;
+		}
 		else
 			close(fd);
 	}
@@ -199,7 +207,11 @@ t_list    *handle_redirection_out_append(t_list *current)
 		if (fd == -1 && redirection_directory_check(next->value, prev) == 1 && prev)
 				prev->execflag = 1;
 		if (fd != -1 && prev && prev->execflag != 1)
+		{
+			if (prev->output != STDOUT_FILENO)
+				close(prev->output);
 			prev->output = fd;
+		}
 		else
 			close(fd);
 	}
