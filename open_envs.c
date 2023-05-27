@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:19:51 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:08:34 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ char	*ft_strjoin_oe(char *s1, char *s2)
 	size_t	s2_len;
 
 	if (s2 == NULL)
-		return (NULL);
+		return (s1);
+	if (s1 == NULL)
+		return (ft_strdup(s2));
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	ns = ft_calloc(s1_len + s2_len + 1, sizeof(char));

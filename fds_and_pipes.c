@@ -358,7 +358,6 @@ t_list	*handle_pipe(t_list *current)
 }
 int	is_it_quote(char c)
 {
-	printf("c: %c\n", c);
 	if(c == '\'' || c == '\"')
 		return (1);
 	else
@@ -381,24 +380,33 @@ char	*heredoc_env_open(char *input, t_list *current)
 
 	i = 0;
 	j = 0;
-	input_opened = malloc(1);
+	input_opened = ft_calloc(1, 1);
 	ft_bzero(input_env, 1024);
 	while(input[i])
 	{
-		if(input[i] == '$')
+		if(input[i] == '$' && input[i + 1] != '\'' && input[i + 1] != '\"')
 		{
 			i++;
-			while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i])
-				copy_to_env_and_move_pointers(input_env, input, &i, &j);
-			input_opened = ft_strjoin_oe(input_opened, ft_getenv(input_env));
-			ft_bzero(input_env, (size_t)j);
-			j = 0;
+			if(input[i] != '\'' && input[i] != '\"')
+			{
+				while(is_it_whitespace(input[i]) == 0 && is_it_quote(input[i]) == 0 && input[i] && input[i] != '$')
+					copy_to_env_and_move_pointers(input_env, input, &i, &j);		
+				input_opened = ft_strjoin_oe(input_opened, ft_getenv(input_env));
+				ft_bzero(input_env, (size_t)j);
+				if (input[i] == '$' || is_it_quote(input[i]) == 0 || is_it_whitespace(input[i]) == 0)
+					i--;
+				j = 0;
+			}
 		}
-		input_opened = char_join(input_opened, input[i], current);
+		else
+			input_opened = char_join(input_opened, input[i], current);
 		i++;
 	}
 	free(input);
-	input = ft_strdup(input_opened);
+	if(input_opened != NULL)
+		input = ft_strdup(input_opened);
+	else
+		input = NULL;
 	free(input_opened);
 	return(input);
 }

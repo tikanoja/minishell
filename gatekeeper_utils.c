@@ -1,10 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gatekeeper_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/27 17:09:07 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/27 17:11:45 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-char *ft_strcpy(char *dest, char *src)
+char	*ft_strcpy(char *dest, char *src)
 {
-	int i;
+	int	i;
 
 	i = 0;
+	if (!dest || !src)
+		return (NULL);
 	while (src[i] != '\0')
 	{
 		dest[i] = src[i];
@@ -14,11 +28,19 @@ char *ft_strcpy(char *dest, char *src)
 	return (dest);
 }
 
-char *char_join(char *string, char c, t_list *current)
+char	*char_join(char *string, char c, t_list *current)
 {
-	size_t len;
-	char *new_str;
+	size_t	len;
+	char	*new_str;
 
+	if (string == NULL)
+	{
+		new_str = ft_calloc(1, 1);
+		if (new_str == NULL)
+			exit_gracefully(current);
+		*new_str = c;
+		return (new_str);
+	}
 	len = ft_strlen(string);
 	new_str = ft_calloc(len + 2, sizeof(char));
 	if (!new_str)
@@ -53,7 +75,7 @@ char	*ft_strndup(const char *string, size_t n)
 	dup = ft_calloc(len + 1, sizeof(char));
 	if (dup == NULL)
 		return (NULL);
-	while (i < len || i <=n)
+	while (i < len || i <= n)
 	{
 		dup[i] = string[i];
 		i++;
@@ -62,12 +84,12 @@ char	*ft_strndup(const char *string, size_t n)
 	return (dup);
 }
 
-int check_for_dollar(char *string)
+int	check_for_dollar(char *string)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(string[i])
+	while (string[i])
 	{
 		if (string[i] == '$' && string[i + 1])
 			return (1);
