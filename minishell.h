@@ -108,7 +108,7 @@ void	move_value_to_args(t_list *current);
 t_list	*gatekeeper(t_list *head, int status);
 void	open_quotes(t_list *current);
 int		check_if_quotes(char *str);
-char	*parse_quotes(char *str);
+char	*parse_quotes(char *str, int i);
 
 //gatekeeper utils
 char	*char_join(char *string, char c, t_list *current);
