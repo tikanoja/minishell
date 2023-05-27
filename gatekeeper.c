@@ -1,18 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gatekeeper.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/27 12:36:16 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/27 12:39:25 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-char *parse_quotes(char *str)
+char	*parse_quotes(char *str, int i)
 {
-	int i = 0;
-	char *new_string;
-	char quote;
+	char	*new_string;
+	char	quote;
+
+	i = 0;
 	quote = '\0';
 	if (str == NULL)
-		return NULL;
+		return (NULL);
 	new_string = NULL;
 	new_string = ft_calloc(ft_strlen(str), sizeof(char));
 	if (new_string == NULL)
-		return NULL;
+		return (NULL);
 	while (str[i])
 	{
 		if (str[i] == '\'' && !quote)
@@ -49,13 +61,13 @@ int	check_if_quotes(char *str)
 	if (single_quote == 0 && double_quote > 0)
 	{
 		if (double_quote % 2 != 0)
-			return(0); //handle error
+			return (0);
 		return (1);
 	}
 	else if (double_quote == 0 && single_quote > 0)
 	{
 		if (single_quote % 2 != 0)
-			return(0); //handle error
+			return (0);
 		return (1);
 	}
 	return (0);
@@ -67,11 +79,11 @@ void	open_quotes(t_list *current)
 
 	i = 0;
 	if (check_if_quotes(current->value))
-		current->value = parse_quotes(current->value);
+		current->value = parse_quotes(current->value, 0);
 	while (i < current->argc)
 	{
 		if (check_if_quotes(current->args[i]))
-			current->args[i] = parse_quotes(current->args[i]);
+			current->args[i] = parse_quotes(current->args[i], 0);
 		i++;
 	}
 }
@@ -93,15 +105,16 @@ t_list	*gatekeeper(t_list *head, int status)
 	while (current)
 	{
 		heredoc_flag = 1;
-		if (current->prev)
-			heredoc_flag = ft_strncmp(current->prev->value, "<<\0", 4);
+		if (current->prev && current->prev->value)
+				heredoc_flag = ft_strncmp(current->prev->value, "<<\0", 4);
 		if (current->value && heredoc_flag != 0)
 			check_value_for_dollar(current, status);
 		if (current->args)
 			check_args_for_dollar(current, status);
-		if(current->value)
+		if (current->value)
 			open_quotes(current);
-		if (current->value && current->value[0] == '\0' && current->args && current->args[0])
+		if (current->value && current->value[0] == '\0' && \
+		current->args && current->args[0])
 			move_arg_to_value(current);
 		current = current->next;
 	}
