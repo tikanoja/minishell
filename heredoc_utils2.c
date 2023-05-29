@@ -47,18 +47,6 @@ void	heredoc_env_open_iterators(char *input, char *input_env, int *i, int *j)
 	return ;
 }
 
-void	free_current_and_next(t_list *current)
-{
-	if (current->next)
-		free(current->next->value);
-	if (current->next)
-		free(current->next);
-	free(current->value);
-	current->value = NULL;
-	free(current);
-	current = NULL;
-}
-
 void	connect_nodes(t_list *crnt, t_list *prev, t_list **ret)
 {
 	crnt->prev = prev;

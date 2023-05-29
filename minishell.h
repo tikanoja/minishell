@@ -103,6 +103,7 @@ int		ft_env(t_list *current, int i);
 int		ft_unsetenv(t_list *current, int k, int len, int status);
 
 //heredoc.c
+void	free_current_and_next(t_list *current);
 char	*heredoc_env_open(char *input, t_list *current);
 void	heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim);
 t_list	*handle_heredoc(t_list *current);
@@ -121,8 +122,8 @@ char	*free_heredoc_env_open(char **input, \
 char *input_opened, t_list *current);
 void	heredoc_env_open_iterators(char *input, \
 char *input_env, int *i, int *j);
-void	free_current_and_next(t_list *current);
-void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret, int pipefd);
+void	fill_args_to_prev(t_list *current, t_list *prev, \
+t_list **ret, int pipefd);
 
 //heredoc_utils3.c
 int		check_heredoc_delim(t_list *current);

@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+void	free_current_and_next(t_list *current)
+{
+	if (current->next)
+		free(current->next->value);
+	if (current->next)
+		free(current->next);
+	free(current->value);
+	current->value = NULL;
+	free(current);
+	current = NULL;
+}
+
 char	*heredoc_env_open(char *input, t_list *current)
 {
 	char	input_env[1024];
