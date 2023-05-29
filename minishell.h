@@ -89,6 +89,9 @@ int		cd_home(t_list *current);
 
 //export.c
 int		ft_export(t_list *current);
+void	print_full_valuepair(char **value_pair);
+void	print_half_valuepair(char **value_pair);
+int		export_print(int i, t_list *current);
 
 //env.c
 char	*ft_getenv(const char *name);

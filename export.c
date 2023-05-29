@@ -6,11 +6,43 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 19:47:52 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 12:51:06 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:34:32 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_full_valuepair(char **value_pair)
+{
+	printf("declare -x %s=\"%s\"\n", value_pair[0], value_pair[1]);
+	free_valuepair(value_pair);
+}
+
+void	print_half_valuepair(char **value_pair)
+{
+	printf("declare -x %s\n", value_pair[0]);
+	free_valuepair(value_pair);
+}
+
+int	export_print(int i, t_list *current)
+{
+	char	**value_pair;
+
+	while (envcpy[i] && current->argc == 0)
+	{
+		value_pair = ft_split(envcpy[i], '=');
+		if (value_pair == NULL)
+			exit_gracefully(current);
+		if (value_pair[1])
+			print_full_valuepair(value_pair);
+		else if (check_if_equal_last(envcpy[i]))
+			printf("declare -x %s=\"\"\n", value_pair[0]);
+		else
+			print_half_valuepair(value_pair);
+		i++;
+	}
+	return (0);
+}
 
 int	ft_export(t_list *current)
 {
@@ -19,35 +51,8 @@ int	ft_export(t_list *current)
 
 	i = 0;
 	status = 0;
-	char **value_pair;
 	if (current->argc == 0)
-	{
-		while (envcpy[i] && current->argc == 0)
-		{
-			value_pair = ft_split(envcpy[i], '=');
-			if(value_pair == NULL)
-				exit_gracefully(current);
-			if(value_pair[1])
-			{
-				printf("declare -x %s=\"%s\"\n", value_pair[0], value_pair[1]);
-				free(value_pair[0]);
-				free(value_pair[1]);
-				free(value_pair);
-			}
-			else if (check_if_equal_last(envcpy[i]))
-			{
-				printf("declare -x %s=\"\"\n", value_pair[0]);
-			}
-			else
-			{
-				printf("declare -x %s\n", value_pair[0]);
-				free(value_pair[0]);
-				free(value_pair);
-			}
-			i++;
-		}
-		return (0);
-	}
+		return (export_print(i, current));
 	while (current->argc > i)
 	{
 		if (ft_setenv(current->args[i], current) == 1)
