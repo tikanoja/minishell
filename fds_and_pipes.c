@@ -98,7 +98,7 @@ t_list	*handle_pipe(t_list *current)
 	syntaxflag = 0;
 	prev = current->prev;
 	next = current->next;
-	if (!next || !next->value || ft_strlen(next->value) == 0)
+	if (!next) // || !next->value || ft_strlen(next->value) == 0)
 		next = fill_node_from_stdin(current);
 	if (!next)
 		return (free_pipe(current, prev, next));

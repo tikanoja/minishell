@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:52:18 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:54:35 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 19:20:49 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	parse_system_commands(t_list *head, int pathflag)
 		patharr = patharr_split(&pathflag, current);
 	while (current)
 	{
-		if (current->value[0] == '\0' || current->value == NULL)
+		if (current->value == NULL || current->value[0] == '\0')
 		{
 			current = current->next;
 			continue ;

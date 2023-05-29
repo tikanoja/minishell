@@ -245,11 +245,23 @@ void	free_split(char **split);
 void	print_error_sys_cmd(t_list *current);
 void	free_failed_split(char **split);
 void 	exit_split(char **split, t_list *current);
+//run_minishell.c
+void	run_minishell(void);
+int		prompt_if_check(char *prompt);
+int		check_if_head_ok(t_list *head);
+char	*get_prompt(char *prompt);
+void	init_main_signals(void);
+
+void	add_index(t_list *head);
+void	ctrl_d_main(void);
+int		check_log_operators(char *prompt);
+int		return_log_problem(char *str);
+int		find_next_quote(char quote, int i, char *str);
+int		empty_input(char *str);
 
 //main.c
 // int ft_echo(char *prompt);
 void	printlist(t_list *head);
-void	run_minishell();
 int		check_quotes(char *str);
 void	malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
 void	get_env_copy(char ***envcpy, const char **envp);
