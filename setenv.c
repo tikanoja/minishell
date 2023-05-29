@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 18:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 13:07:50 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 13:17:29 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,31 +65,39 @@ char **copy_env(char **env, t_list *current)
 	return (new_env);
 }
 
-void	set_env_value(char **env, const char *key, const char *value, t_list *current)
+int set_env_found(const char *key, const char *value, t_list *current, int *found)
 {
+	int env_index;
 	size_t	key_len;
-	size_t	env_index;
-	int		found;
-	char	**new_env;
-	
-	key_len = ft_strlen(key);
+
 	env_index = 0;
-	found = 0;
-	while (env[env_index] != NULL)
+	key_len = ft_strlen(key);
+	while (envcpy[env_index] != NULL)
 	{
-		if (ft_strncmp(env[env_index], key, key_len) == 0 && \
-			(env[env_index][key_len] == '=' || env[env_index][key_len] == '\0'))
+		if (ft_strncmp(envcpy[env_index], key, key_len) == 0 && \
+			(envcpy[env_index][key_len] == '=' || envcpy[env_index][key_len] == '\0'))
 		{
-			free(env[env_index]);
-			env[env_index] = NULL;
-			env[env_index] = ft_strdup(value);
-			if (env[env_index] == NULL)
+			free(envcpy[env_index]);
+			envcpy[env_index] = NULL;
+			envcpy[env_index] = ft_strdup(value);
+			if (envcpy[env_index] == NULL)
 				exit_gracefully(current);
-			found = 1;
+			(*found) = 1;
 			break ;
 		}
 		env_index++;
 	}
+	return (env_index);
+}
+void	set_env_value(const char *key, const char *value, t_list *current)
+{
+	size_t	env_index;
+	int		found;
+	char	**new_env;
+	
+	env_index = 0;
+	found = 0;
+	env_index = set_env_found(key, value, current, &found);
 	if (!found)
 	{
 		new_env = copy_env(envcpy, current);
@@ -288,6 +296,6 @@ int	ft_setenv(const char *value, t_list *current)
 		return (setenv_error((char *)value, valuepair));
 	if (ft_strncmp(valuepair[0], "_\0", 2) == 0)
 	 	return (underscore_env_set((char *)value, valuepair, current));
-	set_env_value(envcpy, valuepair[0], value, current);
+	set_env_value(valuepair[0], value, current);
 	return (free_valuepair(valuepair));
 }
