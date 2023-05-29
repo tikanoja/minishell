@@ -76,6 +76,8 @@ int		free_valuepair(char **valuepair);
 int		underscore_env_set(char *value, char **valuepair, t_list *current);
 int 	setenv_error(char *value, char **valuepair);
 int		do_append_env(char **valuepair,  t_list *current);
+void	exit_gracefully_free_valuepair(t_list *current, char **valuepair);
+void	exit_free_valuepair_string(t_list *current, char **valuepair, char *str);
 
 //cd.c
 int 	ft_cd(t_list *current);

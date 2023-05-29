@@ -6,43 +6,11 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 18:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 12:24:59 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 13:07:50 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	check_key_chars(char c, int flag)
-{
-	if (c >= '0' && c <= '9' && flag)
-		return (1);
-	else if (c >= 'a' && c <= 'z')
-		return (1);
-	else if (c >= 'A' && c <= 'Z')
-		return (1);
-	else if (c == '_')
-		return (1);
-	return (0);
-}
-
-int	is_valid_key(char *key)
-{
-	int	i;
-
-	i = 0;
-	while (key[i])
-	{
-		if (!check_key_chars(key[i], i))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-char	**allocate_new_env(size_t size)
-{
-	return ((char **)ft_calloc((size + 2), sizeof(char *)));
-}
 
 void	free_setenv(char **env)
 {
@@ -207,7 +175,7 @@ int	do_special_env_set(const char *value, t_list *current)
 	return (0);
 }
 
-int append_found(char *key, char *key_value, int found, t_list *current)
+int append_found(char *key, char **valuepair, int found, t_list *current)
 {
 	size_t	env_index;
 	size_t	key_len;
@@ -222,10 +190,10 @@ int append_found(char *key, char *key_value, int found, t_list *current)
 		{
 			appended = ft_strdup(envcpy[env_index]);
 			if(appended == NULL)
-				exit_gracefully(current);
-			envcpy[env_index] = ft_strjoin(appended, key_value);
+				exit_gracefully_free_valuepair(current, valuepair);
+			envcpy[env_index] = ft_strjoin(appended, valuepair[0]);
 			if(envcpy[env_index] == NULL) //free more
-				exit_gracefully(current);
+				exit_free_valuepair_string(current, valuepair, appended);
 			found = 1;
 			free(appended);
 			break ;
@@ -248,10 +216,10 @@ int	do_append_env(char **valuepair,  t_list *current)
 	found = 0;
 	key = ft_strdup(valuepair[0]);
 	if (key == NULL) //free valuepair?
-		exit_gracefully(current);
+		exit_gracefully_free_valuepair(current, valuepair);
 	key[ft_strlen(key) - 1] = '\0';
 	row_count = 0;
-	found = append_found(key, valuepair[1], found, current);
+	found = append_found(key, valuepair, found, current);
 	if (found == 0)
 	{
 		new_env = copy_env(envcpy, current);
@@ -260,13 +228,13 @@ int	do_append_env(char **valuepair,  t_list *current)
 		free_setenv(envcpy);
 		appended = ft_strjoin((const char *)key, "=");
 		if (appended == NULL)
-			exit_gracefully(current);
+			exit_gracefully_free_valuepair(current, valuepair);
 		appended = ft_strjoin_oe(appended, valuepair[1], current);
 		if (appended == NULL)
-			exit_gracefully(current);
+			exit_gracefully_free_valuepair(current, valuepair);
 		new_env[row_count] = ft_strdup(appended);
 		if (new_env[row_count] == NULL)
-			exit_gracefully(current);
+			exit_free_valuepair_string(current, valuepair, appended);
 		new_env[row_count + 1] = NULL;
 		envcpy = new_env;
 		free(appended);
@@ -293,7 +261,7 @@ int	underscore_env_set(char *value, char **valuepair, t_list *current)
 		row_count++;
 	envcpy[row_count - 1] = ft_strdup(value);
 	if(envcpy[row_count - 1] == NULL)
-		exit_gracefully(current);
+		exit_gracefully_free_valuepair(current, valuepair);
 	envcpy[row_count] = NULL;
 	return (free_valuepair(valuepair));
 }
