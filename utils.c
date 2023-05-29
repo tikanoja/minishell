@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 12:56:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 12:25:46 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:36:51 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	free_split(char **split)
 	int	i;
 
 	i = 0;
+	if (split == NULL)
+		return ;
 	while (split[i])
 	{
 		free(split[i]);

@@ -6,20 +6,20 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:06:37 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 13:07:53 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 13:09:01 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void exit_free_valuepair_string(t_list *current, char **valuepair, char *str)
+void	exit_free_valuepair_string(t_list *current, char **valuepair, char *str)
 {
 	free(str);
 	free_valuepair(valuepair);
 	free_env_and_list(envcpy, get_head_node(current));
 }
 
-void exit_gracefully_free_valuepair(t_list *current, char **valuepair)
+void	exit_gracefully_free_valuepair(t_list *current, char **valuepair)
 {
 	free_valuepair(valuepair);
 	free_env_and_list(envcpy, get_head_node(current));
