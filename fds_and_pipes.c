@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fds_and_pipes.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 20:59:24 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 21:01:20 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-t_list    *handle_redirection_out(t_list *current)
+t_list	*handle_redirection_out(t_list *current)
 {
-	t_list *prev;
-	t_list *next;
-	int fd;
+	t_list	*prev;
+	t_list	*next;
+	int		fd;
 
 	prev = current->prev;
 	next = current->next;
@@ -29,11 +41,11 @@ t_list    *handle_redirection_out(t_list *current)
 	return (free_redirection_out(current, prev, next));
 }
 
-t_list    *handle_redirection_in(t_list *current)
+t_list	*handle_redirection_in(t_list *current)
 {
-	t_list *prev;
-	t_list *next;
-	int fd;
+	t_list	*prev;
+	t_list	*next;
+	int		fd;
 
 	prev = current->prev;
 	next = current->next;
@@ -58,12 +70,11 @@ t_list    *handle_redirection_in(t_list *current)
 	return (free_redirection_out(current, prev, next));
 }
 
-
-t_list    *handle_redirection_out_append(t_list *current)
+t_list	*handle_redirection_out_append(t_list *current)
 {
-	t_list *prev;
-	t_list *next;
-	int fd;
+	t_list	*prev;
+	t_list	*next;
+	int		fd;
 
 	prev = current->prev;
 	next = current->next;
@@ -90,10 +101,10 @@ t_list    *handle_redirection_out_append(t_list *current)
 
 t_list	*handle_pipe(t_list *current)
 {
-	t_list *prev;
-	t_list *next;
-	int pipefd[2];
-	int syntaxflag;
+	t_list	*prev;
+	t_list	*next;
+	int		pipefd[2];
+	int		syntaxflag;
 
 	syntaxflag = 0;
 	prev = current->prev;
@@ -116,16 +127,16 @@ t_list	*handle_pipe(t_list *current)
 	return (free_pipe(current, prev, next));
 }
 
-t_list    *open_fds_and_pipes(t_list *head)
+t_list	*open_fds_and_pipes(t_list *head)
 {
-	t_list *current;
+	t_list	*current;
 
 	current = head;
 	while (current)
 	{
 		if (current->prev == NULL)
 			head = current;
-		if (current->value && ft_strncmp(current->value, "|\0", 2) == 0) 
+		if (current->value && ft_strncmp(current->value, "|\0", 2) == 0)
 			current = handle_pipe(current);
 		else if (current->value && ft_strncmp(current->value, "<<\0", 3) == 0)
 			current = handle_heredoc(current);
@@ -138,7 +149,7 @@ t_list    *open_fds_and_pipes(t_list *head)
 		else
 			current = current->next;
 	}
-	if(!head->value && !head->args)
+	if (!head->value && !head->args)
 		return (NULL);
 	return (head);
 }
