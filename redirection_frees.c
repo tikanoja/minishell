@@ -36,18 +36,18 @@ void	free_redir_out_handle_nodes(int *i, t_list **prev, \
 t_list **next, t_list **ret)
 {
 	(*i) = 0;
-	if ((*prev) && next && (*next)->next)
+	if ((*prev) && (*next) && (*next)->next)
 	{
 		(*prev)->next = (*next)->next;
 		(*next)->next->prev = (*prev);
 		(*ret) = (*next)->next;
 	}
-	else if (!prev && next && (*next)->next)
+	else if (!(*prev) && (*next) && (*next)->next)
 	{
 		(*next)->next->prev = NULL;
 		(*ret) = (*next)->next;
 	}
-	else if ((prev && next && !(*next)->next) || (prev && !next))
+	else if (((*prev) && (*next) && !(*next)->next) || (prev && !next))
 	{
 		(*prev)->next = NULL;
 		(*ret) = NULL;

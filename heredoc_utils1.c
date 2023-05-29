@@ -20,8 +20,6 @@ void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
 			close(prev->input);
 		prev->input = pipefd[0];
 	}
-	else if (pipefd[0] != -1)
-		close(pipefd[0]);
 }
 
 t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
@@ -45,7 +43,7 @@ t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 	}
 	else if (prev && current->next && !current->next->next)
 		prev->next = NULL;
-	fill_args_to_prev(current, prev, &ret);
+	fill_args_to_prev(current, prev, &ret, pipefd[0]);
 	free_current_and_next(current);
 	return (ret);
 }
