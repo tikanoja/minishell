@@ -58,6 +58,7 @@ int		termios_handler(int flag);
 void	init_child_signals();
 void	handle_ctrl_c_child(int signum __attribute__((unused)));
 void	handle_ctrl_d_child(int signum __attribute__((unused)));
+void	handle_ctrl_backslash_child(int signum __attribute__((unused)));
 
 //setenv.c
 int		ft_setenv(const char *value, t_list *current);
