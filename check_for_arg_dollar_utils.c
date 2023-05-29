@@ -6,13 +6,14 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:02:25 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 12:47:03 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:24:38 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*process_status_value(char *new_value, int status, int *index, t_list *current)
+char	*process_status_value(char *new_value, \
+int status, int *index, t_list *current)
 {
 	char	*buffer;
 
@@ -30,7 +31,8 @@ char	*process_status_value(char *new_value, int status, int *index, t_list *curr
 	return (new_value);
 }
 
-char	*process_environment_variable(char *new_value, char *arg, int *index, t_list *current)
+char	*process_environment_variable(char *new_value, char *arg, \
+int *index, t_list *current)
 {
 	char	*env;
 
