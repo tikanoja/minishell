@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:00:51 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:21:07 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:22:28 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ int	empty_input(char *str)
 			break ;
 	}
 	if (i == len || len == 0)
-	{
-		free(str);
 		return (1);
-	}
 	else
 		return (0);
 }
