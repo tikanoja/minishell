@@ -64,8 +64,8 @@ void	handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //setenv.c
 int		ft_setenv(const char *value, t_list *current);
-void	set_env_value(const char *key, const char *value, t_list *current);
-int		set_env_found(const char *key, const char *value, t_list *current, int *found);
+void	set_env_value(char **valuepair, const char *value, t_list *current);
+int		set_env_found(char **valuepair, const char *value, t_list *current, int *found);
 char 	**copy_env(char **env, t_list *current);
 void	free_setenv(char **env);
 char	**allocate_new_env(size_t size);
