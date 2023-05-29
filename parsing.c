@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:24:33 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 15:32:14 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:46:40 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ char	**realloc_array(t_list *node, char *token)
 	return (array);
 }
 
-
 t_list	*parsecmd(char *prompt, char **envcpy)
 {
 	t_list	*node;
@@ -82,7 +81,8 @@ t_list	*parsecmd(char *prompt, char **envcpy)
 	{
 		if (token == NULL)
 			break ;
-		if (is_it_redirection_parsing(token) > 0 || is_it_log_operator(token) > 0)
+		if (is_it_redirection_parsing(token) > 0 || \
+		is_it_log_operator(token) > 0)
 		{
 			parse_redir(&argflag, &node, &token, &head);
 			continue ;
