@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 01:09:57 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 02:10:37 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ t_list **ret, int pipefd);
 int		check_heredoc_delim(t_list *current);
 int		is_it_quote(char c);
 void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j);
-void	ctrl_c_happened(t_list *current, int pipefd[2]);
+void	wait_for_child_doc(int pipefd, int pid);
+void	pid_failed(void);
 
 //redirection_errors.c
 void	redir_directory_check_prints(char *str, int flag);
@@ -154,6 +155,7 @@ t_list *prev, t_list *next);
 t_list	*free_pipe(t_list *current, t_list *prev, t_list *next);
 void	realloc_redirection_out(t_list *prev, t_list *current, \
 t_list *next, int i);
+
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);

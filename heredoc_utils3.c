@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:53:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 01:10:12 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 02:10:54 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,16 @@ void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j)
 	(*j)++;
 }
 
-void	ctrl_c_happened(t_list *current, int pipefd[2])
+void	pid_failed(void)
 {
-	free_list(get_head_node(current));
-	close(pipefd[1]);
-	close(pipefd[0]);
-	run_minishell();
+	perror("Failed to fork");
+	exit(EXIT_FAILURE);
+}
+
+void	wait_for_child_doc(int pipefd, int pid)
+{
+	int	status;
+
+	close(pipefd);
+	waitpid(pid, &status, 0);
 }

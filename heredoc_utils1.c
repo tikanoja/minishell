@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:49:10 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:49:53 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 02:30:23 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
 		prev->input = pipefd[0];
 	}
 }
-
 t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 {
 	t_list	*ret;
@@ -48,22 +47,11 @@ t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 	return (ret);
 }
 
-int	last_try_static_c(int flag)
-{
-	static int	status;
-
-	if (flag == -1)
-		status = 0;
-	if (flag == 1)
-		status = 1;
-	return (status);
-}
-
 void	heredoc_signal_c(int signum __attribute__((unused)))
 {
-	last_try_static_c(1);
-	rl_on_new_line();
-	rl_redisplay();
+	close(0);
+	write(2, "\n", 1);
+	exit(EXIT_FAILURE);
 }
 
 void	write_input_to_pipe(char *input, int pipefd)
