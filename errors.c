@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:25:14 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 21:28:54 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 21:42:57 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,32 @@ void	exitmsg(char *msg)
 	exit(1);
 }
 
+void	free_args(t_list *current)
+{
+	int	i;
+
+	i = 0;
+	while (current->args && current->args[i])
+	{
+		if (current->args[i])
+			free(current->args[i]);
+		current->args[i] = NULL;
+		i++;
+	}	
+}
+
 void	free_list(t_list *head)
 {
 	t_list	*next;
 	t_list	*current;
-	int		i;
 
 	next = NULL;
 	current = head;
-	i = 0;
 	while (current != NULL)
 	{
-		i = 0;
 		if (current->value)
 			free(current->value);
-		while (current->args && current->args[i])
-		{
-			if (current->args[i])
-				free(current->args[i]);
-			current->args[i] = NULL;
-			i++;
-		}
+		free_args(current);
 		if (current->args)
 			free(current->args);
 		if (current->input != STDIN_FILENO)
