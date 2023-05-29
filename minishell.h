@@ -19,12 +19,6 @@
 # include <limits.h> //macros
 # include <errno.h>
 
-# define MAX_INT 2147483647
-# define MAXLINE 1024 //maximum lenght of stdin command the user can input!
-
-# define TRUE 1
-# define FALSE 0
-
 # define GREEN "\033[0;32m"
 # define RESET "\033[0m"
 
@@ -250,9 +244,10 @@ void	free_env(char **env);
 void	free_env_and_list(char **env, t_list *head);
 void	free_array(char **arr);
 void	free_array_and_env(char **array, char **envcpy, t_list *head);
-int		error_handling(t_list *head);
 int		double_redir_check(t_list *head);
 void	exit_gracefully(t_list *current);
+int		is_it_redirection_no_pipe(char *prompt);
+int		is_it_redirection_redir_check(char *prompt);
 
 //builtin utils
 char	*ft_strcat(char *dest, const char *src);

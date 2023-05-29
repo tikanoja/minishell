@@ -6,91 +6,11 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:25:14 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 21:42:57 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 22:47:02 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	exitmsg(char *msg)
-{
-	perror(msg);
-	exit(1);
-}
-
-void	free_args(t_list *current)
-{
-	int	i;
-
-	i = 0;
-	while (current->args && current->args[i])
-	{
-		if (current->args[i])
-			free(current->args[i]);
-		current->args[i] = NULL;
-		i++;
-	}	
-}
-
-void	free_list(t_list *head)
-{
-	t_list	*next;
-	t_list	*current;
-
-	next = NULL;
-	current = head;
-	while (current != NULL)
-	{
-		if (current->value)
-			free(current->value);
-		free_args(current);
-		if (current->args)
-			free(current->args);
-		if (current->input != STDIN_FILENO)
-			close(current->input);
-		if (current->output != STDOUT_FILENO)
-			close(current->output);
-		next = current->next;
-		if (current)
-			free(current);
-		current = NULL;
-		current = next;
-	}
-}
-
-void	free_env(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env && env[i])
-	{
-		if (env[i])
-			free(env[i]);
-		i++;
-	}
-	free(env);
-}
-
-void	free_env_and_list(char **env, t_list *head)
-{
-	free_env(env);
-	free_list(head);
-	exitmsg("malloc failed\n");
-}
-
-void	free_array(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
 
 void	free_array_and_env(char **array, char **envcpy, t_list *head)
 {
@@ -155,43 +75,4 @@ int	is_it_redirection_redir_check(char *prompt)
 	else if (ft_strncmp(prompt, ">", 1) == 0)
 		return (1);
 	return (0);
-}
-
-int	double_redir_print(int flag, t_list *current, t_list *head)
-{
-	ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
-	if (flag == 1)
-		ft_putstr_fd(current->value, 2);
-	else if (flag == 2)
-		ft_putstr_fd(current->next->value, 2);
-	else if (flag == 3)
-		ft_putstr_fd(current->args[0], 2);
-	ft_putstr_fd("'\n", 2);
-	free_list(head);
-	return (1);
-}
-
-int	double_redir_check(t_list *head)
-{
-	t_list	*current;
-
-	current = head;
-	if (ft_strncmp(current->value, "|", 1) == 0)
-		return (double_redir_print(1, current, head));
-	while (current)
-	{
-		if (is_it_redirection_no_pipe(current->value) > 0 && \
-		current->next && is_it_redirection_no_pipe(current->next->value) > 0)
-			return (double_redir_print(2, current, head));
-		else if (current->args && \
-		is_it_redirection_redir_check(current->args[0]) > 0)
-			return (double_redir_print(3, current, head));
-		current = current->next;
-	}
-	return (0);
-}
-
-void	exit_gracefully(t_list *current)
-{
-	free_env_and_list(envcpy, get_head_node(current));
 }
