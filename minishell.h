@@ -126,6 +126,13 @@ void	redir_out_null_next(t_list *prev);
 void	redir_out_double_redir(t_list *prev, t_list *next);
 int		redir_directory_check(char *str, t_list *prev);
 
+//stdin_nodes.c
+void	*free_empty_stdin_input(char *input, t_list *new);
+int fill_node_split_check(char *input);
+void fill_node_from_split(t_list *new, char *input, t_list *current);
+char *parse_stdin_input(char *input, t_list *current);
+t_list	*fill_node_from_stdin(t_list *current);
+
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
