@@ -79,6 +79,9 @@ int		do_append_env(char **valuepair,  t_list *current);
 
 //cd.c
 int 	ft_cd(t_list *current);
+int		cd_path(char *path, t_list *current);
+int		cd_back(t_list *current);
+int		cd_home(t_list *current);
 
 //export.c
 int		ft_export(t_list *current);

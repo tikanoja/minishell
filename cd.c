@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:30:21 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:34:31 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:50:23 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strcat(char *dest, const char *src)
 	return (result);
 }
 
-int	cd_home(void)
+int	cd_home(t_list *current)
 {
 	char	*pwd;
 	char	*old_pwd;
@@ -40,14 +40,14 @@ int	cd_home(void)
 	}
 	pwd = getcwd(cwd, PATH_MAX);
 	pwd = ft_strjoin("PWD=", pwd);
-	ft_setenv(old_pwd);
-	ft_setenv(pwd);
+	ft_setenv(old_pwd, current);
+	ft_setenv(pwd, current);
 	free(pwd);
 	free(old_pwd);
 	return (0);
 }
 
-int	cd_back(void)
+int	cd_back(t_list *current)
 {
 	char	*pwd;
 	char	*old_pwd;
@@ -65,8 +65,8 @@ int	cd_back(void)
 		return (status);
 	}
 	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
-	ft_setenv(old_pwd);
-	ft_setenv(pwd);
+	ft_setenv(old_pwd, current);
+	ft_setenv(pwd, current);
 	free(pwd);
 	free(old_pwd);
 	return (status);
@@ -92,8 +92,8 @@ int	cd_path(char *path, t_list *current)
 		return (status);
 	}
 	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
-	ft_setenv(old_pwd);
-	ft_setenv(pwd);
+	ft_setenv(old_pwd, current);
+	ft_setenv(pwd, current);
 	free(pwd);
 	free(old_pwd);
 	return (status);
@@ -109,9 +109,9 @@ int	ft_cd(t_list *current)
 	if (current->argc > 0)
 		path = ft_strdup(current->args[0]);
 	if (current->argc == 0 || (path[0] == '~' && path[1] == '\0'))
-		status = cd_home();
+		status = cd_home(current);
 	else if ((path[0] == '-' && path[1] == '\0'))
-		status = cd_back();
+		status = cd_back(current);
 	else
 		status = cd_path(path, current);
 	if (path)

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:18:26 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:18:29 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:48:20 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ char	*process_arg(char *arg, int status, t_list *current, int len)
 	{
 		flag = handle_flag(arg[i], flag);
 		if (arg[i] == '$' && arg[i + 1] == '?' && (flag == 0 || flag == 2))
-			new_value = process_status_value(new_value, status, &i);
+			new_value = process_status_value(new_value, status, &i, current);
 		else if (should_proccess_var(arg, i, flag))
-			new_value = process_environment_variable(new_value, arg, &i);
+			new_value = process_environment_variable(new_value, arg, &i, current);
 		else if (should_proccess_quote_var(arg, i, flag))
 			new_value = process_quoted_string(new_value, arg, &i, current);
 		else

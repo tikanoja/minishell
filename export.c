@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 19:47:52 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/25 17:21:41 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:51:06 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_export(t_list *current)
 		while (envcpy[i] && current->argc == 0)
 		{
 			value_pair = ft_split(envcpy[i], '=');
+			if(value_pair == NULL)
+				exit_gracefully(current);
 			if(value_pair[1])
 			{
 				printf("declare -x %s=\"%s\"\n", value_pair[0], value_pair[1]);
@@ -48,7 +50,7 @@ int	ft_export(t_list *current)
 	}
 	while (current->argc > i)
 	{
-		if (ft_setenv(current->args[i]) == 1)
+		if (ft_setenv(current->args[i], current) == 1)
 			status = 1;
 		i++;
 	}

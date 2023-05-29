@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 18:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 20:37:21 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:24:59 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	free_setenv(char **env)
 	free(env);
 }
 
-char **copy_env(char **env)
+char **copy_env(char **env, t_list *current)
 {
 	size_t	size;
 	size_t	i;
@@ -77,7 +77,8 @@ char **copy_env(char **env)
 			free(new_env[i]);
 			i++;
 		}
-		return (NULL);
+		free(new_env);
+		exit_gracefully(current);
 	}
 	while (i < size) {
 		new_env[i] = ft_strdup(env[i]);
@@ -89,14 +90,14 @@ char **copy_env(char **env)
 				i--;
 			}
 			free(new_env);
-			return (NULL);
+			exit_gracefully(current);
 		}
 		i++;
 	}
 	return (new_env);
 }
 
-void	set_env_value(char **env, const char *key, const char *value)
+void	set_env_value(char **env, const char *key, const char *value, t_list *current)
 {
 	size_t	key_len;
 	size_t	env_index;
@@ -114,6 +115,8 @@ void	set_env_value(char **env, const char *key, const char *value)
 			free(env[env_index]);
 			env[env_index] = NULL;
 			env[env_index] = ft_strdup(value);
+			if (env[env_index] == NULL)
+				exit_gracefully(current);
 			found = 1;
 			break ;
 		}
@@ -121,8 +124,10 @@ void	set_env_value(char **env, const char *key, const char *value)
 	}
 	if (!found)
 	{
-		new_env = copy_env(envcpy);
+		new_env = copy_env(envcpy, current);
 		new_env[env_index] = ft_strdup(value);
+		if (new_env[env_index] == NULL)
+			exit_gracefully(current);
 		new_env[env_index + 1] = NULL;
 		free_setenv(envcpy);
 		envcpy = new_env;
@@ -157,7 +162,7 @@ int	check_if_equal_last(const char *value)
 	return (0);
 }
 
-int	do_special_env_set(const char *value)
+int	do_special_env_set(const char *value, t_list *current)
 {
 	char	*key;
 	char	**new_env;
@@ -179,6 +184,8 @@ int	do_special_env_set(const char *value)
 		{
 			free(envcpy[env_index]);
 			envcpy[env_index] = ft_strjoin((const char *)key, "=\0");
+			if (envcpy[env_index] == NULL)
+				exit_gracefully(current);
 			found = 1;
 			break ;
 		}
@@ -186,11 +193,13 @@ int	do_special_env_set(const char *value)
 	}
 	if (found == 0)
 	{
-		new_env = copy_env(envcpy);
+		new_env = copy_env(envcpy, current);
 		while (envcpy[row_count] != NULL)
 			row_count++;
 		free_setenv(envcpy);
 		new_env[row_count - 1] = ft_strjoin((const char *)key, "=\0");
+		if (new_env[row_count - 1] == NULL)
+				exit_gracefully(current);
 		new_env[row_count] = NULL;
 		envcpy = new_env;
 	}
@@ -198,7 +207,7 @@ int	do_special_env_set(const char *value)
 	return (0);
 }
 
-int append_found(char *key, char *key_value, int found)
+int append_found(char *key, char *key_value, int found, t_list *current)
 {
 	size_t	env_index;
 	size_t	key_len;
@@ -212,8 +221,11 @@ int append_found(char *key, char *key_value, int found)
 		&& envcpy[env_index][key_len] == '=')
 		{
 			appended = ft_strdup(envcpy[env_index]);
-			free(envcpy[env_index]);
+			if(appended == NULL)
+				exit_gracefully(current);
 			envcpy[env_index] = ft_strjoin(appended, key_value);
+			if(envcpy[env_index] == NULL) //free more
+				exit_gracefully(current);
 			found = 1;
 			free(appended);
 			break ;
@@ -223,7 +235,7 @@ int append_found(char *key, char *key_value, int found)
 	return (found);
 }
 
-int	do_append_env(char **valuepair)
+int	do_append_env(char **valuepair,  t_list *current)
 {
 	char	*key;
 	char	*appended = NULL;
@@ -235,18 +247,26 @@ int	do_append_env(char **valuepair)
 	env_index = 0;
 	found = 0;
 	key = ft_strdup(valuepair[0]);
+	if (key == NULL) //free valuepair?
+		exit_gracefully(current);
 	key[ft_strlen(key) - 1] = '\0';
 	row_count = 0;
-	found = append_found(key, valuepair[1], found);
+	found = append_found(key, valuepair[1], found, current);
 	if (found == 0)
 	{
-		new_env = copy_env(envcpy);
+		new_env = copy_env(envcpy, current);
 		while (envcpy[row_count] != NULL)
 			row_count++;
 		free_setenv(envcpy);
 		appended = ft_strjoin((const char *)key, "=");
-		appended = ft_strjoin_oe(appended, valuepair[1]);
+		if (appended == NULL)
+			exit_gracefully(current);
+		appended = ft_strjoin_oe(appended, valuepair[1], current);
+		if (appended == NULL)
+			exit_gracefully(current);
 		new_env[row_count] = ft_strdup(appended);
+		if (new_env[row_count] == NULL)
+			exit_gracefully(current);
 		new_env[row_count + 1] = NULL;
 		envcpy = new_env;
 		free(appended);
@@ -264,7 +284,7 @@ int	setenv_error(char *value, char **valuepair)
 	return (1);
 }
 
-int	underscore_env_set(char *value, char **valuepair)
+int	underscore_env_set(char *value, char **valuepair, t_list *current)
 {
 	size_t	row_count;
 
@@ -272,23 +292,25 @@ int	underscore_env_set(char *value, char **valuepair)
 	while (envcpy[row_count] != NULL)
 		row_count++;
 	envcpy[row_count - 1] = ft_strdup(value);
+	if(envcpy[row_count - 1] == NULL)
+		exit_gracefully(current);
 	envcpy[row_count] = NULL;
 	return (free_valuepair(valuepair));
 }
 
-int	ft_setenv(const char *value)
+int	ft_setenv(const char *value, t_list *current)
 {
 	char	**valuepair;
 
 	valuepair = NULL;
 	valuepair = (char **)malloc(2 * sizeof(char *));
 	if (check_if_equal_last(value) == 1)
-		return (do_special_env_set(value));
+		return (do_special_env_set(value, current));
 	valuepair = ft_split(value, '='); //protect
-	if (value == NULL)
-		return (1);
+	if (valuepair == NULL)
+		exit_gracefully(current);
 	if (valuepair[0] && valuepair[0][ft_strlen(valuepair[0]) - 1] == '+')
-		return (do_append_env(valuepair));
+		return (do_append_env(valuepair, current));
 	if (!ft_strchr(value, '=') && ft_getenv(valuepair[0]))
 	{
 		free_valuepair(valuepair);
@@ -297,7 +319,7 @@ int	ft_setenv(const char *value)
 	if (!valuepair[0] || !is_valid_key(valuepair[0]))
 		return (setenv_error((char *)value, valuepair));
 	if (ft_strncmp(valuepair[0], "_\0", 2) == 0)
-	 	return (underscore_env_set((char *)value, valuepair));
-	set_env_value(envcpy, valuepair[0], value);
+	 	return (underscore_env_set((char *)value, valuepair, current));
+	set_env_value(envcpy, valuepair[0], value, current);
 	return (free_valuepair(valuepair));
 }

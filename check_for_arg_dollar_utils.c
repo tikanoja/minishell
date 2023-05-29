@@ -6,31 +6,31 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:02:25 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 14:49:27 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:47:03 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*process_status_value(char *new_value, int status, int *index)
+char	*process_status_value(char *new_value, int status, int *index, t_list *current)
 {
 	char	*buffer;
 
 	buffer = ft_itoa(status);
-	new_value = ft_strjoin_oe(new_value, buffer);
+	new_value = ft_strjoin_oe(new_value, buffer, current);
 	free(buffer);
 	(*index) += 2;
 	return (new_value);
 }
 
-char	*process_environment_variable(char *new_value, char *arg, int *index)
+char	*process_environment_variable(char *new_value, char *arg, int *index, t_list *current)
 {
 	char	*env;
 
 	(*index)++;
 	env = ft_strndup(arg + (*index), get_env_len(arg + (*index)));
 	if (ft_getenv(env))
-		new_value = ft_strjoin_oe(new_value, ft_getenv(env));
+		new_value = ft_strjoin_oe(new_value, ft_getenv(env), current);
 	(*index) += ft_strlen(env);
 	free(env);
 	return (new_value);
