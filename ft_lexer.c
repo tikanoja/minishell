@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lexer.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 21:18:50 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 21:20:27 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int is_it_operator(char *str)
+int	is_it_operator(char *str)
 {
 	if (is_it_redirection > 0)
 		return (is_it_redirection(str));
@@ -9,19 +21,19 @@ int is_it_operator(char *str)
 	return (0);
 }
 
-int get_token_len(char *str)
+int	get_token_len(char *str)
 {
-	int len;
-	len = 0;
+	int	len;
 
+	len = 0;
 	if (*str == '\'' || *str == '\"')
 		return (handle_quotes(str, *str, 0));
 	else if (is_it_operator(str) > 0)
 		return (is_it_operator(str));
 	else if (is_it_redirection_parsing(str) > 0)
 		return (is_it_redirection_parsing(str));
-	while(str[len] && str[len] != '\0' && is_it_whitespace(str[len]) == 0 &&\
-	is_it_log_operator(&str[len]) == 0 &&\
+	while (str[len] && str[len] != '\0' && is_it_whitespace(str[len]) == 0 && \
+	is_it_log_operator(&str[len]) == 0 && \
 	is_it_redirection_parsing(&str[len]) == 0)
 	{
 		if (str[len] == '\'' || str[len] == '\"')
@@ -34,9 +46,9 @@ int get_token_len(char *str)
 	return (len);
 }
 
-void fill_token(int tokenlen, char *token, char *last_str)
+void	fill_token(int tokenlen, char *token, char *last_str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	token[tokenlen] = '\0';
@@ -47,11 +59,11 @@ void fill_token(int tokenlen, char *token, char *last_str)
 	}
 }
 
-char *ft_lexer(char *str, char **envcpy, t_list *head)
+char	*ft_lexer(char *str, char **envcpy, t_list *head)
 {
-	static char *last_str;
-	char *token;
-	int tokenlen;
+	static char	*last_str;
+	char		*token;
+	int			tokenlen;
 
 	token = NULL;
 	tokenlen = 0;

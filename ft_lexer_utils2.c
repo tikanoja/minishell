@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lexer_utils2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 21:21:48 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 21:22:43 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check_terminator(char *str, int *len)
@@ -10,16 +22,16 @@ int	check_terminator(char *str, int *len)
 	return (0);
 }
 
-int handle_quotes(char *str, char quote, int start)
+int	handle_quotes(char *str, char quote, int start)
 {
-	int len;
-	int quotes;
+	int	len;
+	int	quotes;
 
 	init_handle_quotes(&len, &quotes, &start);
-	while(1)
+	while (1)
 	{
 		if (check_terminator(str, &len) == 1)
-			break;
+			break ;
 		else if (quotes % 2 == 0 && check_token_end(&str[len]) > 0)
 			return (len);
 		else if (str[len] == quote)
