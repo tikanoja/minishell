@@ -136,6 +136,7 @@ int fill_node_split_check(char *input);
 void fill_node_from_split(t_list *new, char *input, t_list *current);
 char *parse_stdin_input(char *input);
 t_list	*fill_node_from_stdin(t_list *current);
+void	init_parse_stdin(int *start, int *end, int *i, char *input);
 
 // redirection_frees.c
 void	free_redir_out_frees(t_list *current, t_list *next);
