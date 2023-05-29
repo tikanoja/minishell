@@ -56,12 +56,7 @@ void    fd_handling2(t_list *current, t_list *head)
 	while (current)
 	{
 		if (current->index != index)
-		{
-			if (current->input != STDIN_FILENO)
-				close(current->input);
-			if (current->output != STDOUT_FILENO)
-				close(current->output);
-		}
+			fd_handling_close_fds(current);
 		else
 		{
 			if (current->input != STDIN_FILENO)
@@ -208,14 +203,14 @@ int runcmd_directory_check(int *status, t_list **current)
 	return (0);
 }
 
-// int		end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
-// {
-// 	(*current) = (*head);
-// 	close_all_fds((*current));
-// 	while (pid > 0)
-// 		pid = waitpid(-1, &status, 0);
-// 	return (status);
-// }
+int		end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
+{
+	(*current) = (*head);
+	close_all_fds((*current));
+	while (pid > 0)
+		pid = waitpid(-1, &status, 0);
+	return (status);
+}
 
 int    runcmd(t_list *head, char **envcpy)
 {
@@ -242,9 +237,5 @@ int    runcmd(t_list *head, char **envcpy)
 		current = current->next;
 	}
 	current = head;
-	close_all_fds(current);
-	//while ((pid = waitpid(-1, &status, 0)) > 0); 
-	while (pid > 0)
-		pid = waitpid(-1, &status, 0);
-	return (status);
+	return (end_runcmd(&current, &head, status, pid));
 }
