@@ -193,6 +193,8 @@ int     slash_check(char *str);
 //utils.c
 void	free_split(char **split);
 void	print_error_sys_cmd(t_list *current);
+void	free_failed_split(char **split, int i);
+void 	exit_split(char **split, int i, t_list *current);
 
 //main.c
 // int ft_echo(char *prompt);
