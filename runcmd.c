@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   runcmd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 22:57:35 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 23:02:05 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int     directory_check(char *str)
+int	directory_check(char *str)
 {
-	struct stat file_info;
+	struct stat	file_info;
 
-	if (stat(str, &file_info) == 0)//protect?
+	if (stat(str, &file_info) == 0)
 	{
 		if (S_ISDIR(file_info.st_mode))
 		{
 			redir_directory_check_prints(str, 1);
 			return (1);
 		}
-		else if(S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
+		else if (S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
 		{
 			redir_directory_check_prints(str, 2);
 			return (1);
@@ -25,9 +37,9 @@ int     directory_check(char *str)
 	return (0);
 }
 
-int     slash_check(char *str)
+int	slash_check(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -47,9 +59,9 @@ void	fd_handling_close_fds(t_list *current)
 		close(current->output);
 }
 
-void    fd_handling2(t_list *current, t_list *head)
+void	fd_handling2(t_list *current, t_list *head)
 {
-	int index;
+	int	index;
 
 	index = current->index;
 	current = head;
@@ -81,7 +93,7 @@ void	init_execute_builtin(pid_t *pid, int *forkflag, int *status)
 	(*status) = 0;
 }
 
-int		builtin_ladder(int status, t_list *current, pid_t pid)
+int	builtin_ladder(int status, t_list *current, pid_t pid)
 {
 	if (ft_strncmp_casein(current->value, "echo", 5) == 0)
 			status = ft_echo(current);
@@ -102,11 +114,11 @@ int		builtin_ladder(int status, t_list *current, pid_t pid)
 	return (status);
 }
 
-int    execute_builtin(t_list *current)
+int	execute_builtin(t_list *current)
 {
-	pid_t pid;
-	int forkflag;
-	int status;
+	pid_t	pid;
+	int		forkflag;
+	int		status;
 
 	pid = 1;
 	forkflag = 0;
@@ -130,9 +142,10 @@ int    execute_builtin(t_list *current)
 	return (status);
 }
 
-void  execute_system_command(t_list *current, char **envcpy, t_list *head)
+void	execute_system_command(t_list *current, char **envcpy, \
+t_list *head)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	init_child_signals();
@@ -151,7 +164,7 @@ void  execute_system_command(t_list *current, char **envcpy, t_list *head)
 	}
 }
 
-void close_all_fds(t_list *current)
+void	close_all_fds(t_list *current)
 {
 	while (current)
 	{
@@ -171,14 +184,14 @@ void	cmd_not_found_update_status(t_list *current, int *status)
 	(*status) = 127;
 }
 
-void init_runcmd(t_list **current, int *status, pid_t *pid, t_list **head)
+void	init_runcmd(t_list **current, int *status, pid_t *pid, t_list **head)
 {
 	*current = *head;
 	(*status) = 0;
 	(*pid) = 1;
 }
 
-int execflag_check(t_list **current)
+int	execflag_check(t_list **current)
 {
 	if ((*current)->execflag == 1)
 	{
@@ -188,7 +201,7 @@ int execflag_check(t_list **current)
 	return (0);
 }
 
-int runcmd_directory_check(int *status, t_list **current)
+int	runcmd_directory_check(int *status, t_list **current)
 {
 	if (directory_check((*current)->value) != 0)
 	{
@@ -203,7 +216,7 @@ int runcmd_directory_check(int *status, t_list **current)
 	return (0);
 }
 
-int		end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
+int	end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
 {
 	(*current) = (*head);
 	close_all_fds((*current));
@@ -212,20 +225,21 @@ int		end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
 	return (status);
 }
 
-int    runcmd(t_list *head, char **envcpy)
+int	runcmd(t_list *head, char **envcpy)
 {
 	t_list	*current;
 	pid_t	pid;
 	int		status;
-	
+
 	init_runcmd(&current, &status, &pid, &head);
 	while (current)
 	{
 		if (execflag_check(&current) == 1)
-			continue;
+			continue ;
 		if (current->value == NULL)
 			cmd_not_found_update_status(current, &status);
-		else if (slash_check(current->value) == 1 && current->system_command != 1)
+		else if (slash_check(current->value) == 1 && \
+		current->system_command != 1)
 		{
 			if (runcmd_directory_check(&status, &current) == 1)
 				continue ;
