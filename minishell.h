@@ -259,6 +259,21 @@ int		one_n_checker(t_list *echo);
 
 //pwd.d
 int		ft_pwd(void);
+
+//runcmd_utils1.c
+void	cmd_not_found_update_status(t_list *current, int *status);
+void	init_runcmd(t_list **current, int *status, pid_t *pid, t_list **head);
+int	execflag_check(t_list **current);
+int	runcmd_directory_check(int *status, t_list **current);
+int	end_runcmd(t_list **current, t_list **head, int status, pid_t pid);
+
+//runcmd_utils2.c
+void	close_all_fds(t_list *current);
+void	init_execute_builtin(pid_t *pid, int *forkflag, int *status);
+int		slash_check(char *str);
+void	fd_handling_close_fds(t_list *current);
+int		directory_check(char *str);
+
 //runcmd.c
 void	redirection_check(t_list *current);
 int		runcmd(t_list *head, char **envcpy);

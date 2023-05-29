@@ -12,53 +12,6 @@
 
 #include "minishell.h"
 
-int	directory_check(char *str)
-{
-	struct stat	file_info;
-
-	if (stat(str, &file_info) == 0)
-	{
-		if (S_ISDIR(file_info.st_mode))
-		{
-			redir_directory_check_prints(str, 1);
-			return (1);
-		}
-		else if (S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
-		{
-			redir_directory_check_prints(str, 2);
-			return (1);
-		}
-	}
-	else
-	{
-		redir_directory_check_prints(str, 3);
-		return (1);
-	}
-	return (0);
-}
-
-int	slash_check(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	fd_handling_close_fds(t_list *current)
-{
-	if (current->input != STDIN_FILENO)
-		close(current->input);
-	if (current->output != STDOUT_FILENO)
-		close(current->output);
-}
-
 void	fd_handling2(t_list *current, t_list *head)
 {
 	int	index;
@@ -84,13 +37,6 @@ void	fd_handling2(t_list *current, t_list *head)
 		}
 		current = current->next;
 	}
-}
-
-void	init_execute_builtin(pid_t *pid, int *forkflag, int *status)
-{
-	(*pid) = 1;
-	(*forkflag) = 0;
-	(*status) = 0;
 }
 
 int	builtin_ladder(int status, t_list *current, pid_t pid)
@@ -162,67 +108,6 @@ t_list *head)
 		}
 		exit(1);
 	}
-}
-
-void	close_all_fds(t_list *current)
-{
-	while (current)
-	{
-		if (current->input != STDIN_FILENO)
-			close(current->input);
-		if (current->output != STDOUT_FILENO)
-			close(current->output);
-		current = current->next;
-	}
-}
-
-void	cmd_not_found_update_status(t_list *current, int *status)
-{
-	ft_putstr_fd("shelly: ", 2);
-	ft_putstr_fd(current->args[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
-	(*status) = 127;
-}
-
-void	init_runcmd(t_list **current, int *status, pid_t *pid, t_list **head)
-{
-	*current = *head;
-	(*status) = 0;
-	(*pid) = 1;
-}
-
-int	execflag_check(t_list **current)
-{
-	if ((*current)->execflag == 1)
-	{
-		(*current) = (*current)->next;
-		return (1);
-	}
-	return (0);
-}
-
-int	runcmd_directory_check(int *status, t_list **current)
-{
-	if (directory_check((*current)->value) != 0)
-	{
-		(*current)->execflag = 1;
-		(*status) = 126;
-	}
-	else
-	{
-		(*current)->system_command = 1;
-		return (1);
-	}
-	return (0);
-}
-
-int	end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
-{
-	(*current) = (*head);
-	close_all_fds((*current));
-	while (pid > 0)
-		pid = waitpid(-1, &status, 0);
-	return (status);
 }
 
 int	runcmd(t_list *head, char **envcpy)

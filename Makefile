@@ -10,7 +10,8 @@ SRC = main.c parsing.c ft_lexer.c errors.c check_for_arg_dollar.c\
 		redirection_errors.c stdin_nodes.c setenv_ops.c redirection_frees.c \
 		setenv_ops_utils.c signal_init.c run_minishell.c run_minishell_utils.c \
 		env_cpy.c parsing_utils1.c parsing_utils2.c ft_lexer_utils1.c\
-		ft_lexer_utils2.c stdin_nodes2.c errors2.c errors3.c
+		ft_lexer_utils2.c stdin_nodes2.c errors2.c errors3.c runcmd_utils1.c\
+		runcmd_utils2.c
 
 OBJ = main.o parsing.o ft_lexer.o errors.o check_for_arg_dollar.o\
 		echo.o cd.o runcmd.o gatekeeper.o fds_and_pipes.o gatekeeper_utils.o\
@@ -21,7 +22,8 @@ OBJ = main.o parsing.o ft_lexer.o errors.o check_for_arg_dollar.o\
 		redirection_errors.o stdin_nodes.o setenv_ops.o redirection_frees.o \
 		setenv_ops_utils.o signal_init.o run_minishell.o run_minishell_utils.o \
 		env_cpy.o parsing_utils1.o parsing_utils2.o ft_lexer_utils1.o\
-		ft_lexer_utils2.o stdin_nodes2.o errors2.o errors3.o
+		ft_lexer_utils2.o stdin_nodes2.o errors2.o errors3.o runcmd_utils1.o\
+		runcmd_utils2.o
 
 FLAGS = -Wall -Werror -Wextra
 
