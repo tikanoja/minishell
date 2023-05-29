@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:52:18 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 00:23:36 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,19 @@ int	is_it_builtin_sys(char *prompt)
 
 int	if_check_for_sys_cmd(t_list *current)
 {
+	struct stat	file_info;
+
+	if (stat(current->value, &file_info) == 0)
+	{
+		if (S_ISDIR(file_info.st_mode))
+		{
+			redir_directory_check_prints(current->value, 1);
+			current->execflag = 1;
+			return (1);
+		}
+	}
 	if (is_it_builtin_sys(current->value) == 0 && \
-	variable_assign_check(current->value) == 0 && \
-	slash_check(current->value) == 0)
+	variable_assign_check(current->value) == 0)
 		return (1);
 	return (0);
 }
