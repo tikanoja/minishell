@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 18:43:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 14:40:02 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:59:27 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ int	ft_setenv(const char *value, t_list *current)
 	}
 	if (!valuepair[0] || !is_valid_key(valuepair[0]))
 		return (setenv_error((char *)value, valuepair));
-	if (ft_strncmp(valuepair[0], "_\0", 2) == 0)
-		return (underscore_env_set((char *)value, valuepair, current));
 	set_env_value(valuepair, value, current);
 	return (free_valuepair(valuepair));
 }

@@ -6,45 +6,19 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:28:46 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 14:37:51 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 15:09:37 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	underscore_env_set(char *value, char **valuepair, t_list *current)
+int special_env_found(t_list *current, char *key, int found)
 {
-	size_t	row_count;
-
-	row_count = 0;
-	while (envcpy[row_count] != NULL)
-		row_count++;
-	free(envcpy[row_count - 1]);
-	envcpy[row_count - 1] = NULL;
-	envcpy[row_count - 1] = ft_strdup(value);
-	if(envcpy[row_count - 1] == NULL)
-		exit_gracefully_free_valuepair(current, valuepair);
-	envcpy[row_count] = NULL;
-	return (free_valuepair(valuepair));
-}
-
-int	do_special_env_set(const char *value, t_list *current)
-{
-	char	*key;
-	char	**new_env;
 	size_t	env_index;
 	size_t	key_len;
-	int		found;
-	int		row_count;
 
-	env_index = 0;
-	found = 0;
-	key = ft_strdup(value);
-	if (key == NULL)
-		exit_gracefully(current);
-	key[ft_strlen(key) - 1] = '\0';
 	key_len = ft_strlen(key);
-	row_count = 0;
+	env_index = 0;
 	while (envcpy[env_index])
 	{
 		if (ft_strncmp(envcpy[env_index], key, key_len) == 0 && \
@@ -59,6 +33,24 @@ int	do_special_env_set(const char *value, t_list *current)
 		}
 		env_index++;
 	}
+	return (found);
+}
+
+
+int	do_special_env_set(const char *value, t_list *current)
+{
+	char	*key;
+	char	**new_env;
+	int		found;
+	int		row_count;
+
+	found = 0;
+	key = ft_strdup(value);
+	if (key == NULL)
+		exit_gracefully(current);
+	key[ft_strlen(key) - 1] = '\0';
+	row_count = 0;
+	found = special_env_found(current, key, found);
 	if (found == 0)
 	{
 		new_env = copy_env(envcpy, current);
@@ -94,7 +86,7 @@ int append_found(char *key, char **valuepair, int found, t_list *current)
 			free(envcpy[env_index]);
 			envcpy[env_index]=NULL;
 			envcpy[env_index] = ft_strjoin(appended, valuepair[1]);
-			if(envcpy[env_index] == NULL) //free more
+			if(envcpy[env_index] == NULL)
 				exit_free_valuepair_string(current, valuepair, appended);
 			found = 1;
 			free(appended);
@@ -104,43 +96,44 @@ int append_found(char *key, char **valuepair, int found, t_list *current)
 	}
 	return (found);
 }
+void    append_not_found(t_list *current, char *key, char **valuepair)
+{
+	char	**new_env;
+	char	*appended;
+	int		row_count;
+	
+	row_count = 0;
+	new_env = copy_env(envcpy, current);
+	while (envcpy[row_count] != NULL)
+		row_count++;
+	free_split(envcpy);
+	appended = ft_strjoin((const char *)key, "=");
+	if (appended == NULL)
+		exit_gracefully_free_valuepair(current, valuepair);
+	appended = ft_strjoin_oe(appended, valuepair[1], current);
+	if (appended == NULL)
+		exit_gracefully_free_valuepair(current, valuepair);
+	new_env[row_count] = ft_strdup(appended);
+	if (new_env[row_count] == NULL)
+		exit_free_valuepair_string(current, valuepair, appended);
+	new_env[row_count + 1] = NULL;
+	envcpy = new_env;
+	free(appended);
+}
 
 int	do_append_env(char **valuepair,  t_list *current)
 {
 	char	*key;
-	char	*appended = NULL;
-	char	**new_env;
-	size_t	env_index;
 	int		found;
-	int		row_count;
 
-	env_index = 0;
 	found = 0;
 	key = ft_strdup(valuepair[0]);
 	if (key == NULL)
 		exit_gracefully_free_valuepair(current, valuepair);
 	key[ft_strlen(key) - 1] = '\0';
-	row_count = 0;
 	found = append_found(key, valuepair, found, current);
 	if (found == 0)
-	{
-		new_env = copy_env(envcpy, current);
-		while (envcpy[row_count] != NULL)
-			row_count++;
-		free_split(envcpy);
-		appended = ft_strjoin((const char *)key, "=");
-		if (appended == NULL)
-			exit_gracefully_free_valuepair(current, valuepair);
-		appended = ft_strjoin_oe(appended, valuepair[1], current);
-		if (appended == NULL)
-			exit_gracefully_free_valuepair(current, valuepair);
-		new_env[row_count] = ft_strdup(appended);
-		if (new_env[row_count] == NULL)
-			exit_free_valuepair_string(current, valuepair, appended);
-		new_env[row_count + 1] = NULL;
-		envcpy = new_env;
-		free(appended);
-	}
+		append_not_found(current, key, valuepair);
 	free(key);
 	return (free_valuepair(valuepair));
 }

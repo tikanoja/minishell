@@ -79,6 +79,8 @@ int 	setenv_error(char *value, char **valuepair);
 int		do_append_env(char **valuepair,  t_list *current);
 void	exit_gracefully_free_valuepair(t_list *current, char **valuepair);
 void	exit_free_valuepair_string(t_list *current, char **valuepair, char *str);
+void    append_not_found(t_list *current, char *key, char **valuepair);
+int		special_env_found(t_list *current, char *key, int found);
 
 //cd.c
 int 	ft_cd(t_list *current);
