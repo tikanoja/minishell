@@ -56,8 +56,6 @@ char	*ft_strjoin_oe(char *s1, char *s2, t_list *current)
 	char	*ns;
 	size_t	i;
 	size_t	j;
-	size_t	s1_len;
-	size_t	s2_len;
 
 	i = 0;
 	j = 0;
@@ -65,20 +63,19 @@ char	*ft_strjoin_oe(char *s1, char *s2, t_list *current)
 		return (s1);
 	if (s1 == NULL)
 		return (ft_strdup(s2));
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	ns = ft_calloc(s1_len + s2_len + 1, sizeof(char));
+	ns = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!ns)
 		exit_gracefully(current);
-	while (i < s1_len)
+	while (s1[i])
 		ns[j++] = s1[i++];
 	i = 0;
-	while (i < s2_len)
+	while (s2[i])
 		ns[j++] = s2[i++];
 	free(s1);
 	ns[j] = '\0';
 	return (ns);
 }
+
 
 void	handle_single_quotes(char c, int *flag)
 {
