@@ -120,6 +120,11 @@ int check_heredoc_delim(t_list *current);
 int	is_it_quote(char c);
 void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j);
 
+//redirection_errors.c
+void	redir_directory_check_prints(char *str, int flag);
+void	redir_out_null_next(t_list *prev);
+void	redir_out_double_redir(t_list *prev, t_list *next);
+int		redir_directory_check(char *str, t_list *prev);
 
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
