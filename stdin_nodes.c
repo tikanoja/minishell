@@ -1,80 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stdin_nodes.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 21:04:02 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 21:10:50 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	*free_empty_stdin_input(char *input, t_list *new)
+char	*parse_stdin_input(char *input)
 {
-	free(new);
-	free(input);
-	return(NULL);
-}
-
-int fill_node_split_check(char *input)
-{
-	int i;
-
-	i = 0;
-	while (input[i])
-	{
-		if (input[i] == ' ')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void fill_node_exit(t_list *new, char *input, char **arr, t_list *current)
-{
-	free_split(arr);
-	free(new);
-	free(input);
-	exit_gracefully(current);
-}
-
-void fill_node_from_split(t_list *new, char *input, t_list *current)
-{
-	char **arr;
-	int i;
-
-	i = 1;
-	arr = ft_split(input, ' ');
-	if (!arr)
-		fill_node_exit(new, input, arr, current);
-	free(input);
-	new->value = ft_strdup(arr[0]);
-	if (!new->value)
-		fill_node_exit(new, input, arr, current);
-	free(arr[0]);
-	while(arr[i])
-	{
-		new->args = realloc_array(new, arr[i]); // mita jos pitaa fill useempi node?
-		if (!new->args)
-			fill_node_exit(new, input, arr, current);
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
-
-void	init_parse_stdin(int *start, int *end, int *i, char *input)
-{
-	(*start) = 0;
-	(*i) = 0;
-	(*end) = ft_strlen(input) - 1;
-}
-
-char *parse_stdin_input(char *input)
-{
-	int start;
-	int end;
-	int i;
-	char *new;
+	int		start;
+	int		end;
+	int		i;
+	char	*new;
 
 	init_parse_stdin(&start, &end, &i, input);
-	while(is_it_whitespace(input[start]) == 1)
+	while (is_it_whitespace(input[start]) == 1)
 		start++;
-	while(is_it_whitespace(input[end]) == 1)
+	while (is_it_whitespace(input[end]) == 1)
 		end--;
 	if ((size_t)(end - start) == ft_strlen(input) - 1)
-		return(input);
+		return (input);
 	new = ft_calloc(end - start + 1, sizeof(char));
 	if (!new)
 		return (NULL);
@@ -86,7 +37,7 @@ char *parse_stdin_input(char *input)
 		start++;
 	}
 	free(input);
-	return(new);
+	return (new);
 }
 
 void	free_fill_node_exit(char **arr, t_list *new, char *input, t_list *curr)
@@ -97,7 +48,7 @@ void	free_fill_node_exit(char **arr, t_list *new, char *input, t_list *curr)
 	exit_gracefully(curr);
 }
 
-void init_stdin_node(t_list *new, t_list *current)
+void	init_stdin_node(t_list *new, t_list *current)
 {
 	new->argc = 0;
 	new->pipe = 1;
@@ -108,6 +59,7 @@ void init_stdin_node(t_list *new, t_list *current)
 	new->args = NULL;
 	new->execflag = 0;
 }
+
 void	free_input_fail(t_list *new, t_list *current)
 {
 	free(new);
@@ -116,8 +68,8 @@ void	free_input_fail(t_list *new, t_list *current)
 
 t_list	*fill_node_from_stdin(t_list *current)
 {
-	t_list *new;
-	char *input;
+	t_list	*new;
+	char	*input;
 
 	new = ft_calloc(1, sizeof(t_list));
 	if (!new)
