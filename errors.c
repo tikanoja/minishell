@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 21:25:14 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 21:28:54 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void exitmsg(char *msg)
+void	exitmsg(char *msg)
 {
 	perror(msg);
 	exit(1);
 }
 
-void free_list(t_list *head)
+void	free_list(t_list *head)
 {
 	t_list	*next;
 	t_list	*current;
@@ -18,11 +30,11 @@ void free_list(t_list *head)
 	while (current != NULL)
 	{
 		i = 0;
-		if(current->value)
+		if (current->value)
 			free(current->value);
 		while (current->args && current->args[i])
 		{
-			if(current->args[i])
+			if (current->args[i])
 				free(current->args[i]);
 			current->args[i] = NULL;
 			i++;
@@ -41,9 +53,9 @@ void free_list(t_list *head)
 	}
 }
 
-void free_env(char **env)
+void	free_env(char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env && env[i])
@@ -55,16 +67,16 @@ void free_env(char **env)
 	free(env);
 }
 
-void free_env_and_list(char **env, t_list *head)
+void	free_env_and_list(char **env, t_list *head)
 {
 	free_env(env);
 	free_list(head);
 	exitmsg("malloc failed\n");
 }
 
-void free_array(char **arr)
+void	free_array(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arr[i])
@@ -75,15 +87,15 @@ void free_array(char **arr)
 	free(arr);
 }
 
-void free_array_and_env(char **array, char **envcpy, t_list *head)
+void	free_array_and_env(char **array, char **envcpy, t_list *head)
 {
 	free_array(array);
 	free_env_and_list(envcpy, head);
 }
 
-void free_node(t_list *node)
+void	free_node(t_list *node)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	free(node->value);
@@ -96,23 +108,23 @@ void free_node(t_list *node)
 	free(node);
 }
 
-int     assignment_check(char *str)
+int	assignment_check(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (str == NULL)
-        return (0);
-    while (str[i])
-    {
-        if (str[i] == '=')
-            return (1);
-        i++;
-    }
-    return (0);
+	i = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] == '=')
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
-int is_it_redirection_no_pipe(char *prompt)
+int	is_it_redirection_no_pipe(char *prompt)
 {
 	if (ft_strncmp(prompt, "<<\0", 3) == 0)
 		return (2);
@@ -125,9 +137,9 @@ int is_it_redirection_no_pipe(char *prompt)
 	return (0);
 }
 
-int is_it_redirection_redir_check(char *prompt)
+int	is_it_redirection_redir_check(char *prompt)
 {
-	if (ft_strncmp(prompt, "|", 1) == 0) 
+	if (ft_strncmp(prompt, "|", 1) == 0)
 		return (1);
 	else if (ft_strncmp(prompt, "<<", 2) == 0)
 		return (2);
@@ -140,43 +152,45 @@ int is_it_redirection_redir_check(char *prompt)
 	return (0);
 }
 
-int double_redir_check(t_list *head)
+int	double_redir_check(t_list *head)
 {
-	t_list *current;
-	current = head;
+	t_list	*current;
 
+	current = head;
 	if (ft_strncmp(current->value, "|", 1) == 0)
 	{
 		ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
 		ft_putstr_fd(current->value, 2);
 		ft_putstr_fd("'\n", 2);
 		free_list(head);
-		return(1);
+		return (1);
 	}
 	while (current)
 	{
-		if (is_it_redirection_no_pipe(current->value) > 0 && current->next && is_it_redirection_no_pipe(current->next->value) > 0)
+		if (is_it_redirection_no_pipe(current->value) > 0 && \
+		current->next && is_it_redirection_no_pipe(current->next->value) > 0)
 		{
 			ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
 			ft_putstr_fd(current->next->value, 2);
 			ft_putstr_fd("'\n", 2);
 			free_list(head);
-			return(1);
+			return (1);
 		}
-		else if (current->args && is_it_redirection_redir_check(current->args[0]) > 0)
+		else if (current->args && \
+		is_it_redirection_redir_check(current->args[0]) > 0)
 		{
 			ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
 			ft_putstr_fd(current->args[0], 2);
 			ft_putstr_fd("'\n", 2);
 			free_list(head);
-			return(1);
+			return (1);
 		}
 		current = current->next;
 	}
 	return (0);
 }
 
-void exit_gracefully(t_list *current)
+void	exit_gracefully(t_list *current)
 {
 	free_env_and_list(envcpy, get_head_node(current));
 }
