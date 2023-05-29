@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:18:50 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 21:20:27 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	fill_token(int tokenlen, char *token, char *last_str)
 	}
 }
 
-char	*ft_lexer(char *str, char **envcpy, t_list *head)
+char	*ft_lexer(char *str, char **g_envcpy, t_list *head)
 {
 	static char	*last_str;
 	char		*token;
@@ -76,7 +76,7 @@ char	*ft_lexer(char *str, char **envcpy, t_list *head)
 	tokenlen = get_token_len(last_str);
 	token = ft_calloc((tokenlen + 1), sizeof(char));
 	if (!token)
-		free_env_and_list(envcpy, head);
+		free_env_and_list(g_envcpy, head);
 	fill_token(tokenlen, token, last_str);
 	last_str = last_str + tokenlen;
 	if (*token == '\0')

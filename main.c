@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 18:37:41 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:09:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	add_index(t_list *head)
 void	ctrl_d_main(void)
 {
 	printf("exit\n");
-	free_env(envcpy);
+	free_env(g_envcpy);
 	exit(0);
 }
 
@@ -67,7 +67,7 @@ int	main(int argc, char **argv, const char **envp)
 {
 	if (argc > 1 || argv == NULL)
 		exitmsg("too many args");
-	get_env_copy(&envcpy, envp);
+	get_env_copy(&g_envcpy, envp);
 	run_minishell();
 	return (0);
 }

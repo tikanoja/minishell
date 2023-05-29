@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 19:55:42 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:10:42 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	run_minishell(void)
 		prompt = get_prompt(prompt);
 		if (prompt_if_check(prompt) == 1)
 			continue ;
-		head = parsecmd(prompt, envcpy);
+		head = parsecmd(prompt, g_envcpy);
 		if (double_redir_check(head) == 1)
 			continue ;
 		head = gatekeeper(head, status);
@@ -80,7 +80,7 @@ void	run_minishell(void)
 		parse_system_commands(head, 0);
 		head = get_head_node(head);
 		add_index(head);
-		status = runcmd(head, envcpy);
+		status = runcmd(head, g_envcpy);
 		free_list(head);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:52:54 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 15:38:43 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@ int	find_key_index(char *key, int *i, int flag, int len)
 	int	index;
 
 	index = -1;
-	while (envcpy[(*i)] && flag == 0)
+	while (g_envcpy[(*i)] && flag == 0)
 	{
-		if (ft_strncmp(envcpy[(*i)], key, len - 1) == 0 && \
-		(envcpy[(*i)][len] == '=' || envcpy[(*i)][len] == '\0'))
+		if (ft_strncmp(g_envcpy[(*i)], key, len - 1) == 0 && \
+		(g_envcpy[(*i)][len] == '=' || g_envcpy[(*i)][len] == '\0'))
 			index = (*i);
 		(*i)++;
 	}
 	return (index);
 }
 
-void	unset_envcpy(t_list *current, int index, char *key, int i)
+void	unset_g_envcpy(t_list *current, int index, char *key, int i)
 {
 	char	**new_env;
 	int		j;
@@ -57,22 +57,22 @@ void	unset_envcpy(t_list *current, int index, char *key, int i)
 	j = 0;
 	if (new_env == NULL)
 		exit_gracefully(current);
-	while (envcpy[i])
+	while (g_envcpy[i])
 	{
 		if (i != index)
 		{
-			new_env[j] = ft_strdup(envcpy[i]);
+			new_env[j] = ft_strdup(g_envcpy[i]);
 			if (new_env[j] == NULL)
 				exit_gracefully(current);
 			j++;
 		}
-		free(envcpy[i]);
+		free(g_envcpy[i]);
 		i++;
 	}
 	new_env[j] = NULL;
-	free(envcpy);
-	envcpy = NULL;
-	envcpy = new_env;
+	free(g_envcpy);
+	g_envcpy = NULL;
+	g_envcpy = new_env;
 	free(key);
 }
 
@@ -96,7 +96,7 @@ int	ft_unsetenv(t_list *current, int k, int len, int status)
 		if (index == -1)
 			free(key);
 		else if (flag == 0)
-			unset_envcpy(current, index, key, i);
+			unset_g_envcpy(current, index, key, i);
 		k++;
 	}
 	return (status);

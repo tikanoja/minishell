@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:50:27 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 15:46:27 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_getenv(const char *name)
 	size_t	namelen;
 	char	*equals;
 
-	env = envcpy;
+	env = g_envcpy;
 	namelen = 0;
 	while (*env != NULL)
 	{
@@ -53,10 +53,10 @@ int	ft_env(t_list *current, int i)
 			return (127);
 		}
 	}
-	while (envcpy[i])
+	while (g_envcpy[i])
 	{
-		if (ft_strchr(envcpy[i], '='))
-			printf("%s\n", envcpy[i]);
+		if (ft_strchr(g_envcpy[i], '='))
+			printf("%s\n", g_envcpy[i]);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 22:46:25 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 22:48:45 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	double_redir_check(t_list *head)
 
 void	exit_gracefully(t_list *current)
 {
-	free_env_and_list(envcpy, get_head_node(current));
+	free_env_and_list(g_envcpy, get_head_node(current));
 }
 
 void	exitmsg(char *msg)

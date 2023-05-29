@@ -38,7 +38,7 @@ typedef struct  s_list
 	int				execflag;
 }               t_list;
 
-char **envcpy; //chang this to be g_envcpy
+char **g_envcpy; //chang this to be g_g_envcpy
 
 //exit.c
 int		ft_exit(t_list *exit_arg, int pid);
@@ -213,12 +213,12 @@ int		is_it_redirection(char *prompt);
 int		is_it_redirection_parsing(char *prompt);
 int		is_it_log_operator(char *prompt);
 char	*get_path(char **patharr, char *token);
-int		is_it_shell_command(char *token, char **envcpy);
-t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head);
-t_list	*add_head_node(t_list *node, t_list **head, char **envcpy);
+int		is_it_shell_command(char *token, char **g_envcpy);
+t_list	*add_node(t_list *node, char *token, char **g_envcpy, t_list *head);
+t_list	*add_head_node(t_list *node, t_list **head, char **g_envcpy);
 char	**realloc_array(t_list *node, char *token);
 t_list	*get_head_node(t_list *node);
-t_list	*parsecmd(char *prompt, char **envcpy);
+t_list	*parsecmd(char *prompt, char **g_envcpy);
 
 //ft_lexer_utils2.c
 int	check_terminator(char *str, int *len);
@@ -235,7 +235,7 @@ void found_another_quote(char *quote, char *str, int *quotes, int *len);
 int		is_it_whitespace(char c);
 int		check_token_end(char *str);
 int		handle_quotes(char *last_str, char quote, int start);
-char	*ft_lexer(char *str, char **envcpy, t_list *head);
+char	*ft_lexer(char *str, char **g_envcpy, t_list *head);
 
 //errors.c
 void	exitmsg(char *msg);
@@ -243,7 +243,7 @@ void	free_list(t_list *head);
 void	free_env(char **env);
 void	free_env_and_list(char **env, t_list *head);
 void	free_array(char **arr);
-void	free_array_and_env(char **array, char **envcpy, t_list *head);
+void	free_array_and_env(char **array, char **g_envcpy, t_list *head);
 int		double_redir_check(t_list *head);
 void	exit_gracefully(t_list *current);
 int		is_it_redirection_no_pipe(char *prompt);
@@ -276,7 +276,7 @@ int		directory_check(char *str);
 
 //runcmd.c
 void	redirection_check(t_list *current);
-int		runcmd(t_list *head, char **envcpy);
+int		runcmd(t_list *head, char **g_envcpy);
 int     slash_check(char *str);
 //utils.c
 void	free_split(char **split);
@@ -301,8 +301,8 @@ int		empty_input(char *str);
 // int ft_echo(char *prompt);
 void	printlist(t_list *head);
 int		check_quotes(char *str);
-void	malloc_env_copy(char ***envcpy, const char **envp, int rows, int i);
-void	get_env_copy(char ***envcpy, const char **envp);
+void	malloc_env_copy(char ***g_envcpy, const char **envp, int rows, int i);
+void	get_env_copy(char ***g_envcpy, const char **envp);
 int		main(int argc, char **argv, const char **envp);
 
 

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 19:47:52 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:34:32 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ int	export_print(int i, t_list *current)
 {
 	char	**value_pair;
 
-	while (envcpy[i] && current->argc == 0)
+	while (g_envcpy[i] && current->argc == 0)
 	{
-		value_pair = ft_split(envcpy[i], '=');
+		value_pair = ft_split(g_envcpy[i], '=');
 		if (value_pair == NULL)
 			exit_gracefully(current);
 		if (value_pair[1])
 			print_full_valuepair(value_pair);
-		else if (check_if_equal_last(envcpy[i]))
+		else if (check_if_equal_last(g_envcpy[i]))
 			printf("declare -x %s=\"\"\n", value_pair[0]);
 		else
 			print_half_valuepair(value_pair);

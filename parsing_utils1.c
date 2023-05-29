@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:47:40 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:47:44 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ t_list	*get_head_node(t_list *node)
 void	parse_redir(int *argflag, t_list **node, char **token, t_list **head)
 {
 	*argflag = -1;
-	*node = add_node(*node, *token, envcpy, *head);
+	*node = add_node(*node, *token, g_envcpy, *head);
 	free(*token);
-	*token = ft_lexer(NULL, envcpy, *head);
+	*token = ft_lexer(NULL, g_envcpy, *head);
 }
 
 void	handle_parsing_end(int *argflag, char **token, t_list **head)
 {
 	*argflag = *argflag + 1;
 	free(*token);
-	*token = ft_lexer(NULL, envcpy, *head);
+	*token = ft_lexer(NULL, g_envcpy, *head);
 }
 
 void	free_token_and_prompt(char **prompt, char **token)

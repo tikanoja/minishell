@@ -6,16 +6,16 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 21:25:14 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 22:47:02 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_array_and_env(char **array, char **envcpy, t_list *head)
+void	free_array_and_env(char **array, char **g_envcpy, t_list *head)
 {
 	free_array(array);
-	free_env_and_list(envcpy, head);
+	free_env_and_list(g_envcpy, head);
 }
 
 void	free_node(t_list *node)

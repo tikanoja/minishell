@@ -6,13 +6,13 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:24:33 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:46:40 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head)
+t_list	*add_node(t_list *node, char *token, char **g_envcpy, t_list *head)
 {
 	t_list	*prev;
 
@@ -22,7 +22,7 @@ t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head)
 		prev = node;
 	node = ft_calloc(1, sizeof(t_list));
 	if (!node)
-		free_env_and_list(envcpy, head);
+		free_env_and_list(g_envcpy, head);
 	if (token != NULL)
 		node->value = ft_strdup(token);
 	node->args = NULL;
@@ -68,7 +68,7 @@ char	**realloc_array(t_list *node, char *token)
 	return (array);
 }
 
-t_list	*parsecmd(char *prompt, char **envcpy)
+t_list	*parsecmd(char *prompt, char **g_envcpy)
 {
 	t_list	*node;
 	t_list	*head;
@@ -76,7 +76,7 @@ t_list	*parsecmd(char *prompt, char **envcpy)
 	int		argflag;
 
 	init_parsecmd(&node, &head, &argflag);
-	token = ft_lexer(prompt, envcpy, head);
+	token = ft_lexer(prompt, g_envcpy, head);
 	while (1)
 	{
 		if (token == NULL)
@@ -88,7 +88,7 @@ t_list	*parsecmd(char *prompt, char **envcpy)
 			continue ;
 		}
 		if (argflag == -1)
-			node = add_node(node, token, envcpy, head);
+			node = add_node(node, token, g_envcpy, head);
 		else
 			node->args = realloc_array(node, token);
 		handle_parsing_end(&argflag, &token, &head);

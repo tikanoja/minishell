@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 10:52:18 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 19:20:49 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**patharr_split(int *pathflag, t_list *current)
 {
 	char	**patharr;
 
-	patharr = ft_split(envcpy[*pathflag] + 5, ':');
+	patharr = ft_split(g_envcpy[*pathflag] + 5, ':');
 	if (patharr == NULL)
 		exit_gracefully(current);
 	*pathflag = 0;
@@ -75,7 +75,7 @@ void	parse_system_commands(t_list *head, int pathflag)
 	char	**patharr;
 	t_list	*current;
 
-	pathflag = findpath(envcpy);
+	pathflag = findpath(g_envcpy);
 	current = head;
 	if (pathflag != -1)
 		patharr = patharr_split(&pathflag, current);

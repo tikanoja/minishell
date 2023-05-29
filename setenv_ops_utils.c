@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 17:04:35 by jaurasmaa         #+#    #+#             */
-/*   Updated: 2023/05/29 17:48:13 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	special_env_found(t_list *current, char *key, int found)
 
 	key_len = ft_strlen(key);
 	env_index = 0;
-	while (envcpy[env_index])
+	while (g_envcpy[env_index])
 	{
-		if (ft_strncmp(envcpy[env_index], key, key_len) == 0 && \
-		envcpy[env_index][key_len] == '=')
+		if (ft_strncmp(g_envcpy[env_index], key, key_len) == 0 && \
+		g_envcpy[env_index][key_len] == '=')
 		{
-			free(envcpy[env_index]);
-			envcpy[env_index] = ft_strjoin((const char *)key, "=\0");
-			if (envcpy[env_index] == NULL)
+			free(g_envcpy[env_index]);
+			g_envcpy[env_index] = ft_strjoin((const char *)key, "=\0");
+			if (g_envcpy[env_index] == NULL)
 				exit_gracefully(current);
 			found = 1;
 			break ;
@@ -42,18 +42,18 @@ int	append_found(char *key, char **valuepair, int found, t_list *current)
 	char	*appended;
 
 	env_index = 0;
-	while (envcpy[env_index])
+	while (g_envcpy[env_index])
 	{
-		if (ft_strncmp(envcpy[env_index], key, ft_strlen(key)) == 0 \
-		&& envcpy[env_index][ft_strlen(key)] == '=')
+		if (ft_strncmp(g_envcpy[env_index], key, ft_strlen(key)) == 0 \
+		&& g_envcpy[env_index][ft_strlen(key)] == '=')
 		{
-			appended = ft_strdup(envcpy[env_index]);
+			appended = ft_strdup(g_envcpy[env_index]);
 			if (appended == NULL)
 				exit_gracefully_free_valuepair(current, valuepair);
-			free(envcpy[env_index]);
-			envcpy[env_index] = NULL;
-			envcpy[env_index] = ft_strjoin(appended, valuepair[1]);
-			if (envcpy[env_index] == NULL)
+			free(g_envcpy[env_index]);
+			g_envcpy[env_index] = NULL;
+			g_envcpy[env_index] = ft_strjoin(appended, valuepair[1]);
+			if (g_envcpy[env_index] == NULL)
 				exit_free_valuepair_string(current, valuepair, appended);
 			found = 1;
 			free(appended);
@@ -71,10 +71,10 @@ void	append_not_found(t_list *current, char *key, char **valuepair)
 	int		row_count;
 
 	row_count = 0;
-	new_env = copy_env(envcpy, current);
-	while (envcpy[row_count] != NULL)
+	new_env = copy_env(g_envcpy, current);
+	while (g_envcpy[row_count] != NULL)
 		row_count++;
-	free_split(envcpy);
+	free_split(g_envcpy);
 	appended = ft_strjoin((const char *)key, "=");
 	if (appended == NULL)
 		exit_gracefully_free_valuepair(current, valuepair);
@@ -85,6 +85,6 @@ void	append_not_found(t_list *current, char *key, char **valuepair)
 	if (new_env[row_count] == NULL)
 		exit_free_valuepair_string(current, valuepair, appended);
 	new_env[row_count + 1] = NULL;
-	envcpy = new_env;
+	g_envcpy = new_env;
 	free(appended);
 }

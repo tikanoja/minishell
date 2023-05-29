@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 22:57:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:02:05 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	execute_builtin(t_list *current)
 	return (status);
 }
 
-void	execute_system_command(t_list *current, char **envcpy, \
+void	execute_system_command(t_list *current, char **g_envcpy, \
 t_list *head)
 {
 	pid_t	pid;
@@ -100,7 +100,7 @@ t_list *head)
 	else if (pid == 0)
 	{
 		fd_handling2(current, head);
-		if (execve(current->value, current->args, envcpy) == -1)
+		if (execve(current->value, current->args, g_envcpy) == -1)
 		{
 			ft_putstr_fd("shelly: ", 2);
 			ft_putstr_fd(current->value, 2);
@@ -110,7 +110,7 @@ t_list *head)
 	}
 }
 
-int	runcmd(t_list *head, char **envcpy)
+int	runcmd(t_list *head, char **g_envcpy)
 {
 	t_list	*current;
 	pid_t	pid;
@@ -132,7 +132,7 @@ int	runcmd(t_list *head, char **envcpy)
 		else if (is_it_builtin(current->value) > 0)
 			status = execute_builtin(current);
 		else if (current->system_command == 1)
-			execute_system_command(current, envcpy, head);
+			execute_system_command(current, g_envcpy, head);
 		current = current->next;
 	}
 	current = head;
