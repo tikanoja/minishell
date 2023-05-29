@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 15:14:17 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 15:19:13 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:48:46 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,6 @@ void	handle_ctrl_c_child(int signum __attribute__((unused)))
 }
 
 void	handle_ctrl_d_child(int signum __attribute__((unused)))
-{
-	write(STDERR_FILENO, "\n", 1);
-}
-
-void	handle_ctrl_c_heredoc(int signum __attribute__((unused)))
-{
-	init_signals();
-	termios_handler(0);
-	close(4);
-	write(STDERR_FILENO, "\n", 1);
-	run_minishell();
-}
-
-void	handle_ctrl_d_heredoc(int signum __attribute__((unused)))
 {
 	write(STDERR_FILENO, "\n", 1);
 }
@@ -87,16 +73,4 @@ void	init_child_signals(void)
 	sa_d.sa_flags = 0;
 	sigaction(SIGQUIT, &sa_d, NULL);
 	signal(SIGQUIT, handle_ctrl_backslash_child);
-}
-
-void	init_heredoc_signals(void)
-{
-	struct sigaction	sa_c;
-
-	termios_handler(1);
-	sa_c.sa_handler = handle_ctrl_c_heredoc;
-	sigemptyset(&sa_c.sa_mask);
-	sa_c.sa_flags = 0;
-	sigaction(SIGINT, &sa_c, NULL);
-	signal(SIGQUIT, SIG_IGN);
 }

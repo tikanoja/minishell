@@ -17,7 +17,7 @@ OBJ = main.o parsing.o ft_lexer.o errors.o check_for_arg_dollar.o\
 		check_value_for_dollar.o unset_env.o setenv_utils.o heredoc.o\
 		heredoc_utils1.o heredoc_utils2.o heredoc_utils3.o\
 		redirection_errors.o stdin_nodes.o setenv_ops.o redirection_frees.o \
-		setenv_ops_utils.c
+		setenv_ops_utils.o
 
 FLAGS = -Wall -Werror -Wextra
 

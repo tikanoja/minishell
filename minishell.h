@@ -56,11 +56,8 @@ void	handle_ctrl_c(int signum);
 void	rl_replace_line (const char *text, int clear_undo);
 int		termios_handler(int flag);
 void	init_child_signals();
-void	init_heredoc_signals();
 void	handle_ctrl_c_child(int signum __attribute__((unused)));
 void	handle_ctrl_d_child(int signum __attribute__((unused)));
-void	handle_ctrl_c_heredoc(int signum __attribute__((unused)));
-void	handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //setenv.c
 int		ft_setenv(const char *value, t_list *current);
