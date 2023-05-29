@@ -125,7 +125,7 @@ int		get_env_len(char *str);
 int		is_valid_env_char(char c);
 int		check_dollar_end(char c);
 int		check_for_quote_dollar(char *str);
-char	*ft_strjoin_oe(char *s1, char *s2);
+char	*ft_strjoin_oe(char *s1, char *s2, t_list *current);
 void	handle_single_quotes(char c, int *flag);
 
 //check_for_arg_dollar and check_for_arg_dollar_utils
