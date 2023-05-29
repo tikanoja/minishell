@@ -70,8 +70,12 @@ void	free_setenv(char **env);
 char	**allocate_new_env(size_t size);
 int		check_key_chars(char c, int flag);
 int		is_valid_key(char *key);
-int do_special_env_set(const char *value);
-int check_if_equal_last(const char *value);
+int		do_special_env_set(const char *value);
+int		check_if_equal_last(const char *value);
+int		free_valuepair(char **valuepair);
+int 	underscore_env_set(char *value, char **valuepair);
+int 	setenv_error(char *value, char **valuepair);
+int		do_append_env(char **valuepair);
 
 //cd.c
 int 	ft_cd(t_list *current);
