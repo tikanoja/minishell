@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:43:57 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:44:38 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 21:53:43 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,15 @@ t_list **next, t_list **ret)
 	}	
 }
 
+void	realloc_redirection_out(t_list *prev, t_list *current, \
+t_list *next, int i)
+{
+	prev->args = realloc_array(prev, next->args[i]);
+	if (!prev->args)
+		exit_gracefully(current);
+	free(current->next->args[i]);
+}
+
 t_list	*free_redirection_out(t_list *current, t_list *prev, t_list *next)
 {
 	t_list	*ret;
@@ -75,12 +84,7 @@ t_list	*free_redirection_out(t_list *current, t_list *prev, t_list *next)
 			ret = current->prev;
 		}
 		else if (prev)
-		{
-			prev->args = realloc_array(prev, next->args[i]);
-			if (!prev->args)
-				exit_gracefully(current);
-			free(current->next->args[i]);
-		}
+			realloc_redirection_out(prev, current, next, i);
 		i++;
 	}
 	free_redir_out_frees(current, next);

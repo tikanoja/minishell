@@ -143,7 +143,7 @@ void	free_redir_out_frees(t_list *current, t_list *next);
 void	free_redir_out_handle_nodes(int *i, t_list **prev, t_list **next, t_list **ret);
 t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next);
 t_list	*free_pipe(t_list *current, t_list *prev, t_list *next);
-
+void	realloc_redirection_out(t_list *prev, t_list *current, t_list *next, int i);
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
