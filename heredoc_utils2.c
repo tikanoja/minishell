@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 20:50:01 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 20:52:31 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1024])
+void	init_heredoc_env_open(int *i, int *j, char **input_opened, \
+char input_env[1024])
 {
 	(*i) = 0;
 	(*j) = 0;
@@ -8,10 +21,11 @@ void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1
 	ft_bzero(input_env, 1024);
 }
 
-char	*free_heredoc_env_open(char **input, char *input_opened, t_list *current)
+char	*free_heredoc_env_open(char **input, char *input_opened, \
+t_list *current)
 {
 	free((*input));
-	if(input_opened != NULL)
+	if (input_opened != NULL)
 	{
 		(*input) = ft_strdup(input_opened);
 		if ((*input) == NULL)
@@ -26,7 +40,7 @@ char	*free_heredoc_env_open(char **input, char *input_opened, t_list *current)
 void	heredoc_env_open_iterators(char *input, char *input_env, int *i, int *j)
 {
 	ft_bzero(input_env, (size_t)(*j));
-	if (input[(*i)] == '$' || is_it_quote(input[(*i)]) == 0 ||\
+	if (input[(*i)] == '$' || is_it_quote(input[(*i)]) == 0 || \
 	is_it_whitespace(input[(*i)]) == 0)
 		(*i)--;
 	(*j) = 0;
@@ -45,30 +59,30 @@ void	free_current_and_next(t_list *current)
 	current = NULL;
 }
 
-void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
+void	fill_args_to_prev(t_list *crnt, t_list *prev, t_list **ret)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(current->next && current->next->args && current->next->args[i])
+	while (crnt->next && crnt->next->args && crnt->next->args[i])
 	{
 		if (prev == NULL)
 		{
-			prev = add_node(NULL, current->next->args[i], NULL, NULL);
+			prev = add_node(NULL, crnt->next->args[i], NULL, NULL);
 			if (!prev)
-				exit_gracefully(current);
+				exit_gracefully(crnt);
 			prev->next = *ret;
 			if (*ret != NULL)
 				(*ret)->prev = prev;
-			current->prev = prev;
-			*ret = current->prev;
+			crnt->prev = prev;
+			*ret = crnt->prev;
 		}
 		else if (prev)
 		{
-			current->prev->args = realloc_array(current->prev, current->next->args[i]);
-			if (!current->prev->args)
-				exit_gracefully(current);
-			free(current->next->args[i]);
+			crnt->prev->args = realloc_array(crnt->prev, crnt->next->args[i]);
+			if (!crnt->prev->args)
+				exit_gracefully(crnt);
+			free(crnt->next->args[i]);
 		}
 		i++;
 	}

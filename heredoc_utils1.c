@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils1.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 20:49:10 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 20:49:53 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
@@ -14,7 +26,7 @@ void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
 
 t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 {
-	t_list  *ret;
+	t_list	*ret;
 
 	ret = NULL;
 	heredoc_assign_pipe(prev, pipefd);
@@ -40,7 +52,8 @@ t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 
 int	last_try_static_c(int flag)
 {
-	static int status;
+	static int	status;
+
 	if (flag == -1)
 		status = 0;
 	if (flag == 1)
