@@ -149,6 +149,8 @@ char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 		free(node->args);
 	node->args = NULL;
 	array[i] = ft_strdup(token);
+	if (!array[i])
+		exit_gracefully(head);
 	array[i + 1] = NULL;
 	return (array);
 }
