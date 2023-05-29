@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:00:51 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:10:58 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:21:07 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	check_quotes(char *str)
 			if (ret == -1)
 			{
 				write(2, "unclosed quotes\n", 16);
-				free(str);
 				return (1);
 			}
 			i = ret;
