@@ -212,6 +212,12 @@ int		should_proccess_var(char *arg, int i, int flag);
 int		should_proccess_quote_var(char *arg, int i, int flag);
 char	*process_arg(char *arg, int status, t_list *current, int len);
 
+//parsing_utils3.c
+void 	init_realloc_parsecmd(char ***array, int *i);
+void free_realloc_parsecmd3(char *prompt, char *token, t_list *current, char **array);
+void free_realloc_parsecmd2(char *prompt, char *token, t_list *current, char **array);
+void free_realloc_parsecmd(char *prompt, char *token, t_list *current);
+
 //parsing_utils2.c
 int		ft_strncmp_casein(const char *s1, const char *s2, size_t n);
 int		is_it_builtin(char *prompt);

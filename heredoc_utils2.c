@@ -76,7 +76,6 @@ void	fill_args_to_prev(t_list *crnt, t_list *prev, t_list **ret, int pipefd)
 			crnt->prev->args = realloc_array(crnt->prev, crnt->next->args[i]);
 			if (!crnt->prev->args)
 				exit_gracefully(crnt);
-			free(crnt->next->args[i]);
 		}
 		i++;
 	}

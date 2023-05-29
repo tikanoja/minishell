@@ -76,7 +76,10 @@ char	*ft_lexer(char *str, char **g_envcpy, t_list *head)
 	tokenlen = get_token_len(last_str);
 	token = ft_calloc((tokenlen + 1), sizeof(char));
 	if (!token)
+	{
+		free(last_str);
 		free_env_and_list(g_envcpy, head);
+	}
 	fill_token(tokenlen, token, last_str);
 	last_str = last_str + tokenlen;
 	if (*token == '\0')
