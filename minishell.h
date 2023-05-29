@@ -122,7 +122,7 @@ char *input_opened, t_list *current);
 void	heredoc_env_open_iterators(char *input, \
 char *input_env, int *i, int *j);
 void	free_current_and_next(t_list *current);
-void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret);
+void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret, int pipefd);
 
 //heredoc_utils3.c
 int		check_heredoc_delim(t_list *current);
