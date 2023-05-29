@@ -53,6 +53,8 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 		if (prev == NULL)
 		{
 			prev = add_node(NULL, current->next->args[i], NULL, NULL);
+			if (!prev)
+				exit_gracefully(current);
 			prev->next = ret;
 			if (ret != NULL)
 				ret->prev = prev;
@@ -62,6 +64,8 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 		else if (prev)
 		{
 			prev->args = realloc_array(prev, next->args[i], NULL, NULL);
+			if (!prev->args)
+				exit_gracefully(current);
 			free(current->next->args[i]);
 		}
 		i++;
@@ -228,26 +232,38 @@ int fill_node_split_check(char *input)
 	return (0);
 }
 
-void fill_node_from_split(t_list *new, char *input)
+void fill_node_from_split(t_list *new, char *input, t_list *current)
 {
 	char **arr;
 	int i;
 
 	i = 1;
 	arr = ft_split(input, ' ');
+	if (!arr)
+	{
+		free_split(arr);
+		exit_gracefully(current);
+	}
 	free(input);
 	new->value = ft_strdup(arr[0]);
+	if (!new->value)
+	{
+		free_split(arr);
+		exit_gracefully(current);
+	}
 	free(arr[0]);
 	while(arr[i])
 	{
 		new->args = realloc_array(new, arr[i], NULL, NULL); // mita jos pitaa fill useempi node?
+		if (!new->args)
+			exit_gracefully(current);
 		free(arr[i]);
 		i++;
 	}
 	free(arr);
 }
 
-char *parse_stdin_input(char *input)
+char *parse_stdin_input(char *input, t_list *current)
 {
 	int start;
 	int end;
@@ -264,6 +280,8 @@ char *parse_stdin_input(char *input)
 	if ((size_t)(end - start) == ft_strlen(input) - 1)
 		return(input);
 	new = ft_calloc(end - start + 1, sizeof(char));
+	if (!new)
+		exit_gracefully(current);
 	new[end + 1] = '\0';
 	while (start <= end)
 	{
@@ -286,7 +304,9 @@ t_list	*fill_node_from_stdin(t_list *current)
 {
 	t_list *new;
 	char *input;
-	new = ft_calloc(1, sizeof(t_list)); //protect
+	new = ft_calloc(1, sizeof(t_list));
+	if (!new)
+		exit_gracefully(current);
 	new->argc = 0;
 	new->pipe = 1;
 	new->input = STDIN_FILENO;
@@ -296,14 +316,16 @@ t_list	*fill_node_from_stdin(t_list *current)
 	new->args = NULL;
 	new->execflag = 0;
 	input = readline(">"); // ehk pitaa lisaa splitti!
-	input = parse_stdin_input(input);
+	input = parse_stdin_input(input, current);
 	if (ft_strlen(input) == 0)
 		return (free_empty_stdin_input(input, new));
 	if (fill_node_split_check(input) == 1)
-		fill_node_from_split(new, input);
+		fill_node_from_split(new, input, current);
 	else
 	{
 		new->value = ft_strdup(input);
+		if (!new->value)
+			exit_gracefully(current);
 		free(input);
 	}
 	return (new);
@@ -343,8 +365,8 @@ t_list	*handle_pipe(t_list *current)
 	if (!next)
 		return (free_pipe(current, prev, next));
 	if (pipe(pipefd) == -1)
-		printf("error opening pipe\n"); //protect
-	if (prev && prev->output == STDOUT_FILENO) // toi jalkimmainen arg fiksas echo moi > testfile | cat -e
+		exit_gracefully(current);
+	if (prev && prev->output == STDOUT_FILENO)
 	{
 		prev->output = pipefd[1];
 		prev->pipe = 1;
@@ -355,251 +377,6 @@ t_list	*handle_pipe(t_list *current)
 	next->pipe = 1;
 	return (free_pipe(current, prev, next));
 }
-int	is_it_quote(char c)
-{
-	if(c == '\'' || c == '\"')
-		return (1);
-	else
-		return (0);
-}
-
-void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j)
-{
-	input_env[*j] = input[*i];
-	(*i)++;
-	(*j)++;
-}
-
-void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1024])
-{
-	(*i) = 0;
-	(*j) = 0;
-	input_opened = NULL;
-	ft_bzero(input_env, 1024);
-}
-
-char	*free_heredoc_env_open(char **input, char *input_opened, t_list *current)
-{
-	free((*input));
-	if(input_opened != NULL)
-	{
-		(*input) = ft_strdup(input_opened);
-		if ((*input) == NULL)
-			exit_gracefully(current);
-	}
-	else
-		(*input) = NULL;
-	free(input_opened);
-	return ((*input));
-}
-
-void	heredoc_env_open_iterators(char *input, char *input_env, int *i, int *j)
-{
-	ft_bzero(input_env, (size_t)(*j));
-	if (input[(*i)] == '$' || is_it_quote(input[(*i)]) == 0 ||\
-	is_it_whitespace(input[(*i)]) == 0)
-		(*i)--;
-	(*j) = 0;
-	return ;
-}
-
-char	*heredoc_env_open(char *input, t_list *current)
-{
-	char    input_env[1024];
-	char    *open;
-	int     i;
-	int     j;
-
-	init_heredoc_env_open(&i, &j, &open, input_env);
-	while(input[i])
-	{
-		if(input[i] == '$' && input[i + 1] != '\'' && input[i + 1] != '\"')
-		{
-			i++;
-			if(input[i] != '\'' && input[i] != '\"')
-			{
-				while(is_it_whitespace(input[i]) == 0 &&\
-				is_it_quote(input[i]) == 0 && input[i] && input[i] != '$')
-					copy_and_move_ptrs(input_env, input, &i, &j);		
-				open = ft_strjoin_oe(open, ft_getenv(input_env), current);
-				heredoc_env_open_iterators(input, input_env, &i, &j);
-			}
-		}
-		else
-			open = char_join(open, input[i], current);
-		i++;
-	}
-	return(free_heredoc_env_open(&input, open, current));
-}
-
-void	free_current_and_next(t_list *current)
-{
-	if (current->next)
-		free(current->next->value);
-	if (current->next)
-		free(current->next);
-	free(current->value);
-	current->value = NULL;
-	free(current);
-	current = NULL;
-}
-
-void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
-{
-	int i;
-
-	i = 0;
-	while(current->next && current->next->args && current->next->args[i])
-	{
-		if (prev == NULL)
-		{
-			prev = add_node(NULL, current->next->args[i], NULL, NULL);
-			prev->next = *ret;
-			if (*ret != NULL)
-				(*ret)->prev = prev;
-			current->prev = prev;
-			*ret = current->prev;
-		}
-		else if (prev)
-		{
-			current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
-			free(current->next->args[i]);
-		}
-		i++;
-	}
-}
-
-void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
-{
-	if (prev)
-	{
-		if (prev->input != STDIN_FILENO)
-			close(prev->input);
-		prev->input = pipefd[0];
-	}
-	else if (pipefd[0] != -1)
-		close(pipefd[0]);
-}
-
-t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
-{
-	t_list  *ret;
-
-	ret = NULL;
-	heredoc_assign_pipe(prev, pipefd);
-	if (current->next && current->next->next && prev)
-	{
-		prev->next = current->next->next;
-		current->next->next->prev = prev;
-		ret = current->next->next;
-	}
-	else if (prev && !current->next)
-		prev->next = NULL;
-	else if (current->next && current->next->next && !prev)
-	{
-		current->next->next->prev = NULL;
-		ret = current->next->next;
-	}
-	else if (prev && current->next && !current->next->next)
-		prev->next = NULL;
-	fill_args_to_prev(current, prev, &ret);
-	free_current_and_next(current);
-	return (ret);
-}
-
-int	last_try_static_c(int flag)
-{
-	static int status;
-	if (flag == -1)
-		status = 0;
-	if (flag == 1)
-		status = 1;
-	return (status);
-}
-
-void	heredoc_signal_c(int signum __attribute__((unused)))
-{
-	last_try_static_c(1);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	write_input_to_pipe(char *input, int pipefd)
-{
-	ft_putstr_fd(input, pipefd);
-	ft_putchar_fd('\n', pipefd);
-	free(input);
-}
-
-void heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim)
-{
-	while(1)
-	{
-		if (last_try_static_c(0) == 1)
-		{
-			free_list(get_head_node(current));
-			close(pipefd[1]);
-			run_minishell();
-		}
-		else
-			input = readline(">");
-		if (!input)
-		{
-			printf("\033[1A> ");
-			break;
-		}
-		if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 &&\
-		input[ft_strlen(delim)] == '\0'))
-		{
-			free(input);
-			break ;
-		}
-		if(check_for_dollar(input) == 1)
-			input = heredoc_env_open(input, current);
-		write_input_to_pipe(input, pipefd[1]);
-	}
-}
-
-int check_heredoc_delim(t_list *current)
-{
-	if (!current->next)
-	{
-		ft_putstr_fd("shelly: syntax error near unexpected token `newline'\n", 2);
-		if (current->prev)
-			current->prev->execflag = 1;
-		return (1);
-	}
-	return (0);
-}
-
-t_list	*handle_heredoc(t_list *current)
-{
-	char	*delim;
-	char	*input;
-	int		pipefd[2];
-	t_list	*prev;
-	
-	prev = current->prev;
-	input = NULL;
-	last_try_static_c(-1);
-	signal(SIGINT, SIG_IGN);
-	pipefd[0] = -1;
-	if (check_heredoc_delim(current) != 1)
-	{
-		termios_handler(1);
-		signal(SIGINT, heredoc_signal_c);
-		delim = ft_strdup(current->next->value);
-		if (delim == NULL)
-			exit_gracefully(current);
-		if (pipe(pipefd) == -1)
-			exit_gracefully(current);
-		heredoc_loop(current, pipefd, input, delim);
-		close(pipefd[1]);
-		init_signals();
-		free(delim);
-	}
-	return (end_heredoc(current, prev, pipefd));
-}
 
 t_list    *open_fds_and_pipes(t_list *head)
 {
@@ -608,7 +385,7 @@ t_list    *open_fds_and_pipes(t_list *head)
 	current = head;
 	while (current)
 	{
-		if (current->prev == NULL)     
+		if (current->prev == NULL)
 			head = current;
 		if (current->value && ft_strncmp(current->value, "|\0", 2) == 0) 
 			current = handle_pipe(current);
