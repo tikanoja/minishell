@@ -63,19 +63,19 @@ void	handle_ctrl_c_heredoc(int signum __attribute__((unused)));
 void	handle_ctrl_d_heredoc(int signum __attribute__((unused)));
 
 //setenv.c
-int		ft_setenv(const char *value);
-void	set_env_value(char **env, const char *key, const char *value);
-char	**copy_env(char **env);
+int		ft_setenv(const char *value, t_list *current);
+void	set_env_value(char **env, const char *key, const char *value, t_list *current);
+char 	**copy_env(char **env, t_list *current);
 void	free_setenv(char **env);
 char	**allocate_new_env(size_t size);
 int		check_key_chars(char c, int flag);
 int		is_valid_key(char *key);
-int		do_special_env_set(const char *value);
+int		do_special_env_set(const char *value, t_list *current);
 int		check_if_equal_last(const char *value);
 int		free_valuepair(char **valuepair);
-int 	underscore_env_set(char *value, char **valuepair);
+int		underscore_env_set(char *value, char **valuepair, t_list *current);
 int 	setenv_error(char *value, char **valuepair);
-int		do_append_env(char **valuepair);
+int		do_append_env(char **valuepair,  t_list *current);
 
 //cd.c
 int 	ft_cd(t_list *current);
@@ -134,8 +134,8 @@ void	handle_single_quotes(char c, int *flag);
 
 //check_for_arg_dollar and check_for_arg_dollar_utils
 void	check_args_for_dollar(t_list *current, int status);
-char	*process_status_value(char *new_value, int status, int *index);
-char	*process_environment_variable(char *new_value, char *arg, int *index);
+char	*process_status_value(char *new_value, int status, int *index, t_list *current);
+char	*process_environment_variable(char *new_value, char *arg, int *index, t_list *current);
 char	*process_quoted_string(char *new_value, char *arg, int *index, t_list *current);
 int		flag_status(int flag);
 int		handle_single_quotes_args(char c, int flag);
@@ -193,8 +193,8 @@ int     slash_check(char *str);
 //utils.c
 void	free_split(char **split);
 void	print_error_sys_cmd(t_list *current);
-void	free_failed_split(char **split, int i);
-void 	exit_split(char **split, int i, t_list *current);
+void	free_failed_split(char **split);
+void 	exit_split(char **split, t_list *current);
 
 //main.c
 // int ft_echo(char *prompt);

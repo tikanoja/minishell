@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 12:56:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:54:17 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 12:25:46 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,26 @@ void	free_split(char **split)
 	}
 	free(split);
 }
+void	free_failed_split(char **split)
+{
+	int	i;
 
+	i = 0;
+	while(split[i])
+		i++;
+	while (i >= 0)
+	{
+		free(split[i]);
+		i--;
+	}
+	free(split);
+}
+
+void 	exit_split(char **split, t_list *current)
+{
+	free_failed_split(split);
+	exit_gracefully(current);
+}
 void	print_error_sys_cmd(t_list *current)
 {
 	ft_putstr_fd("shelly: ", 2);
