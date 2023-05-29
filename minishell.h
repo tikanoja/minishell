@@ -194,6 +194,19 @@ int		should_proccess_var(char *arg, int i, int flag);
 int		should_proccess_quote_var(char *arg, int i, int flag);
 char	*process_arg(char *arg, int status, t_list *current, int len);
 
+//parsing_utils2.c
+int	ft_strncmp_casein(const char *s1, const char *s2, size_t n);
+int	is_it_builtin(char *prompt);
+int	is_it_redirection(char *prompt);
+int	is_it_redirection_parsing(char *prompt);
+int	is_it_log_operator(char *prompt);
+
+//parsing_utils1.c
+void	init_parsecmd(t_list **node, t_list **head, int *argflag);
+t_list	*get_head_node(t_list *node);
+void	parse_redir(int *argflag, t_list **node, char **token, t_list **head);
+void	handle_parsing_end(int *argflag, char **token, t_list **head);
+void	free_token_and_prompt(char **prompt, char **token);
 
 //parsing.c
 int		ft_strncmp_casein(const char *s1, const char *s2, size_t n);
