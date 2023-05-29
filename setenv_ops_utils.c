@@ -6,13 +6,13 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 17:04:35 by jaurasmaa         #+#    #+#             */
-/*   Updated: 2023/05/29 17:05:07 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:31:28 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int special_env_found(t_list *current, char *key, int found)
+int	special_env_found(t_list *current, char *key, int found)
 {
 	size_t	env_index;
 	size_t	key_len;
@@ -36,7 +36,7 @@ int special_env_found(t_list *current, char *key, int found)
 	return (found);
 }
 
-int append_found(char *key, char **valuepair, int found, t_list *current)
+int	append_found(char *key, char **valuepair, int found, t_list *current)
 {
 	size_t	env_index;
 	char	*appended;
@@ -48,12 +48,12 @@ int append_found(char *key, char **valuepair, int found, t_list *current)
 		&& envcpy[env_index][ft_strlen(key)] == '=')
 		{
 			appended = ft_strdup(envcpy[env_index]);
-			if(appended == NULL)
+			if (appended == NULL)
 				exit_gracefully_free_valuepair(current, valuepair);
 			free(envcpy[env_index]);
 			envcpy[env_index] = NULL;
 			envcpy[env_index] = ft_strjoin(appended, valuepair[1]);
-			if(envcpy[env_index] == NULL)
+			if (envcpy[env_index] == NULL)
 				exit_free_valuepair_string(current, valuepair, appended);
 			found = 1;
 			free(appended);
@@ -64,12 +64,12 @@ int append_found(char *key, char **valuepair, int found, t_list *current)
 	return (found);
 }
 
-void    append_not_found(t_list *current, char *key, char **valuepair)
+void	append_not_found(t_list *current, char *key, char **valuepair)
 {
 	char	**new_env;
 	char	*appended;
 	int		row_count;
-	
+
 	row_count = 0;
 	new_env = copy_env(envcpy, current);
 	while (envcpy[row_count] != NULL)

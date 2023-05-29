@@ -6,11 +6,17 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:28:46 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 17:07:20 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 17:30:32 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	free_key(char *key)
+{
+	free(key);
+	return (0);
+}
 
 int	do_special_env_set(const char *value, t_list *current)
 {
@@ -29,21 +35,19 @@ int	do_special_env_set(const char *value, t_list *current)
 	if (found == 0)
 	{
 		new_env = copy_env(envcpy, current);
-		while (envcpy[row_count] != NULL)
+		while (new_env[row_count] != NULL)
 			row_count++;
 		free_split(envcpy);
-		new_env[row_count - 1] = ft_strjoin((const char *)key, "=\0");
-		if (new_env[row_count - 1] == NULL)
-				exit_gracefully(current);
-		new_env[row_count] = NULL;
+		new_env[row_count] = ft_strjoin((const char *)key, "=\0");
+		if (new_env[row_count] == NULL)
+			exit_gracefully_free_valuepair(current, new_env);
+		new_env[row_count + 1] = NULL;
 		envcpy = new_env;
 	}
-	free(key);
-	return (0);
+	return (free_key(key));
 }
 
-
-int	do_append_env(char **valuepair,  t_list *current)
+int	do_append_env(char **valuepair, t_list *current)
 {
 	char	*key;
 	int		found;
@@ -60,7 +64,8 @@ int	do_append_env(char **valuepair,  t_list *current)
 	return (free_valuepair(valuepair));
 }
 
-int set_env_found(char **valuepair, const char *value, t_list *current, int *found)
+int	set_env_found(char **valuepair, const char *value, \
+t_list *current, int *found)
 {
 	int		env_index;
 	size_t	key_len;
@@ -70,7 +75,8 @@ int set_env_found(char **valuepair, const char *value, t_list *current, int *fou
 	while (envcpy[env_index] != NULL)
 	{
 		if (ft_strncmp(envcpy[env_index], valuepair[0], key_len) == 0 && \
-			(envcpy[env_index][key_len] == '=' || envcpy[env_index][key_len] == '\0'))
+		(envcpy[env_index][key_len] == '=' || \
+		envcpy[env_index][key_len] == '\0'))
 		{
 			free(envcpy[env_index]);
 			envcpy[env_index] = NULL;
@@ -90,7 +96,7 @@ void	set_env_value(char **valuepair, const char *value, t_list *current)
 	size_t	env_index;
 	int		found;
 	char	**new_env;
-	
+
 	env_index = 0;
 	found = 0;
 	env_index = set_env_found(valuepair, value, current, &found);
