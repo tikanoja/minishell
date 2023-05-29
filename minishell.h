@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:55:20 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 01:09:57 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret);
 int		check_heredoc_delim(t_list *current);
 int		is_it_quote(char c);
 void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j);
+void	ctrl_c_happened(t_list *current, int pipefd[2]);
 
 //redirection_errors.c
 void	redir_directory_check_prints(char *str, int flag);

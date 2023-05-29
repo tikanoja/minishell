@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:56:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:57:27 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 01:06:29 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,7 @@ void	heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim)
 	while (1)
 	{
 		if (last_try_static_c(0) == 1)
-		{
-			free_list(get_head_node(current));
-			close(pipefd[1]);
-			run_minishell();
-		}
+			ctrl_c_happened(current, pipefd);
 		else
 			input = readline(">");
 		if (!input)

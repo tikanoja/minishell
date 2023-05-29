@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:53:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:54:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 01:10:12 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,12 @@ void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j)
 	input_env[*j] = input[*i];
 	(*i)++;
 	(*j)++;
+}
+
+void	ctrl_c_happened(t_list *current, int pipefd[2])
+{
+	free_list(get_head_node(current));
+	close(pipefd[1]);
+	close(pipefd[0]);
+	run_minishell();
 }
