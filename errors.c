@@ -29,6 +29,10 @@ void free_list(t_list *head)
 		}
 		if (current->args)
 			free(current->args);
+		if (current->input != STDIN_FILENO)
+			close(current->input);
+		if (current->output != STDOUT_FILENO)
+			close(current->output);
 		next = current->next;
 		if (current)
 			free(current);

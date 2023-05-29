@@ -78,7 +78,7 @@ void	append_not_found(t_list *current, char *key, char **valuepair)
 	appended = ft_strjoin((const char *)key, "=");
 	if (appended == NULL)
 		exit_gracefully_free_valuepair(current, valuepair);
-	appended = ft_strjoin_oe(appended, valuepair[1], current);
+	appended = ft_strjoin_oe(appended, valuepair[1]);
 	if (appended == NULL)
 		exit_gracefully_free_valuepair(current, valuepair);
 	new_env[row_count] = ft_strdup(appended);

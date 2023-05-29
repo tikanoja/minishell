@@ -51,7 +51,7 @@ int	get_env_len(char *str)
 	return (len);
 }
 
-char	*ft_strjoin_oe(char *s1, char *s2, t_list *current)
+char	*ft_strjoin_oe(char *s1, char *s2)
 {
 	char	*ns;
 	size_t	i;
@@ -65,7 +65,7 @@ char	*ft_strjoin_oe(char *s1, char *s2, t_list *current)
 		return (ft_strdup(s2));
 	ns = ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!ns)
-		exit_gracefully(current);
+		return (NULL);
 	while (s1[i])
 		ns[j++] = s1[i++];
 	i = 0;

@@ -32,7 +32,7 @@ int redir_directory_check(char *str, t_list *prev)
 {
 	struct stat file_info;
 
-	if (stat(str, &file_info) == 0)//protect?
+	if (stat(str, &file_info) == 0)
 	{
 		if (S_ISDIR(file_info.st_mode))
 		{

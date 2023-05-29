@@ -17,8 +17,8 @@ char	*heredoc_env_open(char *input, t_list *current)
 			{
 				while(is_it_whitespace(input[i]) == 0 &&\
 				is_it_quote(input[i]) == 0 && input[i] && input[i] != '$')
-					copy_and_move_ptrs(input_env, input, &i, &j);		
-				open = ft_strjoin_oe(open, ft_getenv(input_env), current);
+					copy_and_move_ptrs(input_env, input, &i, &j);
+				open = ft_strjoin_oe(open, ft_getenv(input_env));
 				heredoc_env_open_iterators(input, input_env, &i, &j);
 			}
 		}
@@ -75,9 +75,7 @@ t_list	*handle_heredoc(t_list *current)
 		termios_handler(1);
 		signal(SIGINT, heredoc_signal_c);
 		delim = ft_strdup(current->next->value);
-		if (delim == NULL)
-			exit_gracefully(current);
-		if (pipe(pipefd) == -1)
+		if (delim == NULL || pipe(pipefd) == -1)
 			exit_gracefully(current);
 		heredoc_loop(current, pipefd, input, delim);
 		close(pipefd[1]);

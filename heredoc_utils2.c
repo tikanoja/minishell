@@ -4,7 +4,7 @@ void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1
 {
 	(*i) = 0;
 	(*j) = 0;
-	input_opened = NULL;
+	(*input_opened) = NULL;
 	ft_bzero(input_env, 1024);
 }
 
@@ -55,6 +55,8 @@ void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
 		if (prev == NULL)
 		{
 			prev = add_node(NULL, current->next->args[i], NULL, NULL);
+			if (!prev)
+				exit_gracefully(current);
 			prev->next = *ret;
 			if (*ret != NULL)
 				(*ret)->prev = prev;
@@ -64,6 +66,8 @@ void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
 		else if (prev)
 		{
 			current->prev->args = realloc_array(current->prev, current->next->args[i]);
+			if (!current->prev->args)
+				exit_gracefully(current);
 			free(current->next->args[i]);
 		}
 		i++;
