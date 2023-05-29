@@ -14,10 +14,21 @@
 
 void	free_current_and_next(t_list *current)
 {
+	int	i;
+
+	i = 0;
 	if (current->next)
-		free(current->next->value);
-	if (current->next)
+	{
+		while (current->next->args && current->next->args[i])
+		{
+			free(current->next->args[i]);
+			i++;
+		}
+		free(current->next->args);
+		if (current->next->value)
+			free(current->next->value);
 		free(current->next);
+	}
 	free(current->value);
 	current->value = NULL;
 	free(current);
