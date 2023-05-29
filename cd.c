@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:30:21 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 12:50:23 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 01:23:58 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	cd_path(char *path, t_list *current)
 		ft_putstr_fd(": ", STDERR_FILENO);
 		perror("");
 		free(old_pwd);
-		status = errno;
+		status = 1;
 		return (status);
 	}
 	pwd = ft_strjoin("PWD=", getcwd(cwd, PATH_MAX));
