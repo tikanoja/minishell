@@ -225,6 +225,17 @@ char	**realloc_array(t_list *node, char *token);
 t_list	*get_head_node(t_list *node);
 t_list	*parsecmd(char *prompt, char **envcpy);
 
+//ft_lexer_utils2.c
+int	check_terminator(char *str, int *len);
+int handle_quotes(char *str, char quote, int start);
+
+//ft_lexer_utils1.c
+int is_it_whitespace(char c);
+int check_token_end(char *str);
+char get_next_quote(char quote);
+void	init_handle_quotes(int *len, int *quotes, int *start);
+void found_another_quote(char *quote, char *str, int *quotes, int *len);
+
 //ft_lexer.c
 int		is_it_whitespace(char c);
 int		check_token_end(char *str);
