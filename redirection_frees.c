@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection_frees.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 20:43:57 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 20:44:38 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_redir_out_frees(t_list *current, t_list *next)
@@ -20,7 +32,8 @@ void	free_redir_out_frees(t_list *current, t_list *next)
 	current = NULL;
 }
 
-void	free_redir_out_handle_nodes(int *i, t_list **prev, t_list **next, t_list **ret)
+void	free_redir_out_handle_nodes(int *i, t_list **prev, \
+t_list **next, t_list **ret)
 {
 	(*i) = 0;
 	if ((*prev) && next && (*next)->next)
@@ -41,14 +54,14 @@ void	free_redir_out_handle_nodes(int *i, t_list **prev, t_list **next, t_list **
 	}	
 }
 
-t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
+t_list	*free_redirection_out(t_list *current, t_list *prev, t_list *next)
 {
-	t_list *ret;
-	int i;
+	t_list	*ret;
+	int		i;
 
 	ret = NULL;
 	free_redir_out_handle_nodes(&i, &prev, &next, &ret);
-	while(current->next && current->next->args && current->next->args[i])
+	while (current->next && current->next->args && current->next->args[i])
 	{
 		if (prev == NULL)
 		{
