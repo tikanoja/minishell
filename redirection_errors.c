@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection_errors.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/29 20:42:13 by jaurasma          #+#    #+#             */
+/*   Updated: 2023/05/29 20:42:58 by jaurasma         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	redir_directory_check_prints(char *str, int flag)
@@ -28,9 +40,9 @@ void	redir_out_double_redir(t_list *prev, t_list *next)
 		prev->execflag = 1;
 }
 
-int redir_directory_check(char *str, t_list *prev)
+int	redir_directory_check(char *str, t_list *prev)
 {
-	struct stat file_info;
+	struct stat	file_info;
 
 	if (stat(str, &file_info) == 0)
 	{
@@ -40,7 +52,7 @@ int redir_directory_check(char *str, t_list *prev)
 				redir_directory_check_prints(str, 1);
 			return (1);
 		}
-		else if(S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
+		else if (S_ISREG(file_info.st_mode) && access(str, X_OK) != 0)
 		{
 			if (prev == NULL || (prev && prev->execflag != 1))
 				redir_directory_check_prints(str, 2);
