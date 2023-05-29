@@ -96,6 +96,31 @@ int		ft_env(t_list *current, int i);
 //unset_env.c
 int ft_unsetenv(t_list *current, int k, int len, int status);
 
+//heredoc.c
+char	*heredoc_env_open(char *input, t_list *current);
+void heredoc_loop(t_list *current, int pipefd[2], char *input, char *delim);
+t_list	*handle_heredoc(t_list *current);
+
+//heredoc_utils1.c
+void	heredoc_assign_pipe(t_list *prev, int pipefd[2]);
+t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2]);
+int	last_try_static_c(int flag);
+void	heredoc_signal_c(int signum __attribute__((unused)));
+void	write_input_to_pipe(char *input, int pipefd);
+
+//heredoc_utils2.c
+void	init_heredoc_env_open(int *i, int *j, char **input_opened, char input_env[1024]);
+char	*free_heredoc_env_open(char **input, char *input_opened, t_list *current);
+void	heredoc_env_open_iterators(char *input, char *input_env, int *i, int *j);
+void	free_current_and_next(t_list *current);
+void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret);
+
+//heredoc_utils3.c
+int check_heredoc_delim(t_list *current);
+int	is_it_quote(char c);
+void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j);
+
+
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
