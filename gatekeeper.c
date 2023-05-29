@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:36:16 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 12:39:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/29 20:18:21 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,8 @@ int	check_if_quotes(char *str)
 			double_quote++;
 		i++;
 	}
-	if (single_quote == 0 && double_quote > 0)
-	{
-		if (double_quote % 2 != 0)
-			return (0);
+	if (double_quote > 0 || single_quote > 0)
 		return (1);
-	}
-	else if (double_quote == 0 && single_quote > 0)
-	{
-		if (single_quote % 2 != 0)
-			return (0);
-		return (1);
-	}
 	return (0);
 }
 
