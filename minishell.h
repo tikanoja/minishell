@@ -132,7 +132,7 @@ int		redir_directory_check(char *str, t_list *prev);
 void	*free_empty_stdin_input(char *input, t_list *new);
 int fill_node_split_check(char *input);
 void fill_node_from_split(t_list *new, char *input, t_list *current);
-char *parse_stdin_input(char *input, t_list *current);
+char *parse_stdin_input(char *input);
 t_list	*fill_node_from_stdin(t_list *current);
 
 // redirection_frees.c
@@ -206,7 +206,7 @@ char	*get_path(char **patharr, char *token);
 int		is_it_shell_command(char *token, char **envcpy);
 t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head);
 t_list	*add_head_node(t_list *node, t_list **head, char **envcpy);
-char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head);
+char	**realloc_array(t_list *node, char *token);
 t_list	*get_head_node(t_list *node);
 t_list	*parsecmd(char *prompt, char **envcpy);
 

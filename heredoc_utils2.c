@@ -63,7 +63,7 @@ void	fill_args_to_prev(t_list *current, t_list *prev, t_list **ret)
 		}
 		else if (prev)
 		{
-			current->prev->args = realloc_array(current->prev, current->next->args[i], NULL, NULL);
+			current->prev->args = realloc_array(current->prev, current->next->args[i]);
 			free(current->next->args[i]);
 		}
 		i++;

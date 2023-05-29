@@ -55,7 +55,7 @@ t_list    *handle_redirection_in(t_list *current)
 		else
 			close(fd);
 	}
-	return (free_redirection_out(current, prev, next)); //pitäis toimii täs mut jos ei ni pitää tehä oma hehheh
+	return (free_redirection_out(current, prev, next));
 }
 
 

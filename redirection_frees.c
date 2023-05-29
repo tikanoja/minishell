@@ -63,7 +63,7 @@ t_list *free_redirection_out(t_list *current, t_list *prev, t_list *next)
 		}
 		else if (prev)
 		{
-			prev->args = realloc_array(prev, next->args[i], NULL, NULL);
+			prev->args = realloc_array(prev, next->args[i]);
 			if (!prev->args)
 				exit_gracefully(current);
 			free(current->next->args[i]);

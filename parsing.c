@@ -128,7 +128,7 @@ t_list	*add_node(t_list *node, char *token, char **envcpy, t_list *head)
 	return (node);
 }
 
-char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
+char	**realloc_array(t_list *node, char *token)
 {
 	char	**array;
 	int		i;
@@ -137,10 +137,12 @@ char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 	i = 0;
 	array = ft_calloc(node->argc + 2, sizeof(char **));
 	if (!array)
-		free_env_and_list(envcpy, head);
+		return (NULL);
 	while (node->args && node->args[i])
 	{
 		array[i] = ft_strdup(node->args[i]);
+		if (!array[i])
+			return (NULL);
 		free(node->args[i]);
 		i++;
 	}
@@ -150,7 +152,7 @@ char	**realloc_array(t_list *node, char *token, char **envcpy, t_list *head)
 	node->args = NULL;
 	array[i] = ft_strdup(token);
 	if (!array[i])
-		exit_gracefully(head);
+		return (NULL);
 	array[i + 1] = NULL;
 	return (array);
 }
@@ -214,7 +216,7 @@ t_list	*parsecmd(char *prompt, char **envcpy)
 		if (argflag == -1)
 			node = add_node(node, token, envcpy, head);
 		else
-			node->args = realloc_array(node, token, envcpy, head);
+			node->args = realloc_array(node, token);
 		argflag++;
 		free(token);
 		token = ft_lexer(NULL, envcpy, head);
