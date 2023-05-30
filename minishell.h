@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 15:12:01 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:18:14 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,6 +325,8 @@ int		find_next_quote(char quote, int i, char *str);
 int		empty_input(char *str);
 int		check_if_empty_quote(char *str);
 int		stnc(const char *s1, const char *s2, size_t n);
+int		check_for_empty_redir(char *prompt);
+int		print_redir_error(char *prompt, int i, int flag);
 
 //main.c
 void	printlist(t_list *head);
