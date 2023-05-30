@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 14:52:54 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:30:19 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	find_key_index(char *key, int *i, int flag, int len)
 	index = -1;
 	while (g_envcpy[(*i)] && flag == 0)
 	{
-		if (ft_strncmp(g_envcpy[(*i)], key, len - 1) == 0 && \
+		if (ft_strncmp(g_envcpy[(*i)], key, len) == 0 && \
 		(g_envcpy[(*i)][len] == '=' || g_envcpy[(*i)][len] == '\0'))
 			index = (*i);
 		(*i)++;
