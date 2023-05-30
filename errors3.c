@@ -34,10 +34,13 @@ int	double_redir_check(t_list *head, int *status)
 	current = head;
 	if (ft_strncmp(current->value, "|", 1) == 0)
 		return (double_redir_print(1, current, head, status));
-	while (current)
+	while (current) //jos joku hajoo ni is_it_redirection_no_pipe(current->value)
 	{
 		if (is_it_redirection_no_pipe(current->value) > 0 && \
 		current->next && is_it_redirection_no_pipe(current->next->value) > 0)
+			return (double_redir_print(2, current, head, status));
+		else if (stnc(current->value, "<<", 2) == 0 && \
+		current->next && is_it_redirection(current->next->value) > 0)
 			return (double_redir_print(2, current, head, status));
 		else if (current->args && \
 		is_it_redirection_redir_check(current->args[0]) > 0)

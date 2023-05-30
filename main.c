@@ -36,6 +36,7 @@ void	printlist(t_list *head)
 		printf("pipeflag: %d\n", current->pipe);
 		printf("index: %d\n", current->index);
 		printf("system_command: %d\n", current->system_command);
+		printf("execlfag: %d\n", current->execflag);
 		current = current->next;
 		i++;
 	}

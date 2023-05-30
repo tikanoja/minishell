@@ -51,7 +51,7 @@ int	assignment_check(char *str)
 
 int	is_it_redirection_no_pipe(char *prompt)
 {
-	if (ft_strncmp(prompt, "<<\0", 3) == 0)
+	if (ft_strncmp(prompt, "|\0", 2) == 0)
 		return (2);
 	else if (ft_strncmp(prompt, ">>\0", 3) == 0)
 		return (2);

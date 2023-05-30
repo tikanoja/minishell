@@ -58,6 +58,10 @@ void	fill_args_to_prev(t_list *crnt, t_list *prev, t_list **ret, int pipefd)
 	int	i;
 
 	i = 0;
+	if (crnt->next->next && is_it_redirection(crnt->next->next->value) > 0)
+		close(pipefd);
+	else if (prev == NULL && crnt->next->next == NULL)
+		close(pipefd);
 	while (crnt->next && crnt->next->args && crnt->next->args[i])
 	{
 		if (prev == NULL)

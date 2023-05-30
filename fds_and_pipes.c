@@ -41,6 +41,12 @@ t_list	*handle_redirection_out(t_list *current)
 	return (free_redirection_out(current, prev, next));
 }
 
+void	handle_failed_open(t_list **current, int fd)
+{
+	(*current)->execflag = 1;
+	close(fd);
+}
+
 t_list	*handle_redirection_in(t_list *current)
 {
 	t_list	*prev;
@@ -57,7 +63,7 @@ t_list	*handle_redirection_in(t_list *current)
 	{
 		fd = open(next->value, O_RDONLY, 0644);
 		if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
-				prev->execflag = 1;
+			prev->execflag = 1;
 		if (fd != -1 && prev && prev->execflag != 1)
 		{
 			if (prev->input != STDIN_FILENO)
@@ -65,7 +71,7 @@ t_list	*handle_redirection_in(t_list *current)
 			prev->input = fd;
 		}
 		else
-			close(fd);
+			handle_failed_open(&current, fd);
 	}
 	return (free_redirection_out(current, prev, next));
 }
@@ -85,8 +91,13 @@ t_list	*handle_redirection_out_append(t_list *current)
 	else
 	{
 		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
+		if (fd == -1 && redir_directory_check(next->value, prev) == 1)
+		{	
+			if (prev)
 				prev->execflag = 1;
+			if (next->next)
+				next->next->execflag = 1;
+		}
 		if (fd != -1 && prev && prev->execflag != 1)
 		{
 			if (prev->output != STDOUT_FILENO)
@@ -122,8 +133,13 @@ t_list	*handle_pipe(t_list *current)
 	}
 	else
 		close (pipefd[1]);
-	next->input = pipefd[0];
-	next->pipe = 1;
+	if (is_it_redirection(next->value) == 0)
+	{
+		next->input = pipefd[0];
+		next->pipe = 1;
+	}
+	else
+		close(pipefd[0]);
 	return (free_pipe(current, prev, next));
 }
 

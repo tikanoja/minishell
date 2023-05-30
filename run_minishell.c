@@ -91,6 +91,7 @@ void	run_minishell(void)
 			continue ;
 		head = gatekeeper(head, status);
 		head = open_fds_and_pipes(head);
+		printlist(head);
 		if (check_if_head_ok(head) == 1)
 			continue ;
 		parse_system_commands(head, 0);
