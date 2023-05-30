@@ -324,6 +324,7 @@ int		return_log_problem(char *str);
 int		find_next_quote(char quote, int i, char *str);
 int		empty_input(char *str);
 int		check_if_empty_quote(char *str);
+int		stnc(const char *s1, const char *s2, size_t n);
 
 //main.c
 void	printlist(t_list *head);

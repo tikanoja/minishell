@@ -129,25 +129,25 @@ t_list	*handle_pipe(t_list *current)
 
 t_list	*open_fds_and_pipes(t_list *head)
 {
-	t_list	*current;
+	t_list	*cur;
 
-	current = head;
-	while (current)
+	cur = head;
+	while (cur)
 	{
-		if (current->prev == NULL)
-			head = current;
-		if (current->value && ft_strncmp(current->value, "|\0", 2) == 0)
-			current = handle_pipe(current);
-		else if (current->value && ft_strncmp(current->value, "<<\0", 3) == 0)
-			current = handle_heredoc(current);
-		else if (current->value && ft_strncmp(current->value, ">>\0", 3) == 0)
-			current = handle_redirection_out_append(current);
-		else if (current->value && ft_strncmp(current->value, "<\0", 2) == 0)
-			current = handle_redirection_in(current);
-		else if (current->value && ft_strncmp(current->value, ">\0", 2) == 0)
-			current = handle_redirection_out(current);
+		if (cur->prev == NULL)
+			head = cur;
+		if (cur->value && stnc(cur->value, "|\0", 2) == 0 && !cur->args)
+			cur = handle_pipe(cur);
+		else if (cur->value && stnc(cur->value, "<<\0", 3) == 0 && !cur->args)
+			cur = handle_heredoc(cur);
+		else if (cur->value && stnc(cur->value, ">>\0", 3) == 0 && !cur->args)
+			cur = handle_redirection_out_append(cur);
+		else if (cur->value && stnc(cur->value, "<\0", 2) == 0 && !cur->args)
+			cur = handle_redirection_in(cur);
+		else if (cur->value && stnc(cur->value, ">\0", 2) == 0 && !cur->args)
+			cur = handle_redirection_out(cur);
 		else
-			current = current->next;
+			cur = cur->next;
 	}
 	if (!head->value && !head->args)
 		return (NULL);
