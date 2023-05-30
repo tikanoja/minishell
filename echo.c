@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:20:27 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/27 13:38:02 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:19:43 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,14 +95,14 @@ int	ft_echo(t_list *echo)
 		printf("\n");
 		return (0);
 	}
-	original_fd = dup(STDOUT_FILENO);
-	dup2(echo->output, STDOUT_FILENO);
 	if (one_n_checker(echo) == 1)
 		return (0);
 	while (n_definer(echo->args[n_flag]) == 1)
 		n_flag++;
 	if (echo->argc <= n_flag)
 		return (0);
+	original_fd = dup(STDOUT_FILENO);
+	dup2(echo->output, STDOUT_FILENO);
 	string = create_echo_str(echo, n_flag, n_flag, n_flag);
 	dup2(original_fd, STDOUT_FILENO);
 	close(original_fd);
