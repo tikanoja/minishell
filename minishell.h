@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 14:16:46 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 15:12:01 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,7 @@ void	exit_split(char **split, t_list *current);
 
 //run_minishell.c
 void	run_minishell(void);
-int		prompt_if_check(char *prompt);
+int		prompt_if_check(char *prompt, int *status);
 int		check_if_head_ok(t_list *head);
 char	*get_prompt(char *prompt);
 void	init_main_signals(void);
@@ -323,10 +323,11 @@ int		check_log_operators(char *prompt);
 int		return_log_problem(char *str);
 int		find_next_quote(char quote, int i, char *str);
 int		empty_input(char *str);
+int		check_if_empty_quote(char *str);
 
 //main.c
 void	printlist(t_list *head);
-int		check_quotes(char *str);
+int		check_quotes(char *str, int flag);
 void	malloc_env_copy(char ***g_envcpy, const char **envp, int rows, int i);
 void	get_env_copy(char ***g_envcpy, const char **envp);
 int		main(int argc, char **argv, const char **envp);

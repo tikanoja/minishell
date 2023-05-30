@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:00:51 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:22:28 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 15:13:46 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	find_next_quote(char quote, int i, char *str)
 	return (-1);
 }
 
-int	check_quotes(char *str)
+int	check_quotes(char *str, int flag)
 {
 	int	i;
 	int	ret;
@@ -58,7 +58,8 @@ int	check_quotes(char *str)
 			ret = find_next_quote(str[i], i, str);
 			if (ret == -1)
 			{
-				write(2, "unclosed quotes\n", 16);
+				if (flag == 0)
+					write(2, "unclosed quotes\n", 16);
 				return (1);
 			}
 			i = ret;

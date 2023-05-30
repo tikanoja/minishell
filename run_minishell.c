@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 19:55:42 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 00:23:53 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 15:12:15 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,20 @@ int	check_if_head_ok(t_list *head)
 	return (0);
 }
 
-int	prompt_if_check(char *prompt)
+int	prompt_if_check(char *prompt, int *status)
 {
-	if (check_quotes(prompt) == 1 || empty_input(prompt) == 1 || \
+	if (check_quotes(prompt, 1) == 0 && check_if_empty_quote(prompt) == 0)
+	{
+		ft_putstr_fd("shelly: : command not found\n", 2);
+		free(prompt);
+		(*status) = 127;
+		return (1);
+	}
+	if (check_quotes(prompt, 0) == 1 || empty_input(prompt) == 1 || \
 	check_log_operators(prompt) == 1)
 	{
 		free(prompt);
+		(*status) = 1;
 		return (1);
 	}
 	return (0);
@@ -68,7 +76,7 @@ void	run_minishell(void)
 	while (1)
 	{
 		prompt = get_prompt(prompt);
-		if (prompt_if_check(prompt) == 1)
+		if (prompt_if_check(prompt, &status) == 1)
 			continue ;
 		head = parsecmd(prompt, g_envcpy);
 		if (double_redir_check(head, &status) == 1)
