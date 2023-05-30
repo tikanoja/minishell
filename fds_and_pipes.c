@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:59:24 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:57:23 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:24:50 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,6 @@ t_list	*handle_redirection_out(t_list *current)
 			close(fd);
 	}
 	return (free_redirection_out(current, prev, next));
-}
-
-void	handle_failed_open(t_list **current, int fd)
-{
-	(*current)->execflag = 1;
-	close(fd);
 }
 
 t_list	*handle_redirection_in(t_list *current)
@@ -80,7 +74,6 @@ t_list	*handle_redirection_out_append(t_list *current)
 {
 	t_list	*prev;
 	t_list	*next;
-	int		fd;
 
 	prev = current->prev;
 	next = current->next;
@@ -89,24 +82,7 @@ t_list	*handle_redirection_out_append(t_list *current)
 	else if (is_it_redirection(next->value) > 0)
 		redir_out_double_redir(prev, next);
 	else
-	{
-		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd == -1 && redir_directory_check(next->value, prev) == 1)
-		{	
-			if (prev)
-				prev->execflag = 1;
-			if (next->next)
-				next->next->execflag = 1;
-		}
-		if (fd != -1 && prev && prev->execflag != 1)
-		{
-			if (prev->output != STDOUT_FILENO)
-				close(prev->output);
-			prev->output = fd;
-		}
-		else
-			close(fd);
-	}
+		handle_fd_redir(&prev, &next);
 	return (free_redirection_out(current, prev, next));
 }
 
@@ -115,9 +91,7 @@ t_list	*handle_pipe(t_list *current)
 	t_list	*prev;
 	t_list	*next;
 	int		pipefd[2];
-	int		syntaxflag;
 
-	syntaxflag = 0;
 	prev = current->prev;
 	next = current->next;
 	if (!next)
@@ -127,17 +101,11 @@ t_list	*handle_pipe(t_list *current)
 	if (pipe(pipefd) == -1)
 		exit_gracefully(current);
 	if (prev && prev->output == STDOUT_FILENO)
-	{
-		prev->output = pipefd[1];
-		prev->pipe = 1;
-	}
+		handle_pipe_pipefd(&prev, pipefd[1], 1);
 	else
 		close (pipefd[1]);
 	if (is_it_redirection(next->value) == 0)
-	{
-		next->input = pipefd[0];
-		next->pipe = 1;
-	}
+		handle_pipe_pipefd(&next, pipefd[0], 2);
 	else
 		close(pipefd[0]);
 	return (free_pipe(current, prev, next));

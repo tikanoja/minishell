@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:53:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 02:10:54 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:37:41 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,20 @@ void	pid_failed(void)
 	exit(EXIT_FAILURE);
 }
 
-void	wait_for_child_doc(int pipefd, int pid)
+void	wait_for_child_doc(int pipefd, int pid, t_list *current)
 {
 	int	status;
 
 	close(pipefd);
 	waitpid(pid, &status, 0);
+	// if (status != 0) korjaa taa
+	// {
+	// 	while(current)
+	// 	{
+	// 		if(current->next)
+	// 			current->next->execflag = 1;
+	// 		current = current->next;
+	// 	}
+	// 	printf("does it get out of there\n");
+	// }
 }

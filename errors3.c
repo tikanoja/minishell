@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 22:46:25 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:57:44 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	double_redir_check(t_list *head, int *status)
 	current = head;
 	if (ft_strncmp(current->value, "|", 1) == 0)
 		return (double_redir_print(1, current, head, status));
-	while (current) //jos joku hajoo ni is_it_redirection_no_pipe(current->value)
+	while (current)
 	{
 		if (is_it_redirection_no_pipe(current->value) > 0 && \
 		current->next && is_it_redirection_no_pipe(current->next->value) > 0)

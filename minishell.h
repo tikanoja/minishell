@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 16:18:14 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:34:47 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_list **ret, int pipefd);
 int		check_heredoc_delim(t_list *current);
 int		is_it_quote(char c);
 void	copy_and_move_ptrs(char *input_env, char *input, int *i, int *j);
-void	wait_for_child_doc(int pipefd, int pid);
+void	wait_for_child_doc(int pipefd, int pid, t_list *current);
 void	pid_failed(void);
 
 //redirection_errors.c
@@ -161,6 +161,9 @@ t_list *next, int i);
 //open_fds_and_pipes.c
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
+void	handle_fd_redir(t_list **prev, t_list **next);
+void	handle_pipe_pipefd(t_list **node, int pipefd, int flag);
+void	handle_failed_open(t_list **current, int fd);
 
 //system_commands.c
 void	parse_system_commands(t_list *head, int pathflag);

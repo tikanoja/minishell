@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:56:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 02:15:36 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 18:33:24 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ t_list	*handle_heredoc(t_list *current)
 		else if (pid == 0)
 			heredoc_loop_child(current, pipefd, delim);
 		else
-			wait_for_child_doc(pipefd[1], pid);
+			wait_for_child_doc(pipefd[1], pid, current);
 		init_signals();
 		free(delim);
 	}
