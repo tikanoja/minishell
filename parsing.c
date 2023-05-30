@@ -78,12 +78,12 @@ char	**realloc_array_parsecmd(t_list *node, char *token, char *prompt)
 	init_realloc_parsecmd(&array, &i);
 	array = ft_calloc(node->argc + 2, sizeof(char **));
 	if (!array)
-		free_realloc_parsecmd(prompt, token, node);
+		free_realloc1(prompt, token, node);
 	while (node->args && node->args[i])
 	{
 		array[i] = ft_strdup(node->args[i]);
 		if (!array[i])
-			free_realloc_parsecmd2(prompt, token, node, array);
+			free_realloc2(prompt, token, node, array);
 		free(node->args[i]);
 		i++;
 	}
@@ -93,7 +93,7 @@ char	**realloc_array_parsecmd(t_list *node, char *token, char *prompt)
 	node->args = NULL;
 	array[i] = ft_strdup(token);
 	if (!array[i])
-		free_realloc_parsecmd3(prompt, token, node, array);
+		free_realloc3(prompt, token, node, array);
 	array[i + 1] = NULL;
 	return (array);
 }

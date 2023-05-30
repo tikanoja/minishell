@@ -78,16 +78,15 @@ void	heredoc_loop_child(t_list *current, int pipefd[2], char *delim)
 			printf("\033[1A> ");
 			break ;
 		}
-		if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && input[ft_strlen(delim)] == '\0'))
+		if ((ft_strncmp(input, delim, ft_strlen(delim)) == 0 && \
+		input[ft_strlen(delim)] == '\0'))
 		{
 			free(input);
 			break ;
 		}
 		if (check_for_dollar(input) == 1)
 			input = heredoc_env_open(input, current);
-		write(pipefd[1], input, ft_strlen(input));
-		write(pipefd[1], "\n", 1);
-		free(input);
+		write_input_to_pipe(input, pipefd[1]);
 	}
 	close(pipefd[1]);
 	exit(EXIT_SUCCESS);

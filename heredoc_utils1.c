@@ -21,6 +21,7 @@ void	heredoc_assign_pipe(t_list *prev, int pipefd[2])
 		prev->input = pipefd[0];
 	}
 }
+
 t_list	*end_heredoc(t_list *current, t_list *prev, int pipefd[2])
 {
 	t_list	*ret;
