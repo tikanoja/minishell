@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 19:55:42 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 16:17:17 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 16:54:07 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ int	check_if_head_ok(t_list *head)
 
 int	prompt_if_check(char *prompt, int *status)
 {
-	if (check_quotes(prompt, 1) == 0 && check_if_empty_quote(prompt) == 0)
+	if (empty_input(prompt) == 0 && check_quotes(prompt, 1) == 0 && \
+	check_if_empty_quote(prompt) == 0)
 	{
 		ft_putstr_fd("shelly: : command not found\n", 2);
 		free(prompt);
 		(*status) = 127;
 		return (1);
 	}
-	if ((check_quotes(prompt, 1) == 0 && check_for_empty_redir(prompt) == 1))
+	if (empty_input(prompt) == 0 && check_quotes(prompt, 1) == 0 && \
+	check_for_empty_redir(prompt) == 1)
 	{
 		free(prompt);
 		(*status) = 127;
