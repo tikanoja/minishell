@@ -14,9 +14,19 @@
 
 void	cmd_not_found_update_status(t_list *current, int *status)
 {
-	ft_putstr_fd("shelly: ", 2);
-	ft_putstr_fd(current->args[0], 2);
-	ft_putstr_fd(": command not found\n", 2);
+	if (slash_check(current->args[0]) == 1)
+	{
+		ft_putstr_fd("shelly: ", 2);
+		ft_putstr_fd(current->args[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+	}
+	else
+	{
+		ft_putstr_fd("shelly: ", 2);
+		ft_putstr_fd(current->args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
+	current->execflag = 1;
 	(*status) = 127;
 }
 

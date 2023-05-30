@@ -133,6 +133,8 @@ void	wait_for_child_doc(int pipefd, int pid);
 void	pid_failed(void);
 
 //redirection_errors.c
+int		double_redir_print(int flag, t_list *current, \
+t_list *head, int *status);
 void	redir_directory_check_prints(char *str, int flag);
 void	redir_out_null_next(t_list *prev);
 void	redir_out_double_redir(t_list *prev, t_list *next);
@@ -269,7 +271,7 @@ void	free_env(char **env);
 void	free_env_and_list(char **env, t_list *head);
 void	free_array(char **arr);
 void	free_array_and_env(char **array, char **g_envcpy, t_list *head);
-int		double_redir_check(t_list *head);
+int		double_redir_check(t_list *head, int *status);
 void	exit_gracefully(t_list *current);
 int		is_it_redirection_no_pipe(char *prompt);
 int		is_it_redirection_redir_check(char *prompt);

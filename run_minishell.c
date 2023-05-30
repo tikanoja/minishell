@@ -71,7 +71,7 @@ void	run_minishell(void)
 		if (prompt_if_check(prompt) == 1)
 			continue ;
 		head = parsecmd(prompt, g_envcpy);
-		if (double_redir_check(head) == 1)
+		if (double_redir_check(head, &status) == 1)
 			continue ;
 		head = gatekeeper(head, status);
 		head = open_fds_and_pipes(head);

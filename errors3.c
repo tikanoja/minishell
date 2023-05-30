@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	double_redir_print(int flag, t_list *current, t_list *head)
+int	double_redir_print(int flag, t_list *current, t_list *head, int *status)
 {
 	ft_putstr_fd("shelly: syntax error near unexpected token `", 2);
 	if (flag == 1)
@@ -22,25 +22,26 @@ int	double_redir_print(int flag, t_list *current, t_list *head)
 	else if (flag == 3)
 		ft_putstr_fd(current->args[0], 2);
 	ft_putstr_fd("'\n", 2);
+	(*status) = 258;
 	free_list(head);
 	return (1);
 }
 
-int	double_redir_check(t_list *head)
+int	double_redir_check(t_list *head, int *status)
 {
 	t_list	*current;
 
 	current = head;
 	if (ft_strncmp(current->value, "|", 1) == 0)
-		return (double_redir_print(1, current, head));
+		return (double_redir_print(1, current, head, status));
 	while (current)
 	{
 		if (is_it_redirection_no_pipe(current->value) > 0 && \
 		current->next && is_it_redirection_no_pipe(current->next->value) > 0)
-			return (double_redir_print(2, current, head));
+			return (double_redir_print(2, current, head, status));
 		else if (current->args && \
 		is_it_redirection_redir_check(current->args[0]) > 0)
-			return (double_redir_print(3, current, head));
+			return (double_redir_print(3, current, head, status));
 		current = current->next;
 	}
 	return (0);
