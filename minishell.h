@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:41:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 02:10:37 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:16:46 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,6 +211,7 @@ int		handle_flag(char arg, int flag);
 int		should_proccess_var(char *arg, int i, int flag);
 int		should_proccess_quote_var(char *arg, int i, int flag);
 char	*process_arg(char *arg, int status, t_list *current, int len);
+int		check_for_dollar_whitespace(char c1, char c2);
 
 //parsing_utils3.c
 void	init_realloc_parsecmd(char ***array, int *i);

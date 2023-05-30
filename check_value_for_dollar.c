@@ -6,11 +6,18 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:08:28 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/26 18:24:21 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:16:57 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_for_dollar_whitespace(char c1, char c2)
+{
+	if (c1 == '$' && is_it_whitespace(c2) == 1)
+		return (1);
+	return (0);
+}
 
 void	check_value_for_dollar(t_list *current, int status)
 {

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 16:18:26 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 20:24:09 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:17:02 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,20 @@ int	handle_flag(char arg, int flag)
 
 int	should_proccess_var(char *arg, int i, int flag)
 {
+	int	whitespace;
+
+	whitespace = check_for_dollar_whitespace(arg[i], arg[i + 1]);
 	return (arg[i] == '$' && (arg[i + 1] != '\"' \
-	&& arg[i + 1] != '\'') && (flag == 0 || flag == 2));
+	&& arg[i + 1] != '\'') && whitespace == 0 && (flag == 0 || flag == 2));
 }
 
 int	should_proccess_quote_var(char *arg, int i, int flag)
 {
+	int	whitespace;
+
+	whitespace = check_for_dollar_whitespace(arg[i], arg[i + 1]);
 	return (arg[i] == '$' && (arg[i + 1] == '\"' \
-	|| arg[i + 1] == '\'') && (flag == 0 || flag == 2));
+	|| arg[i + 1] == '\'') && whitespace == 0 && (flag == 0 || flag == 2));
 }
 
 char	*process_arg(char *arg, int status, t_list *current, int len)
