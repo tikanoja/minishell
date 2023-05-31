@@ -72,15 +72,13 @@ int	prompt_if_check(char *prompt, int *status)
 	return (0);
 }
 
-void	run_minishell(void)
+void	run_minishell(int status)
 {
 	char	*prompt;
 	t_list	*head;
-	int		status;
 
 	prompt = NULL;
 	head = NULL;
-	status = 0;
 	while (1)
 	{
 		prompt = get_prompt(prompt);

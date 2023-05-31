@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+int	fd_syntax_check(t_list *next, t_list *prev, t_list *current)
+{
+	if (!next)
+	{
+		redir_out_null_next(prev);
+		free_list(get_head_node(current));
+		run_minishell(258);
+	}
+	else if (is_it_redirection(next->value) > 0)
+	{
+		redir_out_double_redir(prev, next);
+		free_list(get_head_node(current));
+		run_minishell(258);
+	}
+	return (0);
+}
+
 void	handle_pipe_pipefd(t_list **node, int pipefd, int flag)
 {
 	if (flag == 1)

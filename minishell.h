@@ -160,6 +160,7 @@ void	realloc_redirection_out(t_list *prev, t_list *current, \
 t_list *next, int i);
 
 //open_fds_and_pipes.c
+int		fd_syntax_check(t_list *next, t_list *prev, t_list *current);
 t_list	*handle_redirection_out(t_list *current);
 t_list	*open_fds_and_pipes(t_list *head);
 void	handle_fd_redir(t_list **prev, t_list **next);
@@ -316,7 +317,7 @@ void	free_failed_split(char **split);
 void	exit_split(char **split, t_list *current);
 
 //run_minishell.c
-void	run_minishell(void);
+void	run_minishell(int status);
 int		prompt_if_check(char *prompt, int *status);
 int		check_if_head_ok(t_list *head);
 char	*get_prompt(char *prompt);

@@ -66,9 +66,12 @@ void	ctrl_d_main(void)
 
 int	main(int argc, char **argv, const char **envp)
 {
+	int status;
+
+	status = 0;
 	if (argc > 1 || argv == NULL)
 		exitmsg("too many args");
 	get_env_copy(&g_envcpy, envp);
-	run_minishell();
+	run_minishell(status);
 	return (0);
 }

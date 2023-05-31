@@ -20,24 +20,18 @@ t_list	*handle_redirection_out(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next)
-		redir_out_null_next(prev);
-	else if (is_it_redirection(next->value) > 0)
-		redir_out_double_redir(prev, next);
-	else
+	fd_syntax_check(next, prev, current);
+	fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
+		prev->execflag = 1;
+	if (fd != -1 && prev && prev->execflag != 1)
 	{
-		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
-				prev->execflag = 1;
-		if (fd != -1 && prev && prev->execflag != 1)
-		{
-			if (prev->output != STDOUT_FILENO)
-				close(prev->output);
-			prev->output = fd;
-		}
-		else
-			close(fd);
+		if (prev->output != STDOUT_FILENO)
+			close(prev->output);
+		prev->output = fd;
 	}
+	else
+		close(fd);
 	return (free_redirection_out(current, prev, next));
 }
 
@@ -49,24 +43,18 @@ t_list	*handle_redirection_in(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next)
-		redir_out_null_next(prev);
-	else if (is_it_redirection(next->value) > 0)
-		redir_out_double_redir(prev, next);
-	else
+	fd_syntax_check(next, prev, current);
+	fd = open(next->value, O_RDONLY, 0644);
+	if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
+		prev->execflag = 1;
+	if (fd != -1 && prev && prev->execflag != 1)
 	{
-		fd = open(next->value, O_RDONLY, 0644);
-		if (fd == -1 && redir_directory_check(next->value, prev) == 1 && prev)
-			prev->execflag = 1;
-		if (fd != -1 && prev && prev->execflag != 1)
-		{
-			if (prev->input != STDIN_FILENO)
-				close(prev->input);
-			prev->input = fd;
-		}
-		else
-			handle_failed_open(&current, fd);
+		if (prev->input != STDIN_FILENO)
+			close(prev->input);
+		prev->input = fd;
 	}
+	else
+		handle_failed_open(&current, fd);
 	return (free_redirection_out(current, prev, next));
 }
 
@@ -77,12 +65,8 @@ t_list	*handle_redirection_out_append(t_list *current)
 
 	prev = current->prev;
 	next = current->next;
-	if (!next)
-		redir_out_null_next(prev);
-	else if (is_it_redirection(next->value) > 0)
-		redir_out_double_redir(prev, next);
-	else
-		handle_fd_redir(&prev, &next);
+	fd_syntax_check(next, prev, current);
+	handle_fd_redir(&prev, &next);
 	return (free_redirection_out(current, prev, next));
 }
 
