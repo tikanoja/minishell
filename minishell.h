@@ -122,6 +122,7 @@ char	*free_heredoc_env_open(char **input, \
 char *input_opened, t_list *current);
 void	heredoc_env_open_iterators(char *input, \
 char *input_env, int *i, int *j);
+void	connect_nodes(t_list *crnt, t_list *prev, t_list **ret, int pipefd);
 void	fill_args_to_prev(t_list *current, t_list *prev, \
 t_list **ret, int pipefd);
 

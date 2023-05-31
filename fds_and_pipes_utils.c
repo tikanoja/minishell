@@ -26,7 +26,7 @@ void	handle_pipe_pipefd(t_list **node, int pipefd, int flag)
 	}
 }
 
-void	handle_fd_redir(t_list **prev, t_list **next) //jos taa hajotti siirra takas;
+void	handle_fd_redir(t_list **prev, t_list **next)
 {
 	int		fd;
 

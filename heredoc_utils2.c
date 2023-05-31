@@ -47,8 +47,12 @@ void	heredoc_env_open_iterators(char *input, char *input_env, int *i, int *j)
 	return ;
 }
 
-void	connect_nodes(t_list *crnt, t_list *prev, t_list **ret)
+void	connect_nodes(t_list *crnt, t_list *prev, t_list **ret, int pipefd)
 {
+	prev->input = pipefd;
+	prev->next = *ret;
+	if (*ret != NULL)
+		(*ret)->prev = prev;
 	crnt->prev = prev;
 	(*ret) = crnt->prev;
 }
@@ -69,11 +73,7 @@ void	fill_args_to_prev(t_list *crnt, t_list *prev, t_list **ret, int pipefd)
 			prev = add_node(NULL, crnt->next->args[i], NULL, NULL);
 			if (!prev)
 				exit_gracefully(crnt);
-			prev->input = pipefd;
-			prev->next = *ret;
-			if (*ret != NULL)
-				(*ret)->prev = prev;
-			connect_nodes(crnt, prev, ret);
+			connect_nodes(crnt, prev, ret, pipefd);
 		}
 		else if (prev)
 		{
