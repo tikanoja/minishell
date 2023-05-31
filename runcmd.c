@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 22:57:35 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:37:25 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/31 10:19:28 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,9 @@ t_list *head)
 			ft_putstr_fd("shelly: ", 2);
 			ft_putstr_fd(current->value, 2);
 			ft_putstr_fd(": command not found\n", 2);
+			exit(EXIT_FAILURE);
 		}
-		exit(1);
+		exit(0);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 23:55:48 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/29 23:56:53 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/31 10:19:04 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,10 @@ int	end_runcmd(t_list **current, t_list **head, int status, pid_t pid)
 	(*current) = (*head);
 	close_all_fds((*current));
 	while (pid > 0)
+	{
 		pid = waitpid(-1, &status, 0);
+		if (status != 0)
+			status = 1;
+	}
 	return (status);
 }
