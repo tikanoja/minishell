@@ -6,7 +6,7 @@
 /*   By: jaurasma <jaurasma@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 20:53:00 by jaurasma          #+#    #+#             */
-/*   Updated: 2023/05/30 18:37:41 by jaurasma         ###   ########.fr       */
+/*   Updated: 2023/05/31 09:45:00 by jaurasma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ void	wait_for_child_doc(int pipefd, int pid, t_list *current)
 
 	close(pipefd);
 	waitpid(pid, &status, 0);
-	// if (status != 0) korjaa taa
-	// {
-	// 	while(current)
-	// 	{
-	// 		if(current->next)
-	// 			current->next->execflag = 1;
-	// 		current = current->next;
-	// 	}
-	// 	printf("does it get out of there\n");
-	// }
+	printlist(current);
+	if (status != 0)
+	{
+		current = get_head_node(current);
+		while (current)
+		{
+			current->execflag = 1;
+			current = current->next;
+		}
+	}
 }
