@@ -6,7 +6,7 @@
 
 `minishell` is a simple Bash-like shell written in C. It supports command execution, environment variables, basic built-in commands, and more.
 
-<img src="imgs/irssi.png" width="80%" align="center">
+<img src="imgs/minishell.gif" width="80%" align="center">
 
 ## Description
 
